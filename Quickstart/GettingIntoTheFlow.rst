@@ -77,7 +77,7 @@ If your system is configured correctly you should now be able to access the Welc
 
 .. code-block:: text
 
-	``http://localhost/GettingStarted/Web/``
+	http://localhost/GettingStarted/Web/
 
 The result should look similar to the screen you see in the screenshot. If something went wrong, it usually can be blamed on a misconfigured webserver or insufficient file permissions.
 
