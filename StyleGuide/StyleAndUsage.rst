@@ -1,7 +1,9 @@
 Style and Usage
 ---------------
 
-This chapter provides guidelines on writing style and usage. The intent of these guidelines is to help maintain a consistent voice in publications of the TYPO3 Project and in the user interface.
+This chapter provides guidelines on writing style and usage. The intent of these
+guidelines is to help maintain a consistent voice in publications of the TYPO3 Project and
+in the user interface.
 
 
 File types
@@ -14,10 +16,11 @@ File types
 		.php, .jpg, .css
 
 abbreviations and acronyms
-	An acronym is a pronounceable word formed from the initial letter or letters of major parts of a 
-	compound term. An abbreviation is usually formed in the same way but is not pronounced as a word. 
-	Abbreviations are often lowercase or a mix of lowercase and uppercase. Acronyms are almost always 
-	all caps, regardless of the capitalization style of the spelled-out form.
+	An acronym is a pronounceable word formed from the initial letter or letters of major
+	parts of a compound term. An abbreviation is usually formed in the same way but is not
+	pronounced as a word.
+	Abbreviations are often lowercase or a mix of lowercase and uppercase. Acronyms are
+	almost always all caps, regardless of the capitalization style of the spelled-out form.
 	
 	* *Latin*: Avoid using Latin abbreviations.
 
