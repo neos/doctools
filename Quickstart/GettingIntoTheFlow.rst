@@ -72,7 +72,7 @@ accordingly. But don't worry, this is simply done by changing to the FLOW3 base 
 	./flow3 core:setfilepermissions john www-data www-data
 
 Please replace *john* by your own username. The second argument is supposed to be the
-username of your webserver and the last one specifies the web server's group. For most
+username of your web server and the last one specifies the web server's group. For most
 installations on Mac OS X this would be both *_www* instead of *www-data*.
 
 .. note::
@@ -144,7 +144,13 @@ some content. You should be able to access it through the following URL:
 
 	http://localhost/Quickstart/Web/Acme.Demo
 
-Let's use the *StandardController* for some more experiments. After opening the respective class file in *Packages/Application/Acme.Demo/Classes/Controller/* you should find the method *indexAction()* which is responsible for the output you've just seen in your web browser::
+Hello World
+-----------
+
+Let's use the *StandardController* for some more experiments. After opening the respective
+class file in *Packages/Application/Acme.Demo/Classes/Controller/* you should find the
+method *indexAction()* which is responsible for the output you've just seen in your web
+browser::
 
 	/**
 	 * Index action
@@ -157,8 +163,9 @@ Let's use the *StandardController* for some more experiments. After opening the 
 		));
 	}
 
-Accepting some kind of user input is essential for most applications. FLOW3 does a great
-deal of processing and sanitizing any incoming data. In the *StandardController* just create a new action method like this one::
+Accepting some kind of user input is essential for most applications and FLOW3 does a
+great deal of processing and sanitizing any incoming data. Try it out – create a new
+action method like this one::
 
 	/**
 	 * Hello action
@@ -183,13 +190,56 @@ Now test the new action by passing it a name like in the following URL:
 .. code-block:: text
 
 	http://localhost/Quickstart/Web/Acme.Demo/Standard/hello?name=Robert
-	
+
+The path segments of this URL tell FLOW3 to which controller and action the web request
+should be dispatched to. In our example the parts are:
+
+* *Acme.Demo* (package key)
+* *Standard* (controller name)
+* *hello* (action name)
+
+If everything went fine, you should be greeted by a friendly "`Hello John!`" – if that's
+the name you passed to the action. Also try leaving out the *name* parameter in the URL –
+FLOW3 will complain about a missing argument.
 
 Storing and Retrieving Objects
 ------------------------------
 
+One important design goal for FLOW3 was to let a developer focus on the business logic and
+work in a truly object-oriented fashion. While you develop a FLOW3 application, you will
+hardly note that content is actually stored in a database. Your code won't contain any
+SQL query and you don't have to deal with setting up table structures.
 
+But before you can store anything, you still need to set up a database and tell FLOW3 how
+to access it. The credentials and driver options need to be specified in the global 
+FLOW3 settings.
 
+After you have created an empty database and set up a user with sufficient access 
+rights, copy the file *Configuration/Settings.yaml.example* and save it as
+*Settings.yaml*. Open and adjust the file to your needs – for a common MySQL setup, it would
+look similar to this:
+
+.. code-block:: yaml
+
+	TYPO3:
+	  FLOW3:
+	    persistence:
+	     backendOptions:
+	      driver: 'pdo_mysql'
+	      dbname: 'phoenix'    # adjust to your database name
+	      user: 'root'         # adjust to your database user
+	      password: 'password' # adjust to your database password
+	      host: '127.0.0.1'    # adjust to your database host
+	      path: '127.0.0.1'    # adjust to your database host
+	      port: 3306
+
+.. note::
+
+	If you have never written :term:`YAML`, there are two things you should know at least:
+	
+	* indentation has a meaning: by different levels of indentation, a structure is
+	  defined.
+	* spaces, no tabs: you must indent with exactly 2 spaces per level, don't use tabs.
 
 .. _FLOW3 Base Distribution:                       http://flow3.typo3.org/download
 .. _IRC channel:                                                   http://flow3.typo3.org/get-involved/irc-channel/
