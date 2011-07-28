@@ -1,8 +1,6 @@
-Caching
-=======
-
+===============
 Cache Framework
----------------
+===============
 
 FLOW3 offers a caching framework to cache data. The system offers a wide variety of
 options and storage solutions for different caching needs. Each cache can be configured
@@ -14,7 +12,7 @@ cache server with specialized cache systems like the Redis key-value store (a.k.
 database), or shrinking the needed storage space by enabling compression of data.
 
 Introduction
-------------
+============
 
 The caching framework can handle multiple caches with different configurations. A single
 cache consists of any number of cache entries. A single cache entry is defined by these
@@ -114,7 +112,7 @@ In your code you usually rely on dependency injection to have your caches inject
 Thus you deal mainly with the API defined in the ``FrontendInterface``.
 
 Configuration
--------------
+=============
 
 The cache framework is configured in the usual FLOW3 way through YAML files. The most
 important is *Caches.yaml*, although you may of course use *Objects.yaml* to further
@@ -159,10 +157,10 @@ or package *Configuration* directory.
 	    database: 3
 
 Cache Frontends
----------------
+===============
 
 Frontend API
-~~~~~~~~~~~~
+------------
 
 * All frontends must implement the API defined in the interface
 	``TYPO3\FLOW3\Cache\Frontend\FrontendInterface``. All cache operations must be done
@@ -205,7 +203,7 @@ Frontend API
 Check the API documentation for details on these methods.
 
 Available Frontends
-~~~~~~~~~~~~~~~~~~~
+-------------------
 
 Currenly three different frontends are implemented, the main difference is the data types
 which can be stored using a specific frontend.
@@ -238,7 +236,7 @@ which can be stored using a specific frontend.
 	arrays or objects.
 
 Cache Backends
---------------
+==============
 
 Currently already a number of different storage backends exists. They have different
 characteristics and can be used for different caching needs. The best backend depends on
@@ -246,7 +244,7 @@ given server setup and hardware, as well as cache type and usage. A backend shou
 chosen wisely, a wrong decision could slow down an installation in the end.
 
 Common Options
-~~~~~~~~~~~~~~
+--------------
 
 :title:`Common cache backend options`
 
@@ -260,7 +258,7 @@ Common Options
 +-----------------+--------------------------------------+-----------+---------+---------+
 
 TYPO3\\FLOW3\\Cache\\Backend\\FileBackend
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-----------------------------------------
 
 The file backend stores every cache entry as a single file to the file system. The
 lifetime and tags are added after the data part in the same file.
@@ -289,12 +287,12 @@ production systems, so get and set performance is much more important in this sc
 	like RAM disks, battery backed up RAID systems or SSD hard disks might help then.
 
 Options
-"""""""
+~~~~~~~
 
 The file backend has no options.
 
 TYPO3\\FLOW3\\Cache\\Backend\\PdoBackend
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+----------------------------------------
 
 The PDO backend can be used as a native PDO interface to databases which are connected to
 PHP via PDO. The garbage collection is implemented for this backend and should be called
@@ -307,7 +305,7 @@ to clean up hard disk space or memory.
 	cases of this cache.
 
 Options
-"""""""
+~~~~~~~
 
 +----------------+----------------------------------------+-----------+--------+---------+
 + Option         + Description                            + Mandatory + Type   + Default +
@@ -329,7 +327,7 @@ Options
 +----------------+----------------------------------------+-----------+--------+---------+
 
 TYPO3\\FLOW3\\Cache\\Backend\\RedisBackend
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+------------------------------------------
 
 `Redis`_ is a key-value storage/database. In contrast to memcached, it allows structured
 values.Data is stored in RAM but it allows persistence to disk and doesn't suffer from the
@@ -367,7 +365,7 @@ system. It is recommended to build this from the git repository. Currently redis
 	FLOW3 implementation changes to adapt to new versions.
 
 Options
-"""""""
+~~~~~~~
 +------------------+---------------------------------+-----------+-----------+-----------+
 + Option           + Description                     + Mandatory + Type      + Default   +
 +==================+=================================+===========+===========+===========+
@@ -402,7 +400,7 @@ Options
 +------------------+---------------------------------+-----------+-----------+-----------+
 
 TYPO3\\FLOW3\\Cache\\Backend\\MemcachedBackend
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+----------------------------------------------
 
 `Memcached`_ is a simple key/value RAM database which scales across multiple servers. To
 use this backend, at least one memcache daemon must be reachable, and the PHP module
@@ -410,7 +408,7 @@ memcache must be loaded. There are two PHP memcache implementations: memcache an
 memcached, only memcache is currently supported by this backend.
 
 Warning and Design Constraints
-""""""""""""""""""""""""""""""
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Memcached is by design a simple key-value store. Values must be strings and there is no
 relation between keys. Since the caching framework needs to put some structure in it to
@@ -454,6 +452,8 @@ all.
 	memcache is cheap (but could be read by third parties) and access to databases is
 	expensive.
 
+Options
+~~~~~~~
 +-------------+------------------------------------------+-----------+---------+---------+
 + Option      + Description                              + Mandatory + Type    + Default +
 +=============+==========================================+===========+=========+=========+
@@ -485,9 +485,7 @@ all.
 +-------------+------------------------------------------+-----------+---------+---------+
 
 TYPO3\\FLOW3\\Cache\\Backend\\ApcBackend
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-
+----------------------------------------
 
 `APC`_ is mostly known as an opcode cache for PHP source files but can be used to store
 user data as well. As main advantage the data can be shared between different PHP
@@ -516,12 +514,12 @@ heavy memory fragmentation.
 	party can read or tamper your data.
 
 Options
-"""""""
+~~~~~~~
 
 The APC backend has no options.
 
 TYPO3\\FLOW3\\Cache\\Backend\\TransientMemoryBackend
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+----------------------------------------------------
 
 The transient memory backend stores data in a local array. It is only valid for one
 request. This becomes handy if code logic needs to do expensive calculations or must look
@@ -536,30 +534,30 @@ available. The stored data adds to the memory consumed by the PHP process and ca
 ``memory_limit`` PHP setting.
 
 Options
-"""""""
+~~~~~~~
 
 The transient memory backend has no options.
 
 TYPO3\\FLOW3\\Cache\\Backend\\NullBackend
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-----------------------------------------
 
 The null backend is a dummy backend which doesn't store any data and always returns
 ``FALSE`` on ``get()``.
 
 Options
-"""""""
+~~~~~~~
 
 The null backend has no options.
 
 How to Use the Caching Framework
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+================================
 
 This section is targeted at developers who want to use caches for arbitrary needs. It is
 only about proper initialization, not a discussion about identifier, tagging and lifetime
 decisions that must be taken during development.
 
 Register a Cache
-""""""""""""""""
+----------------
 
 To register a cache it must be configured in *Caches.yaml* of a package:::
 
@@ -573,10 +571,10 @@ in this case) can be chosen freely, but keep possible name clashes in mind and a
 meaningful schema.
 
 Retrieve and Use a Cache
-""""""""""""""""""""""""
+------------------------
 
 Using depdendency injection
-+++++++++++++++++++++++++++
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 A cache is usually retrieved through dependency injection, either constructor or setter
 injection. Which is chosen depends on when you need the cache to be available. Keep in
@@ -611,7 +609,7 @@ To make it even simpler you could omit the setter method and annotate the member
 like ``get()``, ``set()`` and ``flushByTag()`` can be executed on ``$this->fooCache``.
 
 Using the CacheFactory
-++++++++++++++++++++++
+~~~~~~~~~~~~~~~~~~~~~~
 
 Of course you can also manually ask the CacheManager (have it injected for your
 convenience) for a cache:::
