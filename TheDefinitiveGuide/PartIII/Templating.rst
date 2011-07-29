@@ -2,6 +2,9 @@
 Templating
 ==========
 
+
+.. Author: Sebastian Kurfürst
+
 Templating is done in *Fluid*, which is a next-generation templating engine. It
 has several goals in mind:
 
