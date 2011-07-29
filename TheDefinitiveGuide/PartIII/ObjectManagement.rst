@@ -420,7 +420,7 @@ inject it to the authentication object.
 
 Dependencies on other objects can be declared in the object's configuration (see section
 about configuring objects) or they can be solved automatically (so called autowiring).
-Generally there are two modes of dependency injection supported by FLOW3: 
+Generally there are two modes of dependency injection supported by FLOW3:
 *Constructor Injection* and *Setter Injection*.
 
 Constructor Injection
@@ -464,7 +464,9 @@ The object framework can also be configured manually to inject a certain object 
 type. You'll have to do that either if you want to switch off autowiring or want to
 specify a configuration which differs from would be done automatically.
 
-*Example: Objects.yaml file for Constructor Injection*::
+*Example: Objects.yaml file for Constructor Injection*:
+
+.. code-block:: yaml
 
 	MyCompany\MyPackage\Foo:
 	  arguments:
@@ -503,7 +505,9 @@ injected into the authentication object. In this case, however, the injection on
 place after the class has been instantiated and a possible constructor method has been
 called. The necessary configuration for the above example looks like this:
 
-*Example: Objects.yaml file for Setter Injection*::
+*Example: Objects.yaml file for Setter Injection*:
+
+.. code-block:: yaml
 
 	MyCompany\MyPackage\Foo:
 	  properties:
@@ -555,21 +559,21 @@ injection in FLOW3.
 
 	* Constructor Injection makes a stronger dependency contract
 	* It enforces a determinate state of the depending object:
-		using setter Injection, the injected object is only available after the constructor
-		has been called
+	  using setter Injection, the injected object is only available after the constructor
+	  has been called
 
 	However, there might be situations in which constructor injection is not possible or
 	even cumbersome:
 
 	* If an object has many dependencies and maybe even many optional dependencies, setter
-		injection is a better solution.
+	  injection is a better solution.
 	* Subclasses are not always in control over the arguments passed to the constructor or
-		might even be incapable of overriding the original constructor (FLOW3's action
-		controller is such a case). Then setter injection is your only chance to get
-		dependencies injected.
+	  might even be incapable of overriding the original constructor (FLOW3's action
+	  controller is such a case). Then setter injection is your only chance to get
+	  dependencies injected.
 	* Setter injection can be helpful to avoid circular dependencies between objects.
 	* Setters provide more flexibility to unit tests than a fixed set of constructor
-		arguments
+	  arguments
 
 Property Injection
 ~~~~~~~~~~~~~~~~~~
@@ -744,11 +748,13 @@ while others are defined in *Objects.yaml* files.
 Objects.yaml
 ~~~~~~~~~~~~
 
-If a file named <filename>Objects.yaml</filename> exists in the *Configuration* directory
+If a file named *Objects.yaml* exists in the *Configuration* directory
 of a package, it will be included during the configuration process. The YAML file should
 stick to FLOW3's general rules for YAML-based configuration.
 
-*Example: Sample Objects.yaml file*::
+*Example: Sample Objects.yaml file*:
+
+.. code-block:: yaml
 
 	#                                                                        #
 	# Object Configuration for the MyPackage package                         #
@@ -909,7 +915,9 @@ name of a PHP interface.
 Finally we have to set which implementation of the ``MyCompany\MyPackage\GreeterInterface``
 should be active:
 
-*Example: Objects.yaml file for object type definition*::
+*Example: Objects.yaml file for object type definition*:
+
+.. code-block:: yaml
 
 	MyCompany\MyPackage\GreeterInterface:
 	  className: 'TYPO3\OtherPackage\GreeterWithCompliments'
@@ -931,12 +939,12 @@ Regardless of what injection type is used (constructor or setter injection), the
 three kinds of value which can be injected:
 
 * *value*: static value of a simple type. Can be string, integer, boolean or array and is
-	passed on as is.
+  passed on as is.
 * *object*: name of an objects (or object type) which represents a dependency.
-	Dependencies of the injected object are resolved and an instance of the object is
-	passed along.
+  Dependencies of the injected object are resolved and an instance of the object is
+  passed along.
 * *setting*: setting defined in one of the *Settings.\** files. A path separated by dots
-	"." specifies which setting to inject.
+  ``.``" specifies which setting to inject.
 
 Constructor Injection
 ~~~~~~~~~~~~~~~~~~~~~
@@ -966,7 +974,9 @@ argument is identified by its position, counting starts with 1.
 		}
 	}
 
-*Example: Sample configuration for Constructor Injection*::
+*Example: Sample configuration for Constructor Injection*:
+
+.. code-block:: yaml
 
 	MyCompany\MyPackage\Foo:
 	  arguments:
@@ -1014,7 +1024,9 @@ definition of setter injection:
 		}
 	}
 
-*Example: Sample configuration for Setter Injection*::
+*Example: Sample configuration for Setter Injection*:
+
+.. code-block:: yaml
 
 	MyCompany\MyPackage\Foo:
 	  properties:
@@ -1035,13 +1047,17 @@ In some cases it might be convenient to specify the name of the object to be inj
 the *settings* rather than in the objects configuration. This can be achieved by
 specifying the settings path instead of the object name:
 
-*Example: Injecting an object specified in the settings*::
+*Example: Injecting an object specified in the settings*:
+
+.. code-block:: yaml
 
 	MyCompany\MyPackage\Foo:
 	  properties:
 	    bar: { object: MyPackage.fooStuff.barImplementation }
 
-*Example: Settings.yaml of MyPackage*::
+*Example: Settings.yaml of MyPackage*:
+
+.. code-block:: yaml
 
 	fooStuff:
 	  barImplementation: MyCompany\MyPackage\Bars\ASpecialBar
@@ -1059,7 +1075,9 @@ this readily prepared cache should now be injected into another object. Sounds c
 With the objects configuration it is however possible to configure even that nested object
 structure:
 
-*Example: Nesting object configuration*::
+*Example: Nesting object configuration*:
+
+.. code-block:: yaml
 
 	MyCompany\MyPackage\Controller\StandardController:
 	  properties:
@@ -1086,7 +1104,9 @@ all constructor arguments and all methods named after the pattern ``inject*``.
 If, for some reason, autowiring is not wanted, it can be disabled by setting an option in
 the object configuration:
 
-*Example: Turning off autowiring support in Objects.yaml*::
+*Example: Turning off autowiring support in Objects.yaml*:
+
+.. code-block:: yaml
 
 	MyCompany\MyPackage\MyObject:
 	  autowiring: off;
@@ -1103,7 +1123,7 @@ Complex objects might require a custom factory which takes care of all important
 and dependencies. As we have seen previously, a cache consists of a frontend, a backend
 and configuration options for that backend. Instead of creating and configuring these
 objects on your own, you can use the ``TYPO3\FLOW3\Cache\CacheFactory`` which provides a
-convenient ``create`` method taking care of all the rest.::
+convenient ``create`` method taking care of all the rest::
 
 	$myCache = $cacheFactory->create('MyCache', 'TYPO3\FLOW3\Cache\VariableCache', ↩
 	    'TYPO3\FLOW3\Cache\Backend\File', array('cacheDirectory' => '/tmp'));
@@ -1111,7 +1131,9 @@ convenient ``create`` method taking care of all the rest.::
 It is possible to specify for each object if it should be created by a custom factory
 rather than the Object Builder. Consider the following configuration:
 
-*Example: Sample configuration for a Custom Factory*::
+*Example: Sample configuration for a Custom Factory*:
+
+.. code-block:: yaml
 
 	TYPO3\FLOW3\Cache\CacheInterface:
 	  factoryObjectName: TYPO3\FLOW3\Cache\CacheFactory
@@ -1122,7 +1144,9 @@ type ``CacheInterface`` needs to be instantiated. If arguments were passed to th
 ``getObject`` or ``create`` method, they will be passed through to the custom factory
 method:
 
-*Example: YAML configuration for a Custom Factory with default arguments*::
+*Example: YAML configuration for a Custom Factory with default arguments*:
+
+.. code-block:: yaml
 
 	TYPO3\FLOW3\Cache\CacheInterface:
 	  factoryObjectName: TYPO3\FLOW3\Cache\CacheFactory
@@ -1163,7 +1187,9 @@ The name of both methods is configurable per object for situations you don't hav
 over the name of your initialization method (maybe, because you are integrating legacy
 code):
 
-*Example: Objects.yaml configuration of the initialization and shutdown method*::
+*Example: Objects.yaml configuration of the initialization and shutdown method*:
+
+.. code-block:: yaml
 
 	MyCompany\MyPackage\MyObject:
 	  lifecycleInitializationMethod: myInitializeMethodname
