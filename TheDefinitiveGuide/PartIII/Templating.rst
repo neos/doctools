@@ -2,6 +2,9 @@
 Templating
 ==========
 
+.. in this template, the default highlighter is XML.
+
+.. highlight:: xml
 
 .. Author: Sebastian Kurfürst
 
@@ -31,10 +34,7 @@ resolves the template HTML file, and renders the template afterwards.
 
 Below, you'll find a snippet of a real-world template displaying a list of blog
 postings. Use it to check whether you find the template language intuitive (we
-hope you will ;-) )
-
-.. code-block:: html
-	:linenos:
+hope you will ;-) )::
 
 	{namespace f=TYPO3\Fluid\ViewHelpers}
 	<html>
@@ -85,7 +85,9 @@ A templating system would be quite pointless if it was not possible to display s
 external data in the templates. That's what variables are for:
 
 Suppose you want to output the title of your blog, you could write the following
-snippet into your controller::
+snippet into your controller:
+
+.. code-block:: php
 
 	$this->view->assign('blogTitle', $blog->getTitle());
 
@@ -105,11 +107,16 @@ you could repeat the above steps, but that would be quite inconvenient and hard 
 	highly encouraged.
 
 That's why the template language has a special syntax for object access, demonstrated
-below. A nicer way of expressing the above is the following::
+below. A nicer way of expressing the above is the following:
+
+.. code-block:: php
 
 	// This should go into the controller:
 	$this->view->assign('blog', $blog);
-	// This should go into the template:
+
+.. code-block:: xml
+
+	<!-- This should go into the template: -->
 	<h1>This blog is called {blog.title}, written by {blog.author}</h1>
 
 Instead of passing strings to the template, we are passing whole objects around
@@ -384,7 +391,9 @@ This is the concept which makes Fluid extremely versatile and extensible.
 If you want to create a view helper which you can call from your template (as a
 tag), you just write a plain PHP class which needs to inherit from
 ``TYPO3\Fluid\Core\AbstractViewHelper`` (or its subclasses). You need to implement
-only one method to write a view helper::
+only one method to write a view helper:
+
+.. code-block:: php
 
 	public function render()
 
@@ -436,13 +445,17 @@ It needs two arguments:
 * ``each``: Will be set to some object or array which can be iterated over.
 * ``as``: The name of a variable which will contain the current element being iterated over
 
-It then should do the following (in pseudocode)::
+It then should do the following (in pseudocode):
+
+.. code-block:: php
 
 	foreach ($each as $$as) {
 	  // render everything between opening and closing tag
 	}
 
-Implementing this is fairly straightforward, as you will see right now::
+Implementing this is fairly straightforward, as you will see right now:
+
+.. code-block:: php
 
 	class ForViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper {
 	  /**
@@ -490,7 +503,9 @@ a ``<a href="...">`` tag. There are many ViewHelpers which work that way.
 Very often, you want to add a CSS class or a target attribute to an ``<a href="...">``
 tag. This often leads to repetitive code like below. (Don't look at the code too
 thoroughly, it should just demonstrate the boring and repetitive task one would
-have without the ``AbstractTagBasedViewHelper``)::
+have without the ``AbstractTagBasedViewHelper``):
+
+.. code-block:: php
 
 	class ActionViewHelper extends \TYPO3\Fluid\Core\AbstractViewHelper {
 	  public function initializeArguments() {
@@ -523,7 +538,9 @@ inside ``initializeArguments()``:
 Inside the ``AbstractTagBasedViewHelper``, there is a ``TagBuilder`` available
 (with ``$this->tag``) which makes building a tag a lot more straightforward.
 
-With the above methods, the ``Link\ActionViewHelper`` from above can be condensed as follows::
+With the above methods, the ``Link\ActionViewHelper`` from above can be condensed as follows:
+
+.. code-block:: php
 
 	class ActionViewHelper extends \TYPO3\\F3\Fluid\Core\AbstractViewHelper {
 		public function initializeArguments() {
@@ -577,7 +594,9 @@ argument called ``additionalAttributes`` which allows you to add arbitary HTML
 attributes to the tag.
 
 If the link tag from above needed a new attribute called ``fadeDuration``, which
-is not part of HTML, you could do that as follows::
+is not part of HTML, you could do that as follows:
+
+.. code-block:: xml
 
 	<f:link.action ... additionalAttributes="{fadeDuration : 800}">
 		Link with fadeDuration set
@@ -591,7 +610,9 @@ AbstractConditionViewHelper
 If you want to build some kind of ``if/else`` condition, you should base the ViewHelper
 on the ``AbstractConditionViewHelper``, as it gives you convenient methods to render
 the ``then`` or ``else`` parts of a ViewHelper. Let's look at the ``<f:if>``-ViewHelper
-for a usage example, which should be quite self-explanatory::
+for a usage example, which should be quite self-explanatory:
+
+.. code-block:: php
 
 	class IfViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractConditionViewHelper {
 
