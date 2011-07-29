@@ -83,7 +83,17 @@ exclude_patterns = ['_build']
 # The name of the Pygments (syntax highlighting) style to use.
 pygments_style = 'sphinx'
 
+
+# Configure PHP syntax highlighting
+# all textsnippets will be PHP by default
 highlight_language = 'php'
+
+# ... and we do not want to include <?php ... ?> in the PHP code snippets.
+from sphinx.highlighting import lexers
+from pygments.lexers.web import PhpLexer
+lexers['php'] = PhpLexer(startinline=True)
+
+
 
 # A list of ignored prefixes for module index sorting.
 #modindex_common_prefix = []
