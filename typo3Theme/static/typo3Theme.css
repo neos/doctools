@@ -9,3 +9,12 @@ div.header div.rel a {
 .highlight {
 	line-height:1em;
 }
+
+div.sidebar a.current {
+	font-weight: bold;
+}
+div.sidebar.sidebarFixed .sidebarInner {
+	position:fixed;
+	top:0px;
+	width:20em; /* like .sidebar */
+}
