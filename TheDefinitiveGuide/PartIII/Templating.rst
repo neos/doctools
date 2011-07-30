@@ -2,11 +2,18 @@
 Templating
 ==========
 
-.. in this template, the default highlighter is XML.
+.. ============================================
+.. Meta-Information for this chapter
+.. ---------------------------------
+.. Author: Sebastian Kurfürst
+.. Converted to ReST by: Sebastian Kurfürst
+.. Updated for 1.0 beta1: YES
+.. TODOs: ViewHelper Reference extracted from PHPDoc
+.. ============================================
+
+.. in this template, the default highlighter is XML:
 
 .. highlight:: xml
-
-.. Author: Sebastian Kurfürst
 
 Templating is done in *Fluid*, which is a next-generation templating engine. It
 has several goals in mind:

@@ -2,6 +2,15 @@
 Aspect-Oriented Programming
 ===========================
 
+.. ============================================
+.. Meta-Information for this chapter
+.. ---------------------------------
+.. Author: Robert Lemke
+.. Converted to ReST by: Christian Müller
+.. Updated for 1.0 beta1: NO
+.. TODOs: none
+.. ============================================
+
 Introduction
 ============
 

@@ -2,6 +2,15 @@
 Object Framework
 ================
 
+.. ============================================
+.. Meta-Information for this chapter
+.. ---------------------------------
+.. Author: Robert Lemke
+.. Converted to ReST by: Rens Admiraal
+.. Updated for 1.0 beta1: NO
+.. TODOs: none
+.. ============================================
+
 The lifecycle of objects are managed centrally by the object framework. It offers
 convenient support for Dependency Injection and provides some additional features such as
 a caching mechanism for objects. Because all packages are built on this foundation it is

@@ -2,6 +2,15 @@
 Property Mapping
 ================
 
+.. ============================================
+.. Meta-Information for this chapter
+.. ---------------------------------
+.. Author: Sebastian Kurfürst
+.. Converted to ReST by: Sebastian Kurfürst
+.. Updated for 1.0 beta1: YES
+.. TODOs: extract TypeConverter reference from PHPDoc
+.. ============================================
+
 The Property Mappers task is to convert *simple types*, like arrays, strings, numbers,
 to objects. This is most prominently needed in the MVC framework: When a request
 arrives, it contains all its data as simple types, that is strings, and arrays.

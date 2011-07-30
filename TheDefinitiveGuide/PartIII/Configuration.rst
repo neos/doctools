@@ -2,6 +2,15 @@
 Configuration
 =============
 
+.. ============================================
+.. Meta-Information for this chapter
+.. ---------------------------------
+.. Author: Robert Lemke
+.. Converted to ReST by: Rens Admiraal
+.. Updated for 1.0 beta1: NO
+.. TODOs: none
+.. ============================================
+
 Configuration Framework
 =======================
 

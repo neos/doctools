@@ -1,6 +1,15 @@
 Getting Into the FLOW
 =====================
 
+.. ============================================
+.. Meta-Information for this chapter
+.. ---------------------------------
+.. Author: Robert Lemke
+.. Converted to ReST by: not needed
+.. Updated for 1.0 beta1: YES, by Robert Lemke
+.. TODOs: none
+.. ============================================
+
 What Is in This Guide?
 ----------------------
 

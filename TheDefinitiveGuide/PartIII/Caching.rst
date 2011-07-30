@@ -2,6 +2,15 @@
 Cache Framework
 ===============
 
+.. ============================================
+.. Meta-Information for this chapter
+.. ---------------------------------
+.. Author: Robert Lemke
+.. Converted to ReST by: Rens Admiraal
+.. Updated for 1.0 beta1: NO
+.. TODOs: none
+.. ============================================
+
 FLOW3 offers a caching framework to cache data. The system offers a wide variety of
 options and storage solutions for different caching needs. Each cache can be configured
 individually and can implement its own specific storage strategy.
