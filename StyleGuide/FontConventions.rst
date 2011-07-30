@@ -1,5 +1,5 @@
 Font conventions
-----------------
+================
 
 The following font conventions are used in FLOW3's documentation:
 
