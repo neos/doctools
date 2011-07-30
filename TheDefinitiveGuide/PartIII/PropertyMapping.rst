@@ -194,7 +194,7 @@ The following configuration options exist:
 
 * ``setTypeConverterOptions($typeConverterClassName, array $options)`` can be used
   to set multiple configuration options for the given ``TypeConverter``. This overrides
-  all previously set configuration options for the ``TypeConverter`.
+  all previously set configuration options for the ``TypeConverter``.
 
 All the configuration options work only for the current level, i.e. all of the
 above converter options would only work for the toplevel type converter. However,
@@ -278,7 +278,7 @@ object. Some of the steps will be described in detail afterwards.
 	#. Ask the type converter about the data type of the child property, by calling
 	   ``getTypeOfChildProperty()`` on the type converter.
 
-	#. Recursively invoke the ``PropertyMapper` to build the child object from the input data.
+	#. Recursively invoke the ``PropertyMapper`` to build the child object from the input data.
 
 #. Now, call the type converter again (method ``convertFrom()``), passing all (already
    built) child objects along. The result of this call is returned as the final result of the
