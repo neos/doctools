@@ -1,18 +1,15 @@
-===========
+﻿===========
 Persistence
 ===========
 
 .. ============================================
 .. Meta-Information for this chapter
 .. ---------------------------------
-.. Author: Robert Lemke or Karsten Dambekalns?
+.. Author: Karsten Dambekalns
 .. Converted to ReST by: Rens Admiraal
-.. Updated for 1.0 beta1: IN PROGRESS - Sebastian
+.. Updated for 1.0 beta1: YES, by Sebastian Kurfürst
 .. TODOs: none
 .. ============================================
-
-Persistence Framework
-=====================
 
 This chapter explains how to use object persistence in FLOW3. To do this, it focuses on
 the persistence based on the *Doctrine* 2 ORM first. There is another mechanism available,
@@ -27,7 +24,7 @@ to FLOW3. It is explained seperately later in the chapter.
 	questions this documentation might leave open.
 
 Introductory Example
---------------------
+====================
 
 Let's look at the following example as an introduction to how FLOW3 handles persistence.
 We have a domain model of a Blog, consisting of Blog, Post, Comment and Tag objects:
@@ -45,32 +42,34 @@ look at the ``addPost()`` method of the ``Blog`` class shows:
 *Example: The Blog's addPost() method* ::
 
 	/**
-	 * @param \TYPO3\Blog\Domain\Post $post
+	 * @param \TYPO3\Blog\Domain\Model\Post $post
 	 * @return void
 	 */
-	public function addPost(\TYPO3\Blog\Domain\Post $post) {
+	public function addPost(\TYPO3\Blog\Domain\Model\Post $post) {
 	    $post->setBlog($this);
 	    $this->posts->add($post);
 	}
 
 The same principles are applied to the rest of the classes, resulting in an object tree of
 a blog object holding several posts, those in turn having references to their associated
-comments and tags. But now we need to make sure the Blog and the data in it are still
-available the next time we need them. In the good old days of programming you might have
+comments and tags.
+
+But now we need to make sure the ``Blog`` and the data in it are still available the next
+time we need them. In the good old days of programming you might have
 added some ugly database calls all over the system at this point. In the currently
-widespread practice of loving Active Record you'd still add save() methods to all or most
+widespread practice of loving Active Record you'd still add ``save()`` methods to all or most
 of your objects. But can it be even easier?
 
 To access an object you need to hold some reference to it. You can get that reference by
 creating an object or by following some reference to it from some object you already have.
 This leaves you at a point where you need to find that "first object". This is done by
-using a Repository. A Repository is the librarian of your system, knowing about all the
-objects it manages. In our model the Blog is the entry point to our object tree,
-so we will add a BlogRepository, allowing us to find Blogs by the criteria we need.
+using a *Repository*. A Repository is the librarian of your system, knowing about all the
+objects it manages. In our model the ``Blog`` is the entry point to our object tree,
+so we will add a ``BlogRepository``, allowing us to find ``Blog`` instances by the criteria we need.
 
-Now, before we can find a Blog, we need to create and save one. What we do is create the
-object (using FLOW3's object factory) and add it to the BlogRepository. This will
-automagically persist your Blog and you can retrieve it again later. No save() call
+Now, before we can find a ``Blog``, we need to create and save one. What we do is create the
+object and add it to the ``BlogRepository``. This will
+automagically persist your Blog and you can retrieve it again later. No ``save()`` call
 needed. Oh, and the posts, comments and tags in your Blog are persisted as well, of
 course.
 
@@ -79,6 +78,7 @@ need to write tons of XML, a few annotations in your code are enough:
 
 *Example: Persistence-related annotations in the Blog class* ::
 
+	namespace TYPO3\Blog\Domain\Model;
 	/**
 	 * A Blog object
 	 *
@@ -100,20 +100,20 @@ need to write tons of XML, a few annotations in your code are enough:
 	     */
 	    protected $posts;
 
-	  ...
+	    ...
 
 	}
 
-The first annotation to note is the *@Entity* annotation, which tells the persistence
-framework it needs to persist Blog instances if they have been added to a Repository. In
-the Blog class we have some member variables, they are persisted as well by default. The
-persistence framework knows their types by looking at the *@var* annotation you use anyway
-when documenting your code (you do document your code, right?). The *@Column* annotation
-on ``$title`` is an optimisation since we allow only 80 chars anyway. In case of the
-$posts property the persistence framework persists the objects held in that
-ArrayCollection as independent objects in a one-to-many relationship. Apart from those
-annotations your domain object's code is completely unaware of the persistence
-infrastructure.
+The first annotation to note is the ``@Entity`` annotation, which tells the persistence
+framework it needs to persist ``Blog`` instances if they have been added to a Repository. In
+the ``Blog`` class we have some member variables, they are persisted as well by default. The
+persistence framework knows their types by looking at the ``@var??  annotation you use anyway
+when documenting your code (you do document your code, right?).
+
+The *@Column* annotation on ``$title`` is an optimisation since we allow only 80 chars
+anyway. In case of the ``$posts`` property the persistence framework persists the objects held
+in that ``ArrayCollection`` as independent objects in a one-to-many relationship. Apart from those
+annotations your domain object's code is completely unaware of the persistence infrastructure.
 
 Let's conclude by taking a look at the BlogRepository code:
 
@@ -142,10 +142,10 @@ methods in our repository, we can make use of the query building API:
 	     *
 	     * @param \TYPO3\Blog\Domain\Model\Tag $tag
 	     * @param \TYPO3\Blog\Domain\Model\Blog $blog The blog the post must refer to
-	     * @return \TYPO3\FLOW3\Persistence\QueryResultProxy The posts
+	     * @return \TYPO3\FLOW3\Persistence\QueryResultInterface The posts
 	     */
-	    public function findByTagAndBlog(\TYPO3\Blog\Domain\Model\Tag $tag, ⏎
-	    \TYPO3\Blog\Domain\Model\Blog $blog) {
+	    public function findByTagAndBlog(\TYPO3\Blog\Domain\Model\Tag $tag, 
+	      \TYPO3\Blog\Domain\Model\Blog $blog) {
 	        $query = $this->createQuery();
 	        return $query->matching(
 	            $query->logicalAnd(
@@ -153,15 +153,16 @@ methods in our repository, we can make use of the query building API:
 	                $query->contains('tags', $tag)
 	            )
 	        )
-	        ->setOrderings(array( ⏎
-	        	'date' => \TYPO3\FLOW3\Persistence\QueryInterface::ORDER_DESCENDING)
+	        ->setOrderings(array(
+	            'date' => \TYPO3\FLOW3\Persistence\QueryInterface::ORDER_DESCENDING)
 	        )
 	        ->execute();
 	    }
 	}
 
 If you like to do things the hard way you can get away with implementing
-``\TYPO3\FLOW3\Persistence\RepositoryInterface`` yourself.
+``\TYPO3\FLOW3\Persistence\RepositoryInterface`` yourself, though that is
+something the normal developer never has to do.
 
 Basics of Persistence in FLOW3
 ==============================
@@ -172,19 +173,19 @@ On the Principles of DDD
 From Evans, the rules we need to enforce include:
 
 * The root Entity has global identity and is ultimately responsible for checking
-	invariants.
+  invariants.
 * Root Entities have global identity. Entities inside the boundary have local identity,
-	unique only within the Aggregate.
+  unique only within the Aggregate.
 * Nothing outside the Aggregate boundary can hold a reference to anything inside, except
-	to the root Entity. The root Entity can hand references to the internal Entities to
-	other objects, but they can only use them transiently (within a single method or
-	block).
+  to the root Entity. The root Entity can hand references to the internal Entities to
+  other objects, but they can only use them transiently (within a single method or
+  block).
 * Only Aggregate Roots can be obtained directly with database queries. Everything else
-	must be done through traversal.
+  must be done through traversal.
 * Objects within the Aggregate can hold references to other Aggregate roots.
 * A delete operation must remove everything within the Aggregate boundary all at once.
 * When a change to any object within the Aggregate boundary is committed, all invariants
-	of the whole Aggregate must be satisfied.
+  of the whole Aggregate must be satisfied.
 
 On the relationship between adding and retrieving
 -------------------------------------------------
@@ -208,13 +209,13 @@ Conventions for File and Class Names
 To allow FLOW3 to detect the object type a repository is responsible for certain
 conventions need to be followed:
 
-* Domain models should reside in a *Model* directory
-* Repositories should reside in a *Repository* directory and be named
-	``<ModelName>Repository``
+* Domain models should reside in a *Domain/Model* directory
+* Repositories should reside in a *Domain/Repository* directory and be named
+  ``<ModelName>Repository``
 * Aside from ``Model`` versus ``Repository`` the qualified class class names should be the
-	same for corresponding classes
+  same for corresponding classes
 * Repositories must implement ``\TYPO3\FLOW3\Persistence\RepositoryInterface`` (which is
-	the case when extending ``\TYPO3\FLOW3\Persistence\Repository``)
+  the case when extending ``\TYPO3\FLOW3\Persistence\Repository``)
 
 *Example: Conventions for model and repository naming*
 
@@ -240,13 +241,13 @@ but does not fetch data of associated objects. This avoids massive amounts of ob
 being reconstituted if you have a large object tree. Instead it defers property thawing in
 objects until the point when those properties are really needed.
 
-The drawback of this: if you access associated objects, each access will fire a request to
-the perisistent storage now. So there might be situations when eager loading comes in
+The drawback of this: If you access associated objects, each access will fire a request to
+the persistent storage now. So there might be situations when eager loading comes in
 handy to avoid excessive database roundtrips. Eager loading is the default when using the
 *Generic* persistence mechanism and can be achieved for the Doctrine 2 ORM by using join
 operations  in DQL or specifying the fetch mode in the mapping configuration.
 
-*Doctrine* Persistence
+Doctrine Persistence
 ======================
 
 Doctrine 2 ORM is used by default in FLOW3. Aside from very few internal changes it
@@ -261,27 +262,27 @@ There are some rules imposed by Doctrine (and/or FLOW3) you need to follow for y
 entities (and value objects). Most of them are good practice anyway, and thus are not
 really restrictions.
 
-* Entity classes must not be final or contain final methods.
-* Persistent properties of any entity class should always be protected, not public,
-	otherwise lazy-loading might not work as expected.
+* Entity classes must not be ``final`` or contain ``final`` methods.
+* Persistent properties of any entity class should always be ``protected``, not ``public``,
+  otherwise lazy-loading might not work as expected.
 * Implementing ``__clone()`` or ``__wakeup()`` is not a problem with FLOW3, as the
-	instances always have an identity. If using your own identity properties, you must
-	wrap any code you intend to run in those methods in an identity check.
+  instances always have an identity. If using your own identity properties, you must
+  wrap any code you intend to run in those methods in an identity check.
 * Entity classes in a class hierarchy that inherit directly or indirectly from one another
-	must not have a mapped property with the same name.
+  must not have a mapped property with the same name.
 * Entities cannot use ``func_get_args()`` to implement variable parameters. The proxies
-	generated by Doctrine do not support this for performance reasons and your code might
-	actually fail to work when violating this restriction.
+  generated by Doctrine do not support this for performance reasons and your code might
+  actually fail to work when violating this restriction.
 
 Persisted instance variables must be accessed only from within the entity instance itself,
-not by clients of the entity. The state of the entity is available to clients only through
+not by clients of the entity. The state of the entity should be available to clients only through
 the entity’s methods, i.e. getter/setter methods or other business methods.
 
 Collection-valued persistent fields and properties must be defined in terms of the
 ``Doctrine\Common\Collections\Collection`` interface. The collection implementation type
 may be used by the application to initialize fields or properties before the entity is
-made persistent. Once the entity becomes managed (or detached), subsequent access must be
-through the interface type.
+made persistent. Once the entity becomes managed (or detached), subsequent access must
+happen through the interface type.
 
 Metadata mapping
 ----------------
@@ -326,7 +327,7 @@ with their name, scope and meaning:
 +                  +          + collections, the type is given in angle brackets.        +
 +------------------+----------+----------------------------------------------------------+
 + ``@transient``   + Variable + Makes the persistence framework ignore the variable.     +
-+                  +          + Neither will it's value be persisted, nor will it be     +
++                  +          + Neither will its value be persisted, nor will it be     +
 +                  +          + touched during reconstitution.                           +
 +------------------+----------+----------------------------------------------------------+
 + ``@identity``    + Variable + Marks the variable as being relevant for determining     +
@@ -342,24 +343,24 @@ Differences between FLOW3 and plain Doctrine
 The custom annotation driver used by FLOW3 to collect mapping information from the code
 makes a number of things easier, compared to plain Doctrine 2.
 
-* **@Entity**
+* ``@Entity``
 
-	* *repositoryClass* can be left out, if you follow the naming rules for your
-		repository classes explained above.
+	* ``repositoryClass`` can be left out, if you follow the naming rules for your
+	  repository classes explained above.
 
-* **@Table**
+* ``@Table``
 
-	* *name* does not default to the unqualified entity classname, but a name is generated
-		from classname, package key and more elements to make it unique.
+	* ``name`` does not default to the unqualified entity classname, but a name is generated
+	  from classname, package key and more elements to make it unique.
 
-* **@Id**
+* ``@Id``
 
 	* Can be left out, as it is automatically generated, this means you also do not need
-		*@GeneratedValue*. Every entity will get a property injected that is filled with
-		an UUID upon instantiation and used as technical identifier.
-	* If an *@Id* annotation is found, it is of course used as is and no magic will happen.
+	  ``@GeneratedValue``. Every entity will get a property injected that is filled with
+	  an UUID upon instantiation and used as technical identifier.
+	* If an ``@Id`` annotation is found, it is of course used as is and no magic will happen.
 
-* **@Column**
+* ``@Column``
 
 	Can usually be left out altogether, as the vital *type* information can be read from
 	the ``@var`` annotation on a class member.
@@ -370,21 +371,21 @@ makes a number of things easier, compared to plain Doctrine 2.
 		you must use ``@Column(type="text")`` if you intend to store more than 255
 		characters in a string property.
 
-* **@OneToOne**
-* **@OneToMany**
-* **@ManyToOne**
-* **@ManyToMany**
+* ``@OneToOne``
+* ``@OneToMany``
+* ``@ManyToOne``
+* ``@ManyToMany``
 
-	* *targetEntity* can be omitted, it is read from the ``@var`` annotation on the property
+	* ``targetEntity`` can be omitted, it is read from the ``@var`` annotation on the property
 
-* **@JoinTable**
-* **@JoinColumn**
+* ``@JoinTable``
+* ``@JoinColumn``
 
 	* Can usually be left out completely, the needed information is gathered automatically
 
 	* But *when using a self-referencing association*, you will need to help FLOW3 a
-		little, so it doesn't generate a join table with only one column. Here is an
-		example:
+	  little, so it doesn't generate a join table with only one column. Here is an
+	  example:
 
 		*Example: @JoinTable annotation for a self-referencing annotation*::
 
@@ -399,8 +400,8 @@ makes a number of things easier, compared to plain Doctrine 2.
 		after the identifiers of the associated entities - which is the same in this case.
 
 
-* **@DiscriminatorColumn**
-* **@DiscriminatorMap**
+* ``@DiscriminatorColumn``
+* ``@DiscriminatorMap``
 
 	* Can be left out, as they are automatically generated.
 
@@ -419,7 +420,7 @@ FLOW3 annotation driver.
 
 *Example: Annotation equivalents in FLOW3 and plain Doctrine 2*
 
-An entity with only the annotations needed in FLOW3:::
+An entity with only the annotations needed in FLOW3::
 
 	/**
 	 * @Entity
@@ -457,7 +458,7 @@ An entity with only the annotations needed in FLOW3:::
 	  protected $comments;
 
 The same code with all annotations needed in plain Doctrine 2 to result in the same
-metadata:::
+metadata::
 
 	/**
 	 * @Entity(repositoryClass="TYPO3\Blog\Domain\Model\Repository\PostRepository")
@@ -498,8 +499,8 @@ metadata:::
 	  protected $content;
 
 	  /**
-	   * @var \Doctrine\Common\Collections\ArrayCollection&lt;\TYPO3\Blog\Domain\Model\Comment>
-	   * @OneToMany(targetEntity="TYPO3\Blog\Domain\Model\Comment", mappedBy="post", ⏎
+	   * @var \Doctrine\Common\Collections\ArrayCollection<\TYPO3\Blog\Domain\Model\Comment>
+	   * @OneToMany(targetEntity="TYPO3\Blog\Domain\Model\Comment", mappedBy="post", 
 	    cascade={"all"}, orphanRemoval="true")
 	   * @OrderBy({"date" = "DESC"})
 	   */
@@ -508,11 +509,11 @@ metadata:::
 Schema management
 =================
 
-Doctrine offers a *Migrations* system as an add-on part of it's DBAL for versioning of
+Doctrine offers a *Migrations* system as an add-on part of its DBAL for versioning of
 database schemas and easy deployment of changes to them. There exist a number of commands
 in the FLOW3 CLI toolchain to create and deploy migrations.
 
-A Migration is a set of command sthat brings the schema from one version to the next. In
+A Migration is a set of commands that bring the schema from one version to the next. In
 the simplest form that means creating a new table, but it can be as complex as renaming a
 column and converting data from one format to another along the way. Migrations can also
 be reversed, so one can migrate up and down.
@@ -527,7 +528,9 @@ Query the schema status
 
 To learn about the current schema and migration status, run the following command:
 
-``./flow3 flow3:doctrine:migrationstatus``
+.. code-block:: bash
+
+	$ ./flow3 flow3:doctrine:migrationstatus
 
 This will produce output similar to the following, obviously varying depending on the
 actual state of schema and active packages:
@@ -563,7 +566,9 @@ Deploying migrations
 On a pristine database it is very easy to create the tables needed with the following
 command:
 
-``./flow3 flow3:doctrine:migrate``
+.. code-block:: bash
+
+	$ ./flow3 flow3:doctrine:migrate
 
 This will result in output that looks similar to the following:
 
@@ -588,9 +593,11 @@ This will result in output that looks similar to the following:
 
 This will deploy all migrations delivered with the currently active packages to the
 configured database. During that process it will display all the SQL statements executed
-and a summary of the deployed migrations at the and. You can do a dry run using
+and a summary of the deployed migrations at the and. You can do a dry run using:
 
-``./flow3 flow3:doctrine:migrate --dry-run``
+.. code-block:: bash
+
+	$ ./flow3 flow3:doctrine:migrate --dry-run
 
 This will result in output that looks similar to the following:
 
@@ -617,7 +624,9 @@ to see the same output but without any changes actually being done to the databa
 want to inspect and possibly adjust the statements that would be run and deploy manually,
 you can write to a file:
 
-``./flow3 flow3:doctrine:migrate --path <write/here/the.sql>``
+.. code-block:: bash
+
+	$ ./flow3 flow3:doctrine:migrate --path <write/here/the.sql>
 
 This will result in output that looks similar to the following:
 
@@ -636,11 +645,13 @@ This will result in output that looks similar to the following:
 Reverting migrations
 --------------------
 
-The migrate command takes an optional --version option. If given, migrations will be
+The migrate command takes an optional ``--version`` option. If given, migrations will be
 executed up or down to reach that version. This can be used to revert changes, even
 completely:
 
-``./flow3 flow3:doctrine:migrate --version <version> --dry-run``
+.. code-block:: bash
+
+	$ ./flow3 flow3:doctrine:migrate --version <version> --dry-run
 
 This will result in output that looks similar to the following:
 
@@ -670,8 +681,9 @@ Executing or reverting a specific migration
 
 Sometimes you need to deploy or revert a specific migration, this is possible as well.
 
-``./flow3 flow3:doctrine:migrationexecute --version <20110613223837> --direction
-<direction> --dry-run``
+.. code-block::
+
+	$ ./flow3 flow3:doctrine:migrationexecute --version <20110613223837> --direction <direction> --dry-run
 
 This will result in output that looks similar to the following:
 
@@ -700,7 +712,9 @@ Migrations make the schema match when a model changes, but how are migrations cr
 The basics are simple, but rest assured that database details and certain other things
 make sure you'll need to practice... The command to scaffold a migration is the following:
 
-``./flow3 flow3:doctrine:migrationgenerate``
+.. code-block::
+
+	$ ./flow3 flow3:doctrine:migrationgenerate
 
 This will result in output that looks similar to the following:
 
@@ -752,13 +766,13 @@ To create an empty migration skeleton, pass ``--diff-against-current 0`` to the 
 
 	The directory generated migrations are written to is only used when creating migrations.
 	The migrations visible to the system are read from *Migrations/<DbPlatForm>* in each
-	package. The <DbPlatform> represents the target platform, e.g. ``Mysql`` (as in Doctrine
+	package. The *<DbPlatform>* represents the target platform, e.g. ``Mysql`` (as in Doctrine
 	DBAL but with the first character uppercased).
 
 After you generated a migration, you will probably need to clean up a little, as there
 might be differences being picked up that are not useful or can be optimized. An example
-is when you rename a model: the migration will drop the old table and create the new one,
-but what you want instead is to rename the table. Also you must to make sure each finished
+is when you rename a model: The migration will drop the old table and create the new one,
+but what you want instead is to *rename* the table. Also you must to make sure each finished
 migration file only deals with one package and then move it to the *Migrations* directory
 in that package. This way different packages can be mixed and still a reasonable migration
 history can be built up.
@@ -790,8 +804,8 @@ Doctrine tries to keep existing data as far as possible, avoiding lossy actions.
 	Both commands also support ``--output <write/here/the.sql>`` to write the SQL
 	statements to the given file instead of executing it.
 
-*Generic* Persistence
-=====================
+Generic Persistence
+===================
 
 What is now called *Generic* Persistence, used to be the only persistence layer in FLOW3.
 Back in those days there was no ORM available that fit our needs. That being said, with
@@ -807,7 +821,9 @@ Switching to Generic Persistence
 --------------------------------
 
 To switch back to Generic persistence on SQLite using PDO you need to configure FLOW3 like
-this:::
+this:
+
+.. code-block:: yaml
 
 	# this needs to go into Objects.yaml
 
@@ -818,7 +834,7 @@ this:::
 	  scope: prototype
 	  className: 'TYPO3\FLOW3\Persistence\Generic\QueryResult'
 
-::
+.. code-block:: yaml
 
 	# this needs to go into Settings.yaml
 
@@ -826,30 +842,20 @@ this:::
 	  persistence:
 	    backendOptions:
 	      dataSourceName: 'sqlite:%FLOW3_PATH_DATA%Persistent/Objects.db'
-	      username: ~
-	      password: ~
+	      username: ''
+	      password: ''
 	      # set the following to null to have them ignored
-	      driver: ~
-	      path: ~
-	      dbname: ~
+	      driver: ''
+	      path: ''
+	      dbname: ''
 
 Using different database systems is possible, as long as there is a PDO driver available
-in PHP. The syntax to use for *dataSourceName* depends on the PDO driver used, consult the
+in PHP. The syntax to use for ``dataSourceName`` depends on the PDO driver used, consult the
 PHP documentation for that.
 
 When installing other backend packages, like CouchDB, the needed object configuration
 should be contained in them, for the connection settings, consult the package's
 documentation.
-
-Requirements and restrictions
------------------------------
-
-There are some rules imposed by FLOW3 you need to follow for your entities (and value
-objects). Most of them are good practice anyway, and thus are not really restrictions.
-
-* Entity classes must not be final or contain final methods.
-* Persistent properties of any entity class should always be protected, not public,
-	otherwise lazy-loading might not work as expected.
 
 Metadata mapping
 ----------------
@@ -912,7 +918,7 @@ To actually mark a property for lazy loading, you need to add the ``@lazy`` anno
 the property docblock in your code. Then the persistence layer will skip loading the data
 for that object and the object properties will be thawed when the object is actually used.
 
-:title:`How ``@lazy`` annotations interact`
+:title:`How @lazy annotations interact`
 
 +-----------+-----------+----------------------------------------------------------------+
 + Class     + Property  + Effect                                                         +
@@ -935,7 +941,7 @@ for that object and the object properties will be thawed when the object is actu
 +-----------+-----------+----------------------------------------------------------------+
 
 Schema management
-=================
+-----------------
 
 For the PDO backend that comes with FLOW3, the needed tables are set up automatically.
 When models are changed, no adjustments to the schema are needed. Effectively the schema
