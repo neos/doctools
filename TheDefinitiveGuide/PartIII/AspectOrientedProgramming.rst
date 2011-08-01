@@ -229,13 +229,19 @@ aspect.
 Pointcuts
 =========
 
-If we want to add security to foo, we need a method which carries out the security checks and a definition where and when this method should be executed. The method is an advice which we're going to declare in a later section, the “where and when” is defined by a pointcut expression in a pointcut declaration.
+If we want to add security to foo, we need a method which carries out the
+security checks and a definition where and when this method should be executed.
+The method is an advice which we're going to declare in a later section, the
+“where and when” is defined by a pointcut expression in a pointcut declaration.
 
-You can either define the pointcut in the advice declaration or set up named pointcuts to help clarify their use.
+You can either define the pointcut in the advice declaration or set up named
+pointcuts to help clarify their use.
 
-A named pointcut is represented by a method of an aspect class. It contains two pieces of information: The pointcut name, defined by the methodname, and the poincut expression, declared by an annotation. The following pointcut will match the execution of methods whose name starts with “delete”, no matter in which class they are defined:
-
-
+A named pointcut is represented by a method of an aspect class. It contains
+two pieces of information: The pointcut name, defined by the methodname,
+and the poincut expression, declared by an annotation. The following pointcut
+will match the execution of methods whose name starts with “delete”, no matter
+in which class they are defined:
 
 *Example: Declaration of a named pointcut*::
 
@@ -274,8 +280,8 @@ method()
 ********
 
 The ``method()`` designator matches on the execution of methods with a certain
-name. The parameter specifies the class and method name, regular expressions can
-be used for more flexibility [#]_. It follows the following scheme:
+name. The parameter specifies the class and method name, regular expressions 
+can be used for more flexibility [#]_. It follows the following scheme:
 
 ``method(public|protected ClassName->methodName())``
 
@@ -292,7 +298,8 @@ Matches all public methods in class \F3\MyPackage\MyObject:
 
 ``method(public F3\MyPackage\MyObject->.*())``
 
-Matches all delete methods (even protected and private ones) in any class of the package MyPackage:
+Matches all delete methods (even protected and private ones) in any class of
+the package MyPackage:
 
 ``method(F3\MyPackage\.*->delete.*())``
 
@@ -300,12 +307,15 @@ Matches all delete methods (even protected and private ones) in any class of the
 
 .. Note::
 	In other AOP frameworks, including AspectJ™ and Spring™, the method
-	designator does not exist. They rather use a more fine grained approach with
-	designators such as execution, call and cflow. As FLOW3 only supports
+	designator does not exist. They rather use a more fine grained approach
+	with designators such as execution, call and cflow. As FLOW3 only supports
 	matching to method execution join points anyway, we decided to simplify
 	things by allowing only a more general method designator.
 
-The ``method()`` designator also supports so called runtime evaluations, meaning you can specify values for the method's arguments. If those argument values do not match the adivce won't be executed. The following example should give you an idea how this works:
+The ``method()`` designator also supports so called runtime evaluations,
+meaning you can specify values for the method's arguments. If those argument
+values do not match the adivce won't be executed. The following example should
+give you an idea how this works:
 
 *Example runtime evaluations for the method() pointcut designator*
 
@@ -315,12 +325,18 @@ The ``method()`` designator also supports so called runtime evaluations, meaning
 
 -----
 
-Besides the method arguments you can also access the properties of the current object or a global object like the party that is currently authenticated. A detailed description of the runtime evaluations possibilites is described below in the section about the evaluate() pointcut filter.
+Besides the method arguments you can also access the properties of the current
+object or a global object like the party that is currently authenticated. 
+A detailed description of the runtime evaluations possibilites is described
+below in the section about the evaluate() pointcut filter.
 
 class()
 *******
 
-The ``class()`` designator matches on the execution of methods defined in a class with a certain name. The parameter specifies the class name, again regular expressions are allowed here. The ``class()`` designator follows this simple scheme:
+The ``class()`` designator matches on the execution of methods defined in a
+class with a certain name. The parameter specifies the class name, again
+regular expressions are allowed here. The ``class()`` designator follows this
+simple scheme:
 
 ``class(classname)``
 
@@ -337,7 +353,10 @@ Matches all methods in class F3\MyPackage\MyObject:
 within()
 ********
 
-The ``within()`` designator matches on the execution of methods defined in a class of a certain type. A type matches if the class is a subclass of or implements an interface of the given name. The ``within()`` designator has this simple syntax:
+The ``within()`` designator matches on the execution of methods defined in a
+class of a certain type. A type matches if the class is a subclass of or
+implements an interface of the given name. The ``within()`` designator has this
+simple syntax:
 
 ``within(type)``
 
@@ -358,7 +377,10 @@ Matches all methods in classes which are part of the Foo layer:
 classTaggedWith()
 *****************
 
-The ``classTaggedWith()`` designator matches on classes which are tagged with a certain annotation. As with class and method names, a regular expression can be used to describe the matching tags. The syntax of this designator is as follows:
+The ``classTaggedWith()`` designator matches on classes which are tagged with a
+certain annotation. As with class and method names, a regular expression can be
+used to describe the matching tags. The syntax of this designator is as 
+follows:
 
 ``classTaggedWith(tag)``
 
@@ -379,7 +401,10 @@ Matches all classes which are tagged with an annotation starting with "@cool":
 methodTaggedWith()
 ******************
 
-The methodTaggedWith() designator matches on methods which are tagged with a certain annotation. As with other pointcut designators, a regular expression can be used to describe the matching tags. The syntax of this designator is as follows:
+The methodTaggedWith() designator matches on methods which are tagged with a
+certain annotation. As with other pointcut designators, a regular expression
+can be used to describe the matching tags. The syntax of this designator is as
+follows:
 
 ``methodTaggedWith(tag)``
 
@@ -396,17 +421,21 @@ Matches all method which are tagged with an "@special" annotation:
 setting()
 *********
 
-The setting() designator matches if the given configuration option is set to TRUE, or if an optional given comparison value equals to its configured value. You can use this designator as follows:
+The setting() designator matches if the given configuration option is set to
+TRUE, or if an optional given comparison value equals to its configured value.
+You can use this designator as follows:
 
 *Example: setting() pointcut designator*
 
 -----
 
-Matches if "my.configuration.option" is set to TRUE in the current execution context:
+Matches if "my.configuration.option" is set to TRUE in the current execution
+context:
 
 ``setting(my.configuration.option)``
 
-Matches if "my.configuration.option" is equal to "AOP is cool" in the current execution context: (Note: single and double quotes are allowed)
+Matches if "my.configuration.option" is equal to "AOP is cool" in the current
+execution context: (Note: single and double quotes are allowed)
 
 ``setting(my.configuration.option = 'AOP is cool')``
 
@@ -415,7 +444,11 @@ Matches if "my.configuration.option" is equal to "AOP is cool" in the current ex
 filter()
 ********
 
-If the built-in filters don't suit your needs you can even define your own custom filters. All you need to do is create a class implementing the ``\F3\FLOW3\AOP\Pointcut\PointcutFilterInterface`` and develop your own logic for the ``matches()`` method. The custom filter can then be invoked by using the ``filter()`` designator:
+If the built-in filters don't suit your needs you can even define your own
+custom filters. All you need to do is create a class implementing the
+``\F3\FLOW3\AOP\Pointcut\PointcutFilterInterface`` and develop your own logic
+for the ``matches()`` method. The custom filter can then be invoked by using
+the ``filter()`` designator:
 
 ``filter(CustomFilterObjectName)``
 
@@ -432,25 +465,36 @@ If the current method matches is determined by the custom filter:
 evaluate()
 **********
 
-The evaluate() designator is used to execute advices depending on constraints that have to be evaluated during runtime. This could be a specific value for a method argument (see the method() designator) or checking a certain property of the current object or accessing a global object like the currently authenticated party. In general you can access object properties by the . syntax and global objects are registered under the current. keyword. Here is an example for the possibilities:
+The evaluate() designator is used to execute advices depending on constraints
+that have to be evaluated during runtime. This could be a specific value for a
+method argument (see the method() designator) or checking a certain property of
+the current object or accessing a global object like the currently
+authenticated party. In general you can access object properties by 
+the . syntax and global objects are registered under the current. keyword. Here
+is an example for the possibilities:
 
 *Example: evaluate() pointcut designator*
 
 -----
 
-Matches if the property name of the global party object (the currently authenticated party of the security framework) is equal to "Andi":
+Matches if the property name of the global party object (the currently
+authenticated party of the security framework) is equal to "Andi":
 
 ``evaluate(current.party.name == "Andi")``
 
-Matches if the property someProperty of someObject which is a property of the current object (the object the advice will be executed in) is equals to the name of the current party:
+Matches if the property someProperty of someObject which is a property of the
+current object (the object the advice will be executed in) is equals to the
+name of the current party:
 
 ``evaluate(this.someObject.someProperty == current.party.name)``
 
-Matches if the property someProperty of the current object is equal to one of the values TRUE, "someString" or the address of the current party:
+Matches if the property someProperty of the current object is equal to one of
+the values TRUE, "someString" or the address of the current party:
 
 ``evaluate(this.someProperty in (TRUE, "someString", current.party.address))``
 
-Matches if the accounts array in the current party object contains the account stored in the myAccount property of the current object:
+Matches if the accounts array in the current party object contains the account
+stored in the myAccount property of the current object:
 
 ``evaluate(current.party.accounts contains this.myAccount)``
 
@@ -463,15 +507,26 @@ Matches if at least one of the entries in the first array exists in the second o
 ------
 
 .. tip::
-	If you like you can enter more than one constraint in a single evaluate pointcut designator by separating them with a comma. The evaluate designator will only match, if all its conditions evaluated to TRUE.
+	If you like you can enter more than one constraint in a single evaluate
+	pointcut designator by separating them with a comma. The evaluate
+	designator will only match, if all its conditions evaluated to TRUE.
 	
 .. note::
-	Currently there is only the party object available under the current. namespace. In the future it should be possible to register arbitrary singletons to be available at this place.
+	Currently there is only the party object available under the current.
+	namespace. In the future it should be possible to register arbitrary
+	singletons to be available at this place.
 	
 Combining pointcut expressions
 ------------------------------
 
-All pointcut expressions mentioned in previous sections can be combined into a whole expression, just like you may combine parts to an overall condition in an if construct. The supported operators are “&&”, “||” and “!” and they have the same meaning as in PHP. Nesting expressions with parentheses is not supported but you may refer to other pointcuts by specifying their full name (i.e. class- and method name). This final example shows how to combine and reuse pointcuts and ultimately build a hierarchy of pointcuts which can be used conveniently in advice declarations:
+All pointcut expressions mentioned in previous sections can be combined into
+a whole expression, just like you may combine parts to an overall condition in
+an if construct. The supported operators are “&&”, “||” and “!” and they have
+the same meaning as in PHP. Nesting expressions with parentheses is not
+supported but you may refer to other pointcuts by specifying their full name
+(i.e. class- and method name). This final example shows how to combine and
+reuse pointcuts and ultimately build a hierarchy of pointcuts which can be used
+conveniently in advice declarations:
 
 *Example: Combining pointcut expressions*::
 	
@@ -530,14 +585,24 @@ All pointcut expressions mentioned in previous sections can be combined into a w
 Declaring advice
 ================
 
-With the aspect and pointcuts in place we are now ready to declare the advice. Remember that an advice is the actual action, the implementation of the concern you want to weave in to some target. Advices are implemented as interceptors which may run before and / or after the target method is called. Four advice types allow for these different kinds of interception: Before, After returning, After throwing and Around.
+With the aspect and pointcuts in place we are now ready to declare the advice.
+Remember that an advice is the actual action, the implementation of the concern
+you want to weave in to some target. Advices are implemented as interceptors
+which may run before and / or after the target method is called. Four advice
+types allow for these different kinds of interception: Before, After returning,
+After throwing and Around.
 
-Other than being of a certain type, advices always come with a pointcut expression which defines the set of join points the advice applies for. The pointcut expression may, as we have seen earlier, refer to other named pointcuts.
+Other than being of a certain type, advices always come with a pointcut
+expression which defines the set of join points the advice applies for. 
+The pointcut expression may, as we have seen earlier, refer to other
+named pointcuts.
 
 Before advice
 -------------
 
-A before advice allows for executing code before the target method is invoked. However, the advice cannot prevent the target method from being executed, nor can it take influence on other before advices at the same join point.
+A before advice allows for executing code before the target method is invoked.
+However, the advice cannot prevent the target method from being executed, nor
+can it take influence on other before advices at the same join point.
 
 *Example: Declaration of a before advice*::
 
@@ -555,7 +620,9 @@ A before advice allows for executing code before the target method is invoked. H
 After returning advice
 ----------------------
 
-The after returning advice becomes active after the target method normally returns from execution (i.e. it doesn't throw an exception). After returning advices may read the result of the target method, but can't modify it.
+The after returning advice becomes active after the target method normally
+returns from execution (i.e. it doesn't throw an exception). After returning
+advices may read the result of the target method, but can't modify it.
 
 *Example: Declaration of an after returning advice*::
 
@@ -573,7 +640,8 @@ The after returning advice becomes active after the target method normally retur
 After throwing advice
 ---------------------
 
-Similar to the “after returning” advice, the after throwing advice is invoked after method execution, but only if an exception was thrown.
+Similar to the “after returning” advice, the after throwing advice is invoked
+after method execution, but only if an exception was thrown.
 
 *Example: Declaration of an after throwing advice*::
 
@@ -590,7 +658,9 @@ Similar to the “after returning” advice, the after throwing advice is invoke
 After advice
 ------------
 
-The after advice is a combination of “after returning” and “after throwing”: These advices become active after method execution, no matter if an exception was thrown or not.
+The after advice is a combination of “after returning” and “after throwing”:
+These advices become active after method execution, no matter if an exception
+was thrown or not.
 
 *Example: Declaration of an after advice*::
 
@@ -606,7 +676,12 @@ The after advice is a combination of “after returning” and “after throwing
 Around advice
 -------------
 
-Finally, the around advice takes total control over the target method and intercepts it completely. It may decide to call the original method or not and even modify the result of the target method or return a completely different one. Obviously the around advice is the most powerful and should only be used if the concern can't be implemented with the alternative advice types. You might already guess how an around advice is declared:
+Finally, the around advice takes total control over the target method and
+intercepts it completely. It may decide to call the original method or not and
+even modify the result of the target method or return a completely 
+different one. Obviously the around advice is the most powerful and should only
+be used if the concern can't be implemented with the alternative advice types.
+You might already guess how an around advice is declared:
 
 *Example: Declaration of an around advice*::
 
@@ -622,26 +697,42 @@ Finally, the around advice takes total control over the target method and interc
 Implementing advice
 ===================
 
-The final step after declaring aspects, pointcuts and advices is to fill the advices with life. The implementation of an advice is located in the same method it has been declared. In that regard, an aspect class behaves like any other object in FLOW3 – you therefore can take advantage of dependency injection in case you need other objects to fulfill the task of your advice.
+The final step after declaring aspects, pointcuts and advices is to fill the
+advices with life. The implementation of an advice is located in the same
+method it has been declared. In that regard, an aspect class behaves like any
+other object in FLOW3 – you therefore can take advantage of dependency
+injection in case you need other objects to fulfill the task of your advice.
 
 Accessing join points
 ---------------------
 
-As you have seen in the previous section, advice methods always expect an argument of the type \F3\FLOW3\AOP\JoinPointInterface. This join point object contains all important information about the current join point. Methods like getClassName() or getMethodArguments() let the advice method classify the current context and enable you to implement advices in a way that they can be reused in different situations. For a full description of the join point object refer to the API documentation.
+As you have seen in the previous section, advice methods always expect an
+argument of the type \F3\FLOW3\AOP\JoinPointInterface. This join point object
+contains all important information about the current join point. Methods like
+getClassName() or getMethodArguments() let the advice method classify the
+current context and enable you to implement advices in a way that they can be
+reused in different situations. For a full description of the join point object
+refer to the API documentation.
 
 Advice chains
 -------------
 
-Around advices are a special advice type in that they have the power to completely intercept the target method. For any other advice type, the advice methods are called by the proxy class one after another. In case of the around advice, the methods form a chain where each link is responsible to pass over control to the next.
+Around advices are a special advice type in that they have the power to
+completely intercept the target method. For any other advice type, the advice
+methods are called by the proxy class one after another. In case of the around
+advice, the methods form a chain where each link is responsible to pass over
+control to the next.
 
-.. figure:: ../../Images/AOPFramework_AdviceChain.png
+.. figure:: ../../Images/TheDefinitiveGuide/PartIII/AOPFramework_AdviceChain.png
 
 	Control flow of an advice chain
 	
 Examples
 --------
 
-Let's put our knowledge into practice and start with a simple example. First we would like to log each access to methods within certain package. The following code will just do that:
+Let's put our knowledge into practice and start with a simple example. First we
+would like to log each access to methods within certain package. The following
+code will just do that:
 
 *Example: Simple logging with aspects*::
 	
@@ -686,9 +777,16 @@ Let's put our knowledge into practice and start with a simple example. First we 
 	}
 
 
-Note that we are using dependency injection for getting the system logger instance to stay independent from any specific logging implementation. We don't have to care about the kind of logger and where it comes from.
+Note that we are using dependency injection for getting the system logger
+instance to stay independent from any specific logging implementation. We don't
+have to care about the kind of logger and where it comes from.
 
-Finally an example for the implementation of an around advice: For a guest book, we want to reject the last name “Sarkosh” (because it should be “Skårhøj”), every time it is submitted. Admittedly you probably wouldn't implement this great feature as an aspect, but it's easy enough to demonstrate the idea. For illustration purposes, we don't define the pointcut expression in place but refer to a named pointcut.
+Finally an example for the implementation of an around advice: For a guest
+book, we want to reject the last name “Sarkosh” (because it should be
+“Skårhøj”), every time it is submitted. Admittedly you probably wouldn't
+implement this great feature as an aspect, but it's easy enough to demonstrate
+the idea. For illustration purposes, we don't define the pointcut expression in
+place but refer to a named pointcut.
 
 *Example: Implementation of an around advice*::
 	
@@ -725,23 +823,36 @@ Finally an example for the implementation of an around advice: For a guest book,
 	}
 
 
-Please note that if the last name is correct, we proceed with the remaining links in the advice chain. This is very important to assure that the original (target-) method is finally called. And don't forget to return the result of the advice chain ...
+Please note that if the last name is correct, we proceed with the remaining
+links in the advice chain. This is very important to assure that the original
+(target-) method is finally called. And don't forget to return the result of
+the advice chain ...
 
 Introductions
 =============
 
-Introductions (also known as Inter-type Declarations) allow to subsequently implement an interface in a given target class. The (usually) newly introduced methods (required by the new interface) can then be implemented by declaring an advice. If no implementation is defined, an empty placeholder method will be generated automatically to satisfy the contract of the introduced interface.
+Introductions (also known as Inter-type Declarations) allow to subsequently
+implement an interface in a given target class. The (usually) newly introduced
+methods (required by the new interface) can then be implemented by declaring an
+advice. If no implementation is defined, an empty placeholder method will be
+generated automatically to satisfy the contract of the introduced interface.
 
 Declaring introductions
 -----------------------
 
-Like advices, introductions are declared by annotations. But in contrast to advices, the anchor for an introduction declaration is a property of the aspect class. The annotation tag follows this syntax:
+Like advices, introductions are declared by annotations. But in contrast to
+advices, the anchor for an introduction declaration is a property of the aspect
+class. The annotation tag follows this syntax:
 
 ``@introduce NewInterfaceName, PointcutExpression``
 
-Although the PoincutExpression is just a normal pointcut expression, which may also refer to named pointcuts, be aware that only expressions filtering for classes make sense. You cannot use the method() pointcut designator in this context and will typically take the class() designator instead.
+Although the PoincutExpression is just a normal pointcut expression, which may
+also refer to named pointcuts, be aware that only expressions filtering for
+classes make sense. You cannot use the method() pointcut designator in this
+context and will typically take the class() designator instead.
 
-The following example introduces a new interface NewInterface to the class OldClass and also provides an implementation of the method newMethod.
+The following example introduces a new interface NewInterface to the class
+OldClass and also provides an implementation of the method newMethod.
 
 *Example: Declaring introductions*::
 	
@@ -788,7 +899,7 @@ AOP proxy mechanism
 
 The following diagram illustrates the building process of a proxy class:
 
-.. figure:: ../../Images/AOPFramework_ProxyBuildingProcess.png
+.. figure:: ../../Images/TheDefinitiveGuide/PartIII/AOPFramework_ProxyBuildingProcess.png
 
 	Proxy building process
 
@@ -797,7 +908,8 @@ The following diagram illustrates the building process of a proxy class:
 .. [#] SoC could, by the way, also mean “Self-organized criticality” or
 	“Service-oriented Computing” or refer to Google's “Summer of Code” ...
 .. [#] AOP was rather invented by Gregor Kiczalesand his team at the Xerox Palo
-	Alto Research Center. The original implementation was called AspectJ and is an extension to Java. It still serves as a de-facto standard and is now
+	Alto Research Center. The original implementation was called AspectJ and is
+	an extension to Java. It still serves as a de-facto standard and is now
 	maintained by the Eclipse Foundation.
 .. [#] Intercepting setting and retrieval of properties can easily be achieved
 	by declaring a before-, after- or around advice.

@@ -91,7 +91,7 @@ installations on Mac OS X this would be both *_www* instead of *www-data*.
 Testing the Installation
 ------------------------
 
-.. figure:: /Images/Welcome.png
+.. figure:: /Images/Quickstart/Welcome.png
 	:align: right
 	:width: 200pt
 	:alt: The FLOW3 Welcome Screen
