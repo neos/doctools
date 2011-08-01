@@ -1,3 +1,5 @@
+.. _ch-caching:
+
 ===============
 Cache Framework
 ===============

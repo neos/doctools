@@ -7,12 +7,9 @@ Configuration
 .. ---------------------------------
 .. Author: Robert Lemke
 .. Converted to ReST by: Rens Admiraal
-.. Updated for 1.0 beta1: IN PROGRESS -- Sebastian
-.. TODOs: see inside the file
+.. Updated for 1.0 beta1: DONE -- Sebastian Kurfürst
+.. TODOs: none
 .. ============================================
-
-Configuration Framework
-=======================
 
 Configuration is an important aspect of versatile applications. FLOW3 provides you with
 configuration mechanisms which have a small footprint and are convenient to use and
@@ -21,7 +18,7 @@ handles alls configuration tasks like reading configuration, configuration casca
 (later) also writing configuration.
 
 File Locations
-~~~~~~~~~~~~~~
+==============
 
 There are several locations where configuration files may be placed. All of them are
 scanned by the configuration manager during initialization and cascaded into a single
@@ -39,7 +36,7 @@ configuration tree. The following locations exist (listed in the order they are 
 	application context.
 
 Configuration Files
--------------------
+===================
 
 FLOW3 distinguishes between different types of configuration. The most important type of
 configuration are the settings, however other configuration types exist for special
@@ -53,13 +50,13 @@ defined in their own dedicated file:
 	are meant to change. Settings are the highest level of system configuration.
 * *Routes.yaml*
 	Contains routes configuration. This routing information is parsed and used by the MVC
-	Web Routing mechanism. Refer to the Routing chapter for more information.
+	Web Routing mechanism. Refer to the :ref:`ch-routing` chapter for more information.
 * *Objects.yaml*
 	Contains object configuration, i.e. options which configure objects and the
-	combination of those on a lower level. See the Object Manager chapter for more
+	combination of those on a lower level. See the :ref:`ch-object-management` chapter for more
 	information.
 * *Policy.yaml*
-	Contains the configuration of the security policies of the system. See the *Security*
+	Contains the configuration of the security policies of the system. See the :ref:`ch-security`
 	chapter for details.
 * *PackageStates.php*
 	Contains a list of packages and their current state, for  example if they are active
@@ -69,16 +66,13 @@ defined in their own dedicated file:
 	Contains a list of caches which are registered automatically. Caches defined in this
 	configuration file are registered in an early stage of the boot process and profit
 	from mechanisms such as automatic flushing by the File Monitor. See the chapter about
-	Caching for details.
-
-.. TODO: Insert reference to "Routing, "Object Manager", "Security", "Caches" in list above.
-
+	the :ref:`ch-caching` for details.
 
 Defining Configuration
-----------------------
+======================
 
 Configuration Format
-~~~~~~~~~~~~~~~~~~~~
+--------------------
 
 The format of FLOW3's configuration files is YAML. YAML is a well-readable format which is
 especially well-suited for defining configuration. The full specification among with many
@@ -110,7 +104,7 @@ which come with the FLOW3 distribution for getting more examples.
 	indentation using tab.
 
 Constants
-~~~~~~~~~
+---------
 
 Sometimes it is necessary to use values in your configuration files which are defined as
 PHP constants. These values can be included by special markers which are replaced by the
@@ -128,7 +122,7 @@ Some examples:
 	Will be replaced by the current PHP version.
 
 Accessing Settings
-------------------
+==================
 
 In almost all cases, FLOW3 will automatically provide you with the right configuration.
 
@@ -192,7 +186,7 @@ there are much better ways to get the desired information (e.g. ask the Object M
 object configuration).
 
 Configuration Cache
--------------------
+===================
 
 Parsing the YAML configuration files takes a bit of time which remarkably slows down the
 initialization of FLOW3. That's why all configuration is cached by default when FLOW3 is

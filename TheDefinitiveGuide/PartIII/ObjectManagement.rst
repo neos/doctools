@@ -1,3 +1,5 @@
+.. _ch-object-management:
+
 ================
 Object Framework
 ================

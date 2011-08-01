@@ -1,2 +1,4 @@
+.. _ch-security:
+
 Security
 ========
