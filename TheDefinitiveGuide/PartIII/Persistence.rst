@@ -2,6 +2,15 @@
 Persistence
 ===========
 
+.. ============================================
+.. Meta-Information for this chapter
+.. ---------------------------------
+.. Author: Robert Lemke or Karsten Dambekalns?
+.. Converted to ReST by: Rens Admiraal
+.. Updated for 1.0 beta1: IN PROGRESS - Sebastian
+.. TODOs: none
+.. ============================================
+
 Persistence Framework
 =====================
 
