@@ -28,7 +28,6 @@ Make sure to push to Gerrit, so you need the following configuration:
   git config remote.origin.pushurl ssh://[yourusername]@review.typo3.org:29418/FLOW3/Documentation.git
   git config remote.origin.push HEAD:refs/for/master
 
-
 Closing Notes
 =============
 
