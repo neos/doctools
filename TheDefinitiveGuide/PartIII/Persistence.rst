@@ -144,7 +144,7 @@ methods in our repository, we can make use of the query building API:
 	     * @param \TYPO3\Blog\Domain\Model\Blog $blog The blog the post must refer to
 	     * @return \TYPO3\FLOW3\Persistence\QueryResultInterface The posts
 	     */
-	    public function findByTagAndBlog(\TYPO3\Blog\Domain\Model\Tag $tag, 
+	    public function findByTagAndBlog(\TYPO3\Blog\Domain\Model\Tag $tag,
 	      \TYPO3\Blog\Domain\Model\Blog $blog) {
 	        $query = $this->createQuery();
 	        return $query->matching(
@@ -327,7 +327,7 @@ with their name, scope and meaning:
 +                  +          + collections, the type is given in angle brackets.        +
 +------------------+----------+----------------------------------------------------------+
 + ``@transient``   + Variable + Makes the persistence framework ignore the variable.     +
-+                  +          + Neither will its value be persisted, nor will it be     +
++                  +          + Neither will its value be persisted, nor will it be      +
 +                  +          + touched during reconstitution.                           +
 +------------------+----------+----------------------------------------------------------+
 + ``@identity``    + Variable + Marks the variable as being relevant for determining     +
@@ -500,7 +500,7 @@ metadata::
 
 	  /**
 	   * @var \Doctrine\Common\Collections\ArrayCollection<\TYPO3\Blog\Domain\Model\Comment>
-	   * @OneToMany(targetEntity="TYPO3\Blog\Domain\Model\Comment", mappedBy="post", 
+	   * @OneToMany(targetEntity="TYPO3\Blog\Domain\Model\Comment", mappedBy="post",
 	    cascade={"all"}, orphanRemoval="true")
 	   * @OrderBy({"date" = "DESC"})
 	   */
@@ -681,7 +681,7 @@ Executing or reverting a specific migration
 
 Sometimes you need to deploy or revert a specific migration, this is possible as well.
 
-.. code-block::
+.. code-block:: bash
 
 	$ ./flow3 flow3:doctrine:migrationexecute --version <20110613223837> --direction <direction> --dry-run
 
@@ -712,7 +712,7 @@ Migrations make the schema match when a model changes, but how are migrations cr
 The basics are simple, but rest assured that database details and certain other things
 make sure you'll need to practice... The command to scaffold a migration is the following:
 
-.. code-block::
+.. code-block:: bash
 
 	$ ./flow3 flow3:doctrine:migrationgenerate
 
