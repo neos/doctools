@@ -9,14 +9,14 @@ Object Framework
 .. ---------------------------------
 .. Author: Robert Lemke
 .. Converted to ReST by: Rens Admiraal
-.. Updated for 1.0 beta1: NO
-.. TODOs: none
+.. Updated for 1.0 beta1: YES, by Sebastian Kurfürst
+.. TODOs: see inline TODO comments
 .. ============================================
 
 The lifecycle of objects are managed centrally by the object framework. It offers
 convenient support for Dependency Injection and provides some additional features such as
 a caching mechanism for objects. Because all packages are built on this foundation it is
-important to understand the general concept of objects in FLOW3 and the container.
+important to understand the general concept of objects in FLOW3.
 
 .. tip::
 
@@ -50,7 +50,7 @@ only through the object framework.
 	As a general rule of thumb for those not developing the FLOW3 core itself but your very
 	own packages:
 
-		Use Dependency Injection whenever possible for retrieving singletons.
+		**Use Dependency Injection whenever possible for retrieving singletons.**
 
 Object Scopes
 -------------
@@ -62,54 +62,57 @@ Objects live in a specific scope. The most commonly used are *prototype* and *si
 +=====================+==================================================================+
 + singleton           + The object instance is unique during one request - each          +
 +                     + injection by the Object Manager or explicit call of              +
-+                     + ``getObject()`` returns the same instance. A request can be an   +
++                     + ``get()`` returns the same instance. A request can be an         +
 +                     + HTTP request or a run initiated from the command line.           +
 +---------------------+------------------------------------------------------------------+
 + prototype (default) + The object instance is not unique - each injection or call of    +
-+                     + the Object Factory's create method returns a fresh instance.     +
++                     + the Object Factory's ``create`` method returns a fresh instance. +
 +---------------------+------------------------------------------------------------------+
 + session             + The object instance is unique during the whole user session -    +
-+                     + each injection or ``getObject()`` call returns the same instance.+
++                     + each injection or ``get()`` call returns the same instance.      +
 +---------------------+------------------------------------------------------------------+
 
-In PHP, objects of the scope prototype are created with the ``new`` operator:::
 
-	$myFreshObject = new \MyCompany\MyPackage\MyClassName();
+.. admonition:: Background: Objects in PHP
 
-In contrast to Prototype, the Singleton design pattern ensures that only one instance of a
-class exists at a time. In PHP the Singleton pattern is often implemented by providing a
-static function (usually called ``getInstance``), which returns a unique instance of the
-class:::
+	In PHP, objects of the scope ``prototype`` are created with the ``new`` operator::
 
-	/**
-	 * Implementation of the Singleton pattern
-	 */
-	class ASingletonClass {
+		$myFreshObject = new \MyCompany\MyPackage\MyClassName();
 
-		protected static $instance;
+	In contrast to Prototype, the Singleton design pattern ensures that only one instance of a
+	class exists at a time. In PHP the Singleton pattern is often implemented by providing a
+	static function (usually called ``getInstance``), which returns a unique instance of the
+	class::
 
-		static public function getInstance() {
-			if (!is_object(self::$instance)) {
-				self::$instance = $this;
+		/**
+		 * Implementation of the Singleton pattern
+		 */
+		class ASingletonClass {
+
+			protected static $instance;
+
+			static public function getInstance() {
+				if (!is_object(self::$instance)) {
+					self::$instance = $this;
+				}
+				return self::$instance;
 			}
-			return self::$instance;
 		}
-	}
 
-Although this way of implementing the singleton will possibly not conflict with the Object
-Manager, it is counterproductive to the integrity of the system and might raise problems
-with unit testing (sometimes Singleton is referred to as an *Anti Pattern*).
-The above examples are *not recommended* for the use within FLOW3 applications.
+	Although this way of implementing the singleton will possibly not conflict with the Object
+	Manager, it is counterproductive to the integrity of the system and might raise problems
+	with unit testing (sometimes Singleton is referred to as an *Anti Pattern*).
+	The above examples are *not recommended* for the use within FLOW3 applications.
 
-The scope of an object is determined from its configuration (see also: Configuring
-Objects). The recommended way to specify the scope is the ``@scope`` annotation:::
+The scope of an object is determined from its configuration (see also :ref:`sect-configuring-objects`).
+The recommended way to specify the scope is the ``@scope`` annotation::
 
 	namespace MyCompany\MyPackage;
 
 	/**
 	 * A sample class
 	 *
-	 * @scope prototype
+	 * @scope singleton
 	 */
 	class SomeClass {
 	}
@@ -120,22 +123,27 @@ other configuration was found.
 Creating Prototypes
 -------------------
 
-The instantiation of classes must be handled by the object framework to assert full
-control over the object lifecycle. In order to instantiate a class or retrieve an existing
-instance of a class, you'll have to call an API function instead of using the ``new``
-operator. To create a fresh instance of an object just call the Object Manager's
-``create`` method:::
+To create prototype objects, just use the ``new`` operator as you are used to::
 
-	$myFreshObject = $objectManager->create('MyCompany\MyPackage\MyClassName');
+	$myFreshObject = new \MyCompany\MyPackage\MyClassName();
 
-The Object Factory (``\TYPO3\FLOW3\Object\ObjectManagerInterface``) itself is a Singleton
-and can be acquired like any other object of that scope (see next section).
+When you do this, some magic is going on behind the scenes which still makes sure the object
+you get back is managed by the object framework. Thus, all dependencies are properly injected
+into the object, lifecycle callbacks are fired, and you can use Aspect-Oriented Programming, etc.
 
-Analog to ``new`` it is possible to pass arguments a constructor of the class being
-instantiated - they are simply passed as additional arguments to the ``create`` method:::
+.. admonition:: Behind the scenes of the Object Framework
 
-	$myFreshObject = $objectManager->create('MyCompany\MyPackage\MyClassName', ↩
-	   'first argument', $secondArgument, 42, $fourthArgument);
+	In order to provide the functionality that you can just use ``new`` to create new
+	prototype objects, a lot of advanced things happen behind the scenes.
+
+	FLOW3 internally copies all classes to another file, and appends ``_Original`` to their
+	class name. Then, it creates a new class under the original name where all the magic is
+	happening.
+
+	However, you as a user do not have to deal with that. The only thing you need to remember
+	is using ``new`` for creating new Prototype objects. And you might know this from PHP ;-)
+
+
 
 Retrieving Singletons
 ---------------------
@@ -160,14 +168,12 @@ is dependency injection.
 
 		/**
 		 * Constructor.
-		 * The Object Factory will automatically be passed (injected) by the object
+		 * The Object Manager will automatically be passed (injected) by the object
 		 * framework on instantiating this class.
 		 *
-		 * @param \TYPO3\FLOW3\Object\ObjectManagerInterface $objectManager ↩
-				The object manager
+		 * @param \TYPO3\FLOW3\Object\ObjectManagerInterface $objectManager
 		 */
-		public function __construct( ↩
-				\TYPO3\FLOW3\Object\ObjectManagerInterface $objectManager) {
+		public function __construct(\TYPO3\FLOW3\Object\ObjectManagerInterface $objectManager) {
 			$this->objectManager = $objectManager;
 		}
 	}
@@ -182,90 +188,22 @@ in one of the later sections.
 Although dependency injection is what you should strive for, it might happen that you need
 to retrieve object instances directly. The ``ObjectManager`` provides methods for
 retrieving object instances for these rare situations. First, you need an instance of the
-``ObjectManager`` itself, again by taking advantage of constructor injection:::
+``ObjectManager`` itself, again by taking advantage of constructor injection::
 
-	public function __construct( ↩
-			\TYPO3\FLOW3\Object\ObjectManagerInterface $objectManager) {
+	public function __construct(\TYPO3\FLOW3\Object\ObjectManagerInterface $objectManager) {
 		$this->objectManager = $objectManager;
 	}
 
-To explicitly retrieve an object instance use the ``getObject()`` method:::
+.. note:: In the text, we commonly refer to the ``ObjectManager``. However, in your code, you should
+   always use the ``ObjectManagerInterface`` if you need an instance of the Object Manager injected.
 
-	$myObjectInstance = $objectManager->getObject('MyCompany\MyPackage\MyClassName');
+To explicitly retrieve an object instance use the ``get()`` method::
 
-Like with the ``ObjectManager``'s ``create`` method, it is possible to pass arguments to
-the constructor of the object class just by adding them to the ``getObject()`` call.
-However passing arguments to a Singleton object makes only sense on the first call when
-the instance is actually created. On all consecutive calls the arguments are just ignored.
+	$myObjectInstance = $objectManager->get('MyCompany\MyPackage\MyClassName');
 
-Passing constructor arguments
------------------------------
-
-In most cases an object class will live in the Singleton scope and at most requires a few
-dependencies passed to its constructor. However, there are times when it becomes necessary
-to pass dynamic values as constructor arguments, especially when the object represents an
-entity and its instances are not unique (Prototype scope). Consider the following
-classes:
-
-*Example: A simple address book*::
-
-	namespace TYPO3\Address;
-
-	/**
-	 * A simple address book
-	 */
-	class AddressBook {
-
-		protected $addresses = array();
-
-		public __construct(\TYPO3\iCal\iCalConnectorInterface $iCalConnector) {
-			...
-		}
-
-		public addAddress(\TYPO3\Address\Address $address) {
-			$this->addresses[] = $address;
-		}
-	}
-
-	/**
-	 * An address
-	 *
-	 * @scope prototype
-	 */
-	class Address {
-
-		public __construct($street, $zip, $town, $country) {
-			...
-		}
-	}
-
-This is admittedly not the fanciest implementation of an address book, but it should
-demonstrate two things:
-
-* The class ``\TYPO3\Address\AddressBook`` is supposed to be a Singleton and obviously
-	depends on a third object type ``\TYPO3\iCal\iCalConnectorInterface`` which is possibly
-	solved by Dependency Injection (will be explained in a later section).
-* The class ``\TYPO3\Address\Address`` represents the address entity and its instances
-	must not be unique - we surely want more than one address. The Address object also
-	expects a few parameters passed to its constructor.
-
-The following code demonstrates how this address book can be used and constructor
-arguments are passed to the Address entity:
-
-*Example: Passing constructor arguments*::
-
-		// Explicitly fetch a unique instance of the address book (but better use
-		// Dependency Injection ...):
-	$myAddressBook = $objectManager->getObject('TYPO3\Address\AddressBook');
-
-		// Create two new addresses and add them to the address book:
-	$newAddress = $objectManager->create('TYPO3\Address\Address', 'Tryggevældevej', ↩
-		    '2720', 'København', 'DK');
-	$myAddressbook->addAddress($newAddress);
-
-	$newAddress = $objectManager->create('TYPO3\Address\Address', 'An den Brodbänken', ↩
-		   '21335', 'Lüneburg', 'DE');
-	$myAddressbook->addAddress($newAddress);
+It is *not* possible to pass arguments to the constructor of the object, as the object might
+be already instanciated when you call ``get()``. If the object needs constructor arguments,
+these must be :ref:`configured in Objects.yaml <sect-objects-yaml>`.
 
 Lifecycle methods
 -----------------
@@ -273,33 +211,36 @@ Lifecycle methods
 The lifecycle of an object goes through different stages. It boils down to the following
 order:
 
-* Solve dependencies for constructor injection
-* Create an instance of the object class
-* Solve and inject dependencies for setter injection
-* Live a happy object-life and solve exciting tasks
-* Dispose the object instance
+#. Solve dependencies for constructor injection
+#. Create an instance of the object class, injecting the constructor dependencies
+#. Solve and inject dependencies for setter injection
+#. Live a happy object-life and solve exciting tasks
+#. Dispose the object instance
 
 Your object might want to take some action after certain of the above steps. Whenever one
 of the following methods exists in the object class, it will be invoked after the related
 lifecycle step:
 
-* No action after this step
-* During instantiation the function ``__construct()`` is called (by PHP itself),
-	dependencies are passed to the constructor arguments
-* After all dependencies have been injected (through constructor- or setter injection)
-	the object's initialization method is called. The name of this method is configurable
-	and it is called regardless of whether any dependencies have been injected or not
-* During the life of an object no special lifecycle methods are called
-* Before destruction of the object, the function ``shutdownObject`` is called. The name of
-	this method is also configurable.
-* On disposal, the function ``__destruct()`` is called (by PHP itself)
+#. No action after this step
+#. During instantiation the function ``__construct()`` is called (by PHP itself),
+   dependencies are passed to the constructor arguments
+#. After all dependencies have been injected (through constructor- or setter injection)
+   the object's ``initializeObject()`` method is called. The name of this method is configurable
+   inside *Objects.yaml*.
+
+   .. tip:: ``initializeObject()`` is also called if no dependencies were injected.
+
+#. During the life of an object no special lifecycle methods are called
+#. Before destruction of the object, the function ``shutdownObject()`` is called. The name of
+   this method is also configurable.
+#. On disposal, the function ``__destruct()`` is called (by PHP itself)
 
 We strongly recommend that you use the ``shutdownObject`` method instead of PHP's
 ``__destruct`` method for shutting down your object. If you used ``__destruct`` it might
 happen that important parts of the framework are already unavailable. Here's a simple
 example with all kinds of lifecycle methods:
 
-* Example: Sample class with lifecycle methods*::
+*Example: Sample class with lifecycle methods* ::
 
 	class Foo {
 
@@ -331,7 +272,7 @@ example with all kinds of lifecycle methods:
 		}
 	}
 
-::
+Output::
 
 	Constructing object ...
 	Initializing object ...
@@ -345,8 +286,8 @@ Object Framework API
 --------------------
 
 The object framework provides a lean API for registering, configuring and retrieving
-instances of objects. Some of the methods provided are exclusively used within the
-``FLOW3`` package or in unit tests and should possibly not be used elsewhere. By offering
+instances of objects. Some of the methods provided are exclusively used within FLOW3
+package or in test cases and should possibly not be used elsewhere. By offering
 Dependency Injection, the object framework helps you to avoid creating rigid
 interdependencies between objects and allows for writing code which is hardly or even not
 at all aware of the framework it is working in. Calls to the Object Manager should
@@ -355,36 +296,42 @@ therefore be the exception.
 For a list of available methods please refer to the API documentation of the interface
 ``TYPO3\FLOW3\Object\ObjectManagerInterface``.
 
-Object names and types
-----------------------
+Object Names vs. Class Names
+----------------------------
 
-By default, the name of an object is identical to the PHP class which contains the
+We first need to introduce some namings: A *class name* is the name of a PHP class, while an
+*object name* is an identifier which is used inside the object framework to identify a certain
+object.
+
+By default, the *object name* is identical to the PHP class which contains the
 object's code. A class called ``MyCompany\MyPackage\MyImplementation`` will be
 automatically available as an object with the exact same name. Every part of the system
 which asks for an object with a certain name will therefore - by default - get an instance
-of the class of that name. It is possible to replace the original implementation of an
+of the class of that name.
+
+It is possible to replace the original implementation of an
 object by another one. In that case the class name of the new implementation will
 naturally differ from the object name which stays the same at all times. In these cases it
-is important to be aware of the fine difference between an object name and a class name.
+is important to be aware of the fine difference between an *object name* and a *class name*.
 
-If the object name equals the name of a PHP interface, it is often referred to as a
-*object type*. An interface called ``MyCompany\MyPackage\MyInterface`` will be available
-as an object of the same name as long as there exists one class implementing that
-interface. Object types can be created and retrieved like regular objects:::
+All PHP interfaces for which only one implementation class exist are also automatically
+registered as *object names*, with the implementation class being returned when asked
+for an instance of the interface.
 
-	$objectTypeInstance = $objectManager->create('MyCompany\MyPackage\MyInterface');
+Thus, you can also ask for interface implementations::
 
-If exactly one class implements the ``TYPO3\SomePackage\SomeInterfaceName`` interface,
-``$otherObjectInstance`` will contain an instance of that class. If zero or more than one
-class implements the interface, the Object Factory will throw an exception.
+	$objectTypeInstance = $objectManager->get('MyCompany\MyPackage\MyInterface');
 
-The advantage of using object types instead of regular object names is the increased
+.. note:: If zero or more than one class implements the interface, the Object Manager will
+   throw an exception.
+
+The advantage of programming against interfaces is the increased
 flexibility: By referring to interfaces rather than classes it is possible to write code
 depending on other classes without the need to be specific about the implementation. Which
 implementation will actually be used can be set at a later point in time by simple means
 of configuration.
 
-Object dependencies
+Object Dependencies
 ===================
 
 The intention to base an application on a combination of packages and objects is to force
@@ -404,38 +351,37 @@ authentication object will need a logger for logging intrusion attempts and the 
 shop system hopefully consists of more than just one class. Whenever an object refers to
 another directly, it adds more complexity and removes flexibility by opening new
 interdependencies. It is very difficult or even impossible to reuse such hardwired classes
-and it becomes a nightmare testing them.
+and testing them becomes a nightmare.
 
 By introducing *Dependency Injection*, these interdependencies are minimized by inverting
 the control over resolving the dependencies: Instead of asking for the instance of an
 object actively, the depending object just gets one *injected* by the Object Manager.
 This methodology is also referred to as the "`Hollywood Principle`_": *Don't call us,
-we'll call you.*. It helps in the development of code with loose coupling and high
-cohesion – or in short: It makes you a better programmer.
+we'll call you.* It helps in the development of code with loose coupling and high
+cohesion --- or in short: It makes you a better programmer.
 
 In the context of the previous example it means that the authentication object announces
 that it needs a logger which implements a certain PHP interface (for example the
-``TYPO3\FLOW3\Log\Logger\BackendInterface``).
-The object itself has no control over what kind of logger backend (file-logger,
+``TYPO3\FLOW3\Log\LoggerInterface``).
+The object itself has no control over what kind of logger (file-logger,
 sms-logger, ...) it finally gets and it doesn't have to care about it anyway as long as it
 matches the expected API. As soon as the authentication object is instantiated, the object
-manager will resolve these dependencies, prepare an instance of a logger backend and
+manager will resolve these dependencies, prepare an instance of a logger and
 inject it to the authentication object.
 
-.. tip::
+.. admonition:: Reading Tip
 
 	`An article`_ by Jonathan Amsterdam discusses the difference between creating an object
 	and requesting one (i.e. using ``new`` versus using dependency injection). It
 	demonstrates why ``new`` should be considered as a low-level tool and outlines issues
 	with polymorphism. He doesn't mention dependency injection though ...
 
-Dependencies on other objects can be declared in the object's configuration (see section
-about configuring objects) or they can be solved automatically (so called autowiring).
+Dependencies on other objects can be declared in the object's configuration (see :ref:`sect-configuring-objects`) or they can be solved automatically (so called autowiring).
 Generally there are two modes of dependency injection supported by FLOW3:
 *Constructor Injection* and *Setter Injection*.
 
 Constructor Injection
-~~~~~~~~~~~~~~~~~~~~~
+---------------------
 
 With constructor injection, the dependencies are passed as constructor arguments to the
 depending object while it is instantiated. Here is an example of an object ``Foo`` which
@@ -458,8 +404,8 @@ depends on an object ``Bar``:
 		}
 	}
 
-So far there's nothing special about this class, it just makes sure that an instance of a
-class implementing the ``\MyCompany\MyPackage\BarInterface`` is passed to the constructor.
+So far there's nothing special about this class, the type hint just makes sure that an instance of
+a class implementing the ``\MyCompany\MyPackage\BarInterface`` is passed to the constructor.
 However, this is already a quite flexible approach because the type of ``$bar`` can be
 determined from outside by just passing one or the another implementation to the
 constructor.
@@ -488,7 +434,7 @@ be passed to the first argument of the constructor when an instance of the objec
 ``MyCompany\MyPackage\Foo`` is created.
 
 Setter Injection
-~~~~~~~~~~~~~~~~
+----------------
 
 With setter injection, the dependencies are passed by calling *setter methods* of the
 depending object right after it has been instantiated. Here is an example of the ``Foo``
@@ -512,7 +458,7 @@ class which depends on a ``Bar`` object - this time with setter injection:
 	}
 
 Analog to the constructor injection example, a ``BarInterface`` compatible object is
-injected into the authentication object. In this case, however, the injection only takes
+injected into the ``Foo`` object. In this case, however, the injection only takes
 place after the class has been instantiated and a possible constructor method has been
 called. The necessary configuration for the above example looks like this:
 
@@ -526,12 +472,14 @@ called. The necessary configuration for the above example looks like this:
 
 Unlike constructor injection, setter injection like in the above example does not offer
 the autowiring feature. All dependencies have to be declared explicitly in the object
-configuration. To save you from writing large configuration files, FLOW3 supports a second
-type of setter methods: By convention all methods whose name start with "inject" are
+configuration.
+
+To save you from writing large configuration files, FLOW3 supports a second
+type of setter methods: By convention all methods whose name start with ``inject`` are
 considered as setters for setter injection. For those methods no further configuration is
 necessary, dependencies will be autowired (if autowiring is not disabled):
 
-*Example: The preferred way of Setter Injection, using an inject method*::
+*Example: The preferred way of Setter Injection, using an inject method* ::
 
 	namespace MyCompany\MyPackage;
 
@@ -549,7 +497,7 @@ necessary, dependencies will be autowired (if autowiring is not disabled):
 	}
 
 Note the new method name ``injectBar`` - for the above example no further configuration is
-required (but possible). Using ``inject*`` methods is the preferred way for setter
+required. Using ``inject*`` methods is the preferred way for setter
 injection in FLOW3.
 
 .. note::
@@ -557,37 +505,35 @@ injection in FLOW3.
 	If both, a ``set*`` and a ``inject*`` method exist for the same property, the
 	``inject*`` method has precedence.
 
-.. note::
+Constructor- or Setter Injection?
+---------------------------------
 
-	**Constructor- or Setter Injection?**
+The natural question which arises at this point is *Should I use constructor- or setter
+injection?* There is no answer across-the-board --- it mainly depends on the situation
+and your preferences. The authors of the Java-based `Spring Framework`_ for example
+prefer Setter Injection for its flexibility. The more puristic developers of
+`PicoContainer`_ strongly plead for using Constructor Injection for its cleaner
+approach. Reasons speaking in favor of constructor injections are:
 
-	The natural question which arises at this point is *Should I use constructor- or setter
-	injection?*. There is no answer across-the-board – it mainly depends on the situation
-	and your preferences. The authors of the Java-based `Spring Framework`_ for example
-	prefer Setter Injection for its flexibility. The more puristic developers of
-	`PicoContainer`_ strongly plead for using Constructor Injection for its cleaner
-	approach. Reasons speaking in favor of constructor injections are:
+* Constructor Injection makes a stronger dependency contract
+* It enforces a determinate state of the depending object:
+  using setter Injection, the injected object is only available after the constructor
+  has been called
 
-	* Constructor Injection makes a stronger dependency contract
-	* It enforces a determinate state of the depending object:
-	  using setter Injection, the injected object is only available after the constructor
-	  has been called
+However, there might be situations in which constructor injection is not possible or
+even cumbersome:
 
-	However, there might be situations in which constructor injection is not possible or
-	even cumbersome:
-
-	* If an object has many dependencies and maybe even many optional dependencies, setter
-	  injection is a better solution.
-	* Subclasses are not always in control over the arguments passed to the constructor or
-	  might even be incapable of overriding the original constructor (FLOW3's action
-	  controller is such a case). Then setter injection is your only chance to get
-	  dependencies injected.
-	* Setter injection can be helpful to avoid circular dependencies between objects.
-	* Setters provide more flexibility to unit tests than a fixed set of constructor
-	  arguments
+* If an object has many dependencies and maybe even many optional dependencies, setter
+  injection is a better solution.
+* Subclasses are not always in control over the arguments passed to the constructor or
+  might even be incapable of overriding the original constructor.
+  Then setter injection is your only chance to get dependencies injected.
+* Setter injection can be helpful to avoid circular dependencies between objects.
+* Setters provide more flexibility to unit tests than a fixed set of constructor
+  arguments
 
 Property Injection
-~~~~~~~~~~~~~~~~~~
+------------------
 
 Setter injection is the academic, clean way to set dependencies from outside. However,
 writing these setters can become quite tiresome if all they do is setting the property.
@@ -612,10 +558,10 @@ For these cases FLOW3 provides support for *Property Injection*:
 		}
 	}
 
-You could say that property injection is the same like setter injection – just without the
+You could say that property injection is the same like setter injection --- just without the
 setter. The ``@inject`` annotation tells the object framework that the property is
 supposed to be injected and the ``@var`` annotation specifies the type. Note that property
-injection even works (and should only be used) with protected properties. The Objects
+injection even works (and should only be used) with protected properties. The *Objects.yaml*
 configuration for property injection is identical to the setter injection configuration.
 
 .. note::
@@ -635,15 +581,15 @@ can still switch back from property injection to setter injection without proble
 turns out that you really need it.
 
 Settings Injection
-~~~~~~~~~~~~~~~~~~
+------------------
 
 No, this headline is not misspelled. FLOW3 offers some convenient feature which allows for
 automagically injecting the settings of the current package without the need to configure
 the injection. If a class contains a method called ``injectSettings`` and autowiring is
 not disabled for that object, the Object Builder will retrieve the settings of the package
-the object belongs to and pass it to the injectSettings method.
+the object belongs to and pass it to the ``injectSettings`` method.
 
-*Example: the magic injectSettings method*:::
+*Example: the magic injectSettings method* ::
 
 	namespace MyCompany\MyPackage;
 
@@ -663,7 +609,11 @@ the object belongs to and pass it to the injectSettings method.
 The ``doSomething`` method will output the settings of the ``MyPackage`` package.
 
 Required and Optional Dependencies
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+----------------------------------
+
+.. warning:: The following section is not correct anymore for FLOW3 1.0
+
+.. TODO: update this part. it is plain wrong :) and then remove the above comment
 
 All dependencies defined in a constructor are, by its nature, required. If a dependency
 can't be solved by autowiring or by configuration, FLOW3's object builder will throw an
@@ -715,7 +665,7 @@ required. If the object builder can't autowire an object for this injection meth
 will now no longer throw an exception.
 
 Dependency Resolution
-~~~~~~~~~~~~~~~~~~~~~
+---------------------
 
 The dependencies between objects are only resolved during the instantiation process.
 Whenever a new instance of an object class needs to be created, the object configuration
@@ -724,12 +674,14 @@ only if all dependencies could be resolved, the object class is finally instanti
 the dependency injection takes place.
 
 During the resolution of dependencies it might happen that circular dependencies occur. If
-an object A requires an object B to be injected to its constructor and then again object B
-requires a object A likewise passed as a constructor argument, none of the two classes can
+an object ``A`` requires an object ``B`` to be injected to its constructor and then again object ``B``
+requires an object ``A`` likewise passed as a constructor argument, none of the two classes can
 be instantiated due to the mutual dependency. Although it is technically possible (albeit
 quite complex) to solve this type of reference, FLOW3's policy is not to allow circular
-dependencies at all. As a workaround you can use setter injection instead of Constructor
-Injection for either one or both of the objects causing the trouble.
+constructor dependencies at all. As a workaround you can use setter injection instead
+for either one or both of the objects causing the trouble.
+
+.. _sect-configuring-objects:
 
 Configuring objects
 ===================
@@ -740,8 +692,9 @@ registered as objects and an initial configuration is prepared. In a second step
 configuration sources are queried for additional configuration options. Definitions found
 at these sources are added to the base configuration in the following order:
 
-* If they exist, the *<PackageName>/Configuration/Objects.\** will be included.
-* Additional configuration defined in the global *Configuration/* directory is applied.
+* If they exist, the *<PackageName>/Configuration/Objects.yaml* will be included.
+* Additional configuration defined in the global *Configuration/Objects.yaml* directory is applied.
+* Additional configuration defined in the global *Configuration/<ApplicationScope>/Objects.yaml* directory is applied.
 
 Currently there are three important situations in which you want to configure objects:
 
@@ -749,15 +702,10 @@ Currently there are three important situations in which you want to configure ob
 * Set the active implementation for an object type
 * Explicitly define and configure dependencies to other objects
 
-Configuration Sources
----------------------
+.. _sect-objects-yaml:
 
-As already mentioned, the configuration for each object is compiled from different
-sources. Most options are set implicitly through reflection and analysis of annotations
-while others are defined in *Objects.yaml* files.
-
-Objects.yaml
-~~~~~~~~~~~~
+Configuring Objects Through Objects.yaml
+----------------------------------------
 
 If a file named *Objects.yaml* exists in the *Configuration* directory
 of a package, it will be included during the configuration process. The YAML file should
@@ -782,8 +730,8 @@ stick to FLOW3's general rules for YAML-based configuration.
 	    bar: { object: MyCompany\MyPackage\BarInterface }
 	    enableCache: { setting: MyPackage.Cache.enable }
 
-Annotations
-~~~~~~~~~~~
+Configuring Objects Through Annotations
+---------------------------------------
 
 A very convenient way to configure certain aspects of objects are annotations. You write
 down the configuration directly where it takes effect: in the class file. However, this
@@ -858,7 +806,7 @@ During initialization the above class will automatically be registered as the ob
 ``MyCompany\MyPackage\Greeter`` and is available to other objects. In the class code of
 another object you might find these lines:
 
-*Example: Code using the object MyCompany\MyPackage\Greeter*::
+*Example: Code using the object MyCompany\\MyPackage\\Greeter*::
 
 	  // Use setter injection for fetching an instance
 	  // of the \MyCompany\MyPackage\Greeter object:
@@ -908,13 +856,10 @@ The solution is to let both implementations implement the same interface:
 	}
 
 Instead of referring to the original implementation directly we can now refer to the
-interface. In this case we call the object name a *object type* because it contains the
-name of a PHP interface.
+interface.
 
-*Example: Code using the object type MyCompany\MyPackage\GreeterInterface*::
+*Example: Code using the interface MyCompany\MyPackage\GreeterInterface*::
 
-	  // Use setter injection for fetching an instance ↩
-	  // of the \MyCompany\MyPackage\Greeter object:
 	public function injectGreeter(\MyCompany\MyPackage\GreeterInterface $greeter) {
 		$this->greeter = $greeter;
 	}
@@ -951,11 +896,11 @@ three kinds of value which can be injected:
 
 * *value*: static value of a simple type. Can be string, integer, boolean or array and is
   passed on as is.
-* *object*: name of an objects (or object type) which represents a dependency.
+* *object*: object name which represents a dependency.
   Dependencies of the injected object are resolved and an instance of the object is
   passed along.
-* *setting*: setting defined in one of the *Settings.\** files. A path separated by dots
-  ``.``" specifies which setting to inject.
+* *setting*: setting defined in one of the *Settings.yaml* files. A path separated by dots
+  specifies which setting to inject.
 
 Constructor Injection
 ~~~~~~~~~~~~~~~~~~~~~
@@ -973,7 +918,7 @@ argument is identified by its position, counting starts with 1.
 		protected $identifier;
 		protected $enableCache;
 
-		public function __construct(\MyCompany\MyPackage\BarInterface $bar, $identifier, ↩
+		public function __construct(\MyCompany\MyPackage\BarInterface $bar, $identifier,
 			    $enableCache) {
 			$this->bar = $bar;
 			$this->identifier = $identifier;
@@ -998,7 +943,7 @@ argument is identified by its position, counting starts with 1.
 .. note::
 
 	It is usually not necessary to configure injection of objects explicitly. It is much
-	more convent to just declare the type of the constructor arguments (like
+	more convenient to just declare the type of the constructor arguments (like
 	``MyCompany\MyPackage\BarInterface`` in the above example) and let the autowiring
 	feature configure and resolve the dependencies for you.
 
@@ -1046,10 +991,12 @@ definition of setter injection:
 	    enableCache: { setting: "MyPackage.Cache.enable" }
 
 As you can see, it is important that a setter method with the same name as the property,
-preceded by "inject" or "set" exists. It doesn't matter though, if you choose "inject" or
-"set", except that "inject" has the advantage of being autowireable. As a rule of thumb we
-recommend using "inject" for required ependencies and values and "set" for optional
+preceded by ``inject`` or ``set`` exists. It doesn't matter though, if you choose ``inject`` or
+``set``, except that ``inject`` has the advantage of being autowireable. As a rule of thumb we
+recommend using ``inject`` for required ependencies and values and ``set`` for optional
 properties.
+
+.. TODO: is the last sentence still true? (Optional properties...)
 
 Injection of Objects Specified in Settings
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -1064,14 +1011,16 @@ specifying the settings path instead of the object name:
 
 	MyCompany\MyPackage\Foo:
 	  properties:
-	    bar: { object: MyPackage.fooStuff.barImplementation }
+	    bar: { object: MyCompany.MyPackage.fooStuff.barImplementation }
 
 *Example: Settings.yaml of MyPackage*:
 
 .. code-block:: yaml
 
-	fooStuff:
-	  barImplementation: MyCompany\MyPackage\Bars\ASpecialBar
+	MyCompany:
+	  MyPackage:
+	    fooStuff:
+	      barImplementation: MyCompany\MyPackage\Bars\ASpecialBar
 
 Nested Object Configuration
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -1120,15 +1069,19 @@ the object configuration:
 .. code-block:: yaml
 
 	MyCompany\MyPackage\MyObject:
-	  autowiring: off;
+	  autowiring: off
 
-Autowiring can also be switched on or off through the ``@autowiring`` annotation - either
+Autowiring can also be switched off through the ``@autowiring off`` annotation - either
 in the DocComment block of a whole class or of a single method. For the latter the
 annotation only has an effect when used in comment blocks of a constructor or of a method
 whose name starts with ``inject``.
 
 Custom Factories
-~~~~~~~~~~~~~~~~
+----------------
+
+.. warning:: The following section is not yet fully up-to-date for FLOW3 1.0.
+
+.. TODO: re-work the factories example and remove this TODO notice.
 
 Complex objects might require a custom factory which takes care of all important settings
 and dependencies. As we have seen previously, a cache consists of a frontend, a backend
@@ -1136,7 +1089,7 @@ and configuration options for that backend. Instead of creating and configuring 
 objects on your own, you can use the ``TYPO3\FLOW3\Cache\CacheFactory`` which provides a
 convenient ``create`` method taking care of all the rest::
 
-	$myCache = $cacheFactory->create('MyCache', 'TYPO3\FLOW3\Cache\VariableCache', ↩
+	$myCache = $cacheFactory->create('MyCache', 'TYPO3\FLOW3\Cache\VariableCache',
 	    'TYPO3\FLOW3\Cache\Backend\File', array('cacheDirectory' => '/tmp'));
 
 It is possible to specify for each object if it should be created by a custom factory
@@ -1152,8 +1105,8 @@ rather than the Object Builder. Consider the following configuration:
 
 From now on the Cache Factory's ``create`` method will be called each time an object of
 type ``CacheInterface`` needs to be instantiated. If arguments were passed to the
-``getObject`` or ``create`` method, they will be passed through to the custom factory
-method:
+``ObjectManagerInterface::get()`` method or defined in the configuration, they will be
+passed through to the custom factory method:
 
 *Example: YAML configuration for a Custom Factory with default arguments*:
 
@@ -1176,7 +1129,7 @@ The required second and third argument and the optional fourth parameter are aut
 built from the values defined in the object configuration.
 
 Name of Lifecycle Methods
-~~~~~~~~~~~~~~~~~~~~~~~~~
+-------------------------
 
 The default name of a lifecycle methods is ``initializeObject`` and ``shutdownObject``.
 If these methods exist, the initialization method will be called after the object has been
@@ -1189,10 +1142,10 @@ executed. That is why the initialization method gets a parameter, which is one o
 ``\TYPO3\FLOW3\Object\ObjectManagerInterface::INITIALIZATIONCAUSE_*`` constants:
 
 * ``\TYPO3\FLOW3\Object\ObjectManagerInterface::INITIALIZATIONCAUSE_CREATED``
-	if the object is newly created (i.e. the constructor has been called)
+  if the object is newly created (i.e. the constructor has been called)
 * ``\TYPO3\FLOW3\Object\ObjectManagerInterface::INITIALIZATIONCAUSE_RECREATED``
-	if the 	object has been recreated/reconstituted (i.e. the constructor has not been
-	called)
+  if the object has been recreated/reconstituted (i.e. the constructor has not been
+  called)
 
 The name of both methods is configurable per object for situations you don't have control
 over the name of your initialization method (maybe, because you are integrating legacy
