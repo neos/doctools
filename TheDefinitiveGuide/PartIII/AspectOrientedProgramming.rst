@@ -59,7 +59,7 @@ Let's imagine you want to log a message inside methods of your domain model:
 
 		/**
 		 * @inject
-		 * @var Examples\Forum\Logger\ApplicationLoggerInterface
+		 * @var \Examples\Forum\Logger\ApplicationLoggerInterface
 		 */
 		protected $applicationLogger;
 
@@ -119,7 +119,7 @@ and has many possibilities, even for complex scenarios.
 
 		/**
 		 * @inject
-		 * @var Examples\Forum\Logger\ApplicationLoggerInterface
+		 * @var \Examples\Forum\Logger\ApplicationLoggerInterface
 		 */
 		protected $applicationLogger;
 
@@ -131,7 +131,7 @@ and has many possibilities, even for complex scenarios.
 		 * @return void
 		 */
 		public function logDeletePost(\TYPO3\FLOW3\AOP\JoinPointInterface $joinPoint) {
-			$post = $joinPoint-getMethodArgument('post');
+			$post = $joinPoint->getMethodArgument('post');
 			$this->applicationLogger->log('Removing post ' . $post->getTitle(), LOG_INFO);
 		}
 
@@ -151,8 +151,8 @@ developers. Here they are:
 Aspect
 	An aspect is the part of the application which cross-cuts the core concerns
 	of multiple objects. In FLOW3, aspects are implemented as regular classes
-	which are tagged by the @aspect annotation. The methods of an aspect class
-	represent advices, the properties act as an anchor for introductions.
+	which are tagged by the ``@aspect`` annotation. The methods of an aspect class
+	represent advices, the properties may be used for introductions.
 
 Join point
 	A join point is a point in the flow of a program. Examples are the execution
@@ -175,8 +175,8 @@ Pointcut
 	methods in an aspect class as anchors for pointcut declarations.
 
 Pointcut expression
-	A poincut expression is the condition under which a joinpoint should match.
-	It may, for example, define that joinpoints only match on the execution of a
+	A poincut expression is the condition under which a join point should match.
+	It may, for example, define that join points only match on the execution of a
 	(target-) method with a certain name. Pointcut expressions are used in
 	pointcut- and advice declarations.
 
@@ -188,7 +188,8 @@ Introduction
 	An introduction redeclares the target class to implement an additional
 	interface. By declaring an introduction it is possible to introduce new
 	interfaces and an implementation of the required methods without touching
-	the code of the original class.
+	the code of the original class. Additionally introductions can be used to
+	add new properties to a target class.
 
 The following terms are related to advices:
 
@@ -244,10 +245,8 @@ implement in PHP compared to Java.
 
 FLOW3 pragmatically implements a reduced subset of AOP, which satisfies most
 needs of web applications. The join point model allows for intercepting method
-executions but provides no special support for advising field access [#]_. For
-the sake of simplicity and performance, pointcuts don't allow criteria which
-have to be evaluated at runtime (such as matching argument values of a method)
-and pointcut expressions are based on well-known regular expressions instead of
+executions but provides no special support for advising field access [#]_. 
+Pointcut expressions are based on well-known regular expressions instead of
 requiring the knowledge of a dedicated expression language. Pointcut filters and
 join point types are modularized and can be extended if more advanced
 requirements should arise in the future.
@@ -265,7 +264,7 @@ FLOW3 uses PHP's reflection capabilities to analyze declarations of aspects,
 pointcuts and advices and implements method interceptors as a dynamic proxy. In
 accordance to the GoF patterns [#]_, the proxy classes act as a placeholders for
 the target object. They are true subclasses of the original and override adviced
-methods by implementing a interceptor method. The proxy classes are generated
+methods by implementing an interceptor method. The proxy classes are generated
 automatically by the AOP framework and cached for further use. If a class has
 been adviced by some aspect, the Object Manager will only deliver instances of
 the proxy class instead of the original.
@@ -299,8 +298,8 @@ shows the definition of a hypothetical ``FooSecurity`` aspect:
 	}
 
 As you can see, ``\Example\MySecurityPackage\FooSecurityAspect`` is just a regular
-PHP class which may (actually must) contain methods and properties. What it
-makes it an aspect is solely the @aspect annotation mentioned in the class
+PHP class which may (actually must) contain methods and properties. What
+makes it an aspect is solely the ``@aspect`` annotation mentioned in the class
 comment. The AOP framework recognizes this tag and registers the class as an
 aspect.
 
@@ -380,10 +379,10 @@ Matches all public methods in class ``Example\MyPackage\MyObject``:
 
 ``method(public Example\MyPackage\MyObject->.*())``
 
-Matches all methods prefixed with "delete" (even protected and private ones) in
+Matches all methods prefixed with "delete" (even protected ones) in
 any class of the package ``Example.MyPackage``:
 
-``method(Example\MyPackage\.*->delete.*())``
+``method(Example\MyPackage.*->delete.*())``
 
 Matches all methods except injectors in class ``Example\MyPackage\MyObject``:
 
@@ -403,18 +402,18 @@ meaning you can specify values for the method's arguments. If those argument
 values do not match the adivce won't be executed. The following example should
 give you an idea how this works:
 
-*Example runtime evaluations for the method() pointcut designator*
+*Example: Runtime evaluations for the method() pointcut designator*
 
 -----
 
-``method(Example\MyPackage\MyClass->update(title == "FLOW3", overwrite == TRUE))``
+``method(Example\MyPackage\MyClass->update(title == "FLOW3", override == TRUE))``
 
 -----
 
 Besides the method arguments you can also access the properties of the current
 object or a global object like the party that is currently authenticated.
-A detailed description of the runtime evaluations possibilites is described
-below in the section about the evaluate() pointcut filter.
+A detailed description of the runtime evaluations possibilities is described
+below in the section about the ``evaluate()`` pointcut designator.
 
 class()
 *******
@@ -426,7 +425,7 @@ simple scheme:
 
 ``class(classname)``
 
-*Example class() pointcut designator*
+*Example: class() pointcut designator*
 
 -----
 
@@ -436,7 +435,7 @@ Matches all methods in class ``Example\MyPackage\MyObject``:
 
 Matches all methods in namespace "Service":
 
-``class(Example\MyPackage\Service\.*)``
+``class(Example\MyPackage\Service\\.*)``
 
 -----
 
@@ -483,11 +482,11 @@ follows:
 
 -----
 
-Matches all classes which are tagged with an "@entity" annotation:
+Matches all classes which are tagged with an ``@entity`` annotation:
 
 ``classTaggedWith(entity)``
 
-Matches all classes which are tagged with an annotation starting with "@cool":
+Matches all classes which are tagged with an annotation starting with ``@cool``:
 
 ``classTaggedWith(cool.*)``
 
@@ -496,7 +495,7 @@ Matches all classes which are tagged with an annotation starting with "@cool":
 methodTaggedWith()
 ******************
 
-The methodTaggedWith() designator matches on methods which are tagged with a
+The ``methodTaggedWith()`` designator matches on methods which are tagged with a
 certain annotation. As with other pointcut designators, a regular expression
 can be used to describe the matching tags. The syntax of this designator is as
 follows:
@@ -507,7 +506,7 @@ follows:
 
 -----
 
-Matches all method which are tagged with an "@special" annotation:
+Matches all method which are tagged with a ``@special`` annotation:
 
 ``methodTaggedWith(special)``
 
@@ -538,37 +537,16 @@ execution context: (Note: single and double quotes are allowed)
 
 -----
 
-filter()
-********
-
-If the built-in filters don't suit your needs you can even define your own
-custom filters. All you need to do is create a class implementing the
-``TYPO3\FLOW3\AOP\Pointcut\PointcutFilterInterface`` and develop your own logic
-for the ``matches()`` method. The custom filter can then be invoked by using
-the ``filter()`` designator:
-
-``filter(CustomFilterObjectName)``
-
-*Example: filter() pointcut designator*
-
------
-
-If the current method matches is determined by the custom filter:
-
-``filter(Example\MyPackage\MyCustomPointcutFilter)``
-
------
-
 evaluate()
 **********
 
-The evaluate() designator is used to execute advices depending on constraints
+The ``evaluate()`` designator is used to execute advices depending on constraints
 that have to be evaluated during runtime. This could be a specific value for a
-method argument (see the method() designator) or checking a certain property of
+method argument (see the ``method()`` designator) or checking a certain property of
 the current object or accessing a global object like the currently
 authenticated party. In general you can access object properties by
-the . syntax and global objects are registered under the current. keyword. Here
-is an example for the possibilities:
+the ``.`` syntax and global objects are registered under the ``current.`` keyword. Here
+is an example showing the possibilities:
 
 *Example: evaluate() pointcut designator*
 
@@ -580,7 +558,7 @@ authenticated party of the security framework) is equal to "Andi":
 ``evaluate(current.party.name == "Andi")``
 
 Matches if the property someProperty of someObject which is a property of the
-current object (the object the advice will be executed in) is equals to the
+current object (the object the advice will be executed in) is equal to the
 name of the current party:
 
 ``evaluate(this.someObject.someProperty == current.party.name)``
@@ -609,9 +587,30 @@ Matches if at least one of the entries in the first array exists in the second o
 	designator will only match, if all its conditions evaluated to TRUE.
 
 .. note::
-	Currently there is only the party object available under the current.
-	namespace. In the future it should be possible to register arbitrary
-	singletons to be available at this place.
+	It is possible to register arbitrary singletons to be available as global
+	objects with the FLOW3 configuration setting ``TYPO3.FLOW3.aop.globalObjects``.
+
+filter()
+********
+
+If the built-in filters don't suit your needs you can even define your own
+custom filters. All you need to do is create a class implementing the
+``TYPO3\FLOW3\AOP\Pointcut\PointcutFilterInterface`` and develop your own logic
+for the ``matches()`` method. The custom filter can then be invoked by using
+the ``filter()`` designator:
+
+``filter(CustomFilterObjectName)``
+
+*Example: filter() pointcut designator*
+
+-----
+
+If the current method matches is determined by the custom filter:
+
+``filter(Example\MyPackage\MyCustomPointcutFilter)``
+
+-----
+
 
 Combining pointcut expressions
 ------------------------------
@@ -827,7 +826,7 @@ Examples
 --------
 
 Let's put our knowledge into practice and start with a simple example. First we
-would like to log each access to methods within certain package. The following
+would like to log each access to methods within a certain package. The following
 code will just do that:
 
 *Example: Simple logging with aspects*::
@@ -976,7 +975,7 @@ The following example introduces a new interface ``NewInterface`` to the class
 		public function newMethodImplementation(\TYPO3\FLOW3\AOP\JoinPointInterface $joinPoint) {
 				// We call the advice chain, in case any other advice is declared for
 				// this method, but we don't care about the result.
-			$someResult = $joinPoint->getAdviceChain->proceed($joinPoint);
+			$someResult = $joinPoint->getAdviceChain()->proceed($joinPoint);
 
 			$a = $joinPoint->getMethodArgument('a');
 			$b = $joinPoint->getMethodArgument('b');
