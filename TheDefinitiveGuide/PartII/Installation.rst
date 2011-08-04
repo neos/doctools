@@ -38,7 +38,7 @@ following Unix command would download the FLOW3 distribution:
 
 *command line*::
 
-	git clone --recursive http://git.typo3.org/FLOW3/Distributions/Base.git \
+	git clone --recursive git://git.typo3.org/FLOW3/Distributions/Base.git \
 	/var/apache2/htdocs/tutorial/
 
 .. note::
