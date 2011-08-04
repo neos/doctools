@@ -435,7 +435,7 @@ Matches all methods in class ``Example\MyPackage\MyObject``:
 
 Matches all methods in namespace "Service":
 
-``class(Example\MyPackage\Service\\.*)``
+``class(Example\MyPackage\Service\.*)``
 
 -----
 
