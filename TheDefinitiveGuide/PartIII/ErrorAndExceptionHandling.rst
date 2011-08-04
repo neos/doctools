@@ -1,2 +1,2 @@
-Error and Exception Handling
-============================
+Error and Exception Handling (to be written)
+============================================
