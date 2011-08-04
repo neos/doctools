@@ -2,7 +2,7 @@
 @import url("share-web-font/stylesheet.css");
 
 div.header div.rel a {
-	color:white;
+	color: white;
 }
 
 /* Code examples should have a normal line height; makes them more readable */
@@ -10,11 +10,72 @@ div.header div.rel a {
 	line-height:1em;
 }
 
+p.caption {
+	font-style: italic;
+	text-align: center;
+	margin-bottom: 12px;
+}
+
+hr.docutils {
+	margin: 0.8em 0;
+	border: 0;
+	border-bottom: 1px solid #ccc;
+	height: 1px;
+}
+
+div.content {
+	margin-top: 3em;
+}
+
 div.sidebar a.current {
 	font-weight: bold;
 }
 div.sidebar.sidebarFixed .sidebarInner {
-	position:fixed;
-	top:0px;
-	width:20em; /* like .sidebar */
+	position: fixed;
+	top: 0px;
+	width: 20em; /* like .sidebar */
+}
+
+div.body {
+	text-align: left;
+}
+
+h2 {
+	border-bottom: 1px solid #CCC;
+}
+
+div.document h2 {
+	margin-top: 3em;
+}
+
+div.document h1 + .section > h2 {
+	margin-top: 0.7em;
+}
+
+div.document dt {
+	font-weight: bold;
+}
+
+body {
+	font-family: Helvetica, Arial, sans-serif;
+}
+
+div.header div.rel a,
+div.footer .left {
+	text-transform: none;
+}
+
+table.footnote td.label {
+	padding-right: 6px;
+}
+table.footnote td {
+	padding: 4px 0;
+}
+
+div.footer-wrapper {
+	background: #444;
+}
+
+div.footer .left a {
+	color: #fff;
 }
