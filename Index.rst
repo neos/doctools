@@ -4,7 +4,7 @@ FLOW3 Documentation
 Quickstart
 ----------
 
-Get a rough overview and a working example within 10 minutes: :doc:`Quickstart <Quickstart/GettingIntoTheFlow>`
+Get a rough overview and a working example within 10 minutes: :doc:`Quickstart <Quickstart/Index>`
 
 .. toctree::
 	:hidden:

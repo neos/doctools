@@ -1,6 +1,584 @@
 Quickstart
+==========
+
+.. sectionauthor:: Robert Lemke <robert@typo3.org>
+
+What Is in This Guide?
+----------------------
+
+This guided tour gets you started with FLOW3 by giving step-by-step instructions for the
+development of a small sample application. It will give you a first overview of the basic
+concepts and leaves the details to the full manual and more specific guides.
+
+Be warned that your head will be buzzed with several new concepts. But after you made your
+way through the whitewater you'll surely ride the wave in no time!
+
+What Is FLOW3?
+--------------
+
+FLOW3 is a PHP-based application framework which is especially well-suited for
+enterprise-grade applications. Its architecture and conventions keep your head clear and 
+let you focus on the essential parts of your application. Although stability, security and
+performance are all important elements of the framework's design, the fluent user
+experience is the one underlying theme which rules them all.
+
+As a matter of fact, FLOW3 is easier to learn for PHP beginners than for veterans. It
+takes a while to leave behind old paradigms and open up for new approaches. That being
+said, developing with FLOW3 is very intuitive and the basic principles can be learned
+within a few hours. Even if you don't decide to use FLOW3 for your next project, there are
+a lot of universal development techniques you can learn.
+
+.. tip::
+
+	This tutorial goes best with a Caffè Latte or, if it's afternoon or late night 
+	already, with a few shots of Espresso ...
+
+Downloading FLOW3
+-----------------
+
+Setting up FLOW3 is pretty straight-forward. As a minimum requirement you will need:
+
+* A web server (we recommend Apache with the *mod_rewrite* module enabled)
+* PHP 5.3.2 or later
+* A PDO-compatible database such as MySQL
+* Command line access
+
+Download the `FLOW3 Base Distribution`_ and unpack it in a directory which will be
+accessible by your web server. You will end up with a directory structure like this:
+
+.. code-block:: text
+
+	htdocs/               <-- depending on your web server
+	  Quickstart/         <-- depending on which directory you chose
+	    Build/
+	    Configuration/
+	      Settings.yaml.example
+	      ...
+	    Packages/
+	      Framework/
+	        TYPO3.FLOW3/
+	        ...
+	    Web/              <-- your virtual host root will later point to this
+	      .htaccess
+	      index.php
+	      flow3
+	      flow3.bat
+
+Setting File Permissions
+------------------------
+
+You will access FLOW3 from both, the command line and the web browser. In order to provide
+write access to certain directories for both, you will need to set the file permissions
+accordingly. But don't worry, this is simply done by changing to the FLOW3 base directory
+(``Quickstart`` in the above example) and calling the following command:
+
+.. code-block:: bash
+
+	./flow3 core:setfilepermissions john www-data www-data
+
+Please replace *john* by your own username. The second argument is supposed to be the
+username of your web server and the last one specifies the web server's group. For most
+installations on Mac OS X this would be both *_www* instead of *www-data*.
+
+.. note::
+
+	Setting file permissions is not necessary and not possible on Windows machines.
+
+Testing the Installation
+------------------------
+
+.. figure:: /Images/Quickstart/Welcome.png
+	:align: right
+	:width: 200pt
+	:alt: The FLOW3 Welcome Screen
+
+	The FLOW3 Welcome Screen
+
+If your system is configured correctly you should now be able to access the Welcome
+screen. Just point your browser to the ``Web`` directory of your FLOW3 installation,
+for example:
+
+.. code-block:: text
+
+	http://localhost/Quickstart/Web/
+
+The result should look similar to the screen you see in the screenshot. If something went
+wrong, it usually can be blamed on a misconfigured web server or insufficient file
+permissions.
+
+.. tip::
+
+	There are some friendly ghosts in our `IRC channel`_ and in the
+	`users mailing list`_ –  they will gladly help you out if describe your problem as
+	precisely as possible.
+
+.. rubric:: Some Note About Speed
+
+The first request will usually take quite a while because FLOW3 does a lot of heavy
+lifting in the background. It analyzes code, builds up reflection caches and applies
+security rules. During all the following examples you will work in the so called
+*Development Context*. It makes development very convenient but feels a lot slower than
+the *Production Context* – the one you will obviously use for the application in
+production.
+
+Kickstarting a Package
+----------------------
+
+The actual code of an application and its resources – such as images, style sheets and
+templates – are bundled into *packages*. Each package is identified by a globally unique
+package key, which consists of your company or domain name (the so called *vendor name*)
+and further parts you choose for naming the package.
+
+Let's create a *Demo* package for our fictive company *Acme*:
+
+.. code-block:: bash
+
+	$ ./flow3 kickstart:package Acme.Demo
+	Created .../Acme.Demo/Classes/Controller/StandardController.php
+	Created .../Acme.Demo/Resources/Private/Templates/Standard/Index.html
+
+The Kickstarter will create a new package directory in *Packages/Application/* resulting
+in the following structure:
+
+.. code-block:: text
+
+	Packages/
+	  Application/
+	    Acme.Demo/
+	      Classes/
+	      Configuration/
+	      Documentation/
+	      Meta/
+	      Resources/
+
+The :command:`kickstart:package` command also generates a sample controller which displays
+some content. You should be able to access it through the following URL:
+
+.. code-block:: text
+
+	http://localhost/Quickstart/Web/Acme.Demo
+
+Hello World
+-----------
+
+Let's use the *StandardController* for some more experiments. After opening the respective
+class file in *Packages/Application/Acme.Demo/Classes/Controller/* you should find the
+method *indexAction()* which is responsible for the output you've just seen in your web
+browser::
+
+	/**
+	 * Index action
+	 *
+	 * @return void
+	 */
+	public function indexAction() {
+		$this->view->assign('foos', array(
+			'bar', 'baz'
+		));
+	}
+
+Accepting some kind of user input is essential for most applications and FLOW3 does a
+great deal of processing and sanitizing any incoming data. Try it out – create a new
+action method like this one::
+
+	/**
+	 * Hello action
+	 *
+	 * @param string $name Your name
+	 * @return string The hello
+	 */
+	public function helloAction($name) {
+		return "Hello $name!";
+	}
+
+.. important::
+
+	Always make sure to properly document all your functions and class properties. This 
+	will not only help other developers to understand your code, but is also essential for
+	FLOW3 to work properly: In the above example FLOW3 will, for example, determine that
+	the expected type of the parameter *$name* is *string* and adjust some validation
+	rules accordingly.
+
+Now test the new action by passing it a name like in the following URL:
+
+.. code-block:: text
+
+	http://localhost/Quickstart/Web/Acme.Demo/Standard/hello?name=Robert
+
+The path segments of this URL tell FLOW3 to which controller and action the web request
+should be dispatched to. In our example the parts are:
+
+* *Acme.Demo* (package key)
+* *Standard* (controller name)
+* *hello* (action name)
+
+If everything went fine, you should be greeted by a friendly "`Hello John!`" – if that's
+the name you passed to the action. Also try leaving out the *name* parameter in the URL –
+FLOW3 will complain about a missing argument.
+
+Database Setup
+--------------
+
+One important design goal for FLOW3 was to let a developer focus on the business logic and
+work in a truly object-oriented fashion. While you develop a FLOW3 application, you will
+hardly note that content is actually stored in a database. Your code won't contain any
+SQL query and you don't have to deal with setting up table structures.
+
+But before you can store anything, you still need to set up a database and tell FLOW3 how
+to access it. The credentials and driver options need to be specified in the global 
+FLOW3 settings.
+
+After you have created an empty database and set up a user with sufficient access 
+rights, copy the file *Configuration/Settings.yaml.example* and save it as
+*Settings.yaml*. Open and adjust the file to your needs – for a common MySQL setup, it
+would look similar to this:
+
+.. code-block:: yaml
+
+	TYPO3:
+	  FLOW3:
+	    persistence:
+	     backendOptions:
+	      driver: 'pdo_mysql'
+	      dbname: 'phoenix'    # adjust to your database name
+	      user: 'root'         # adjust to your database user
+	      password: 'password' # adjust to your database password
+	      host: '127.0.0.1'    # adjust to your database host
+	      path: '127.0.0.1'    # adjust to your database host
+	      port: 3306
+
+.. note::
+
+	If you have never written :term:`YAML`, there are two things you should know at least:
+
+	* indentation has a meaning: by different levels of indentation, a structure is
+	  defined.
+	* spaces, no tabs: you must indent with exactly 2 spaces per level, don't use tabs.
+
+If you configured everything correctly, the following command will create the initial
+table structure needed by FLOW3:
+
+.. code-block:: bash
+
+	$ ./flow3 doctrine:migrate
+	Migrating up to 2011xxxxx00 from 0
+
+	++ migrating 2011xxxxx00
+		-> CREATE TABLE flow3_resource_resourcepointer (hash VARCHAR(255) NOT NULL, PRIMARY
+		-> CREATE TABLE flow3_resource_resource (flow3_persistence_identifier VARCHAR(40)
+	...
+	++ finished in 0.76
+
+
+Storing Objects
+---------------
+
+Let's take a shortcut here – instead of programming your own controller, model and view
+just generate some example with the kickstarter:
+
+.. code-block:: bash
+
+	$ ./flow3 kickstart:actioncontroller --generate-actions --generate-related Acme.Demo CoffeeBean
+	Created .../Acme.Demo/Classes/Domain/Model/CoffeeBean.php
+	Created .../Acme.Demo/Classes/Domain/Repository/CoffeeBeanRepository.php
+	Created .../Acme.Demo/Classes/Controller/CoffeeBeanController.php
+	Created .../Acme.Demo/Resources/Private/Templates/CoffeeBean/Index.html
+	Created .../Acme.Demo/Resources/Private/Templates/CoffeeBean/New.html
+	Created .../Acme.Demo/Resources/Private/Templates/CoffeeBean/Edit.html
+
+Whenever a model is created or modified, the database structure needs to be adjusted to
+fit the new PHP code. This is something you should do consciously because existing data
+could be altered or removed – therefore this step isn't taken automatically by FLOW3.
+
+The Kickstarter created a new model representing a coffee bean. For promoting the new
+structure to the database, just run the :command:`doctrine:update` command:
+
+.. code-block:: bash
+
+	$ ./flow3 doctrine:update
+	Executed a database schema update.
+
+A quick glance at the table structure (using your preferred database management tool) will
+reveal that a new table for coffee beans has been created.
+
+The controller rendered by the Kickstarter provides some very basic functionality for
+creating, editing and deleting coffee beans. Try it out by accessing this URL:
+
+.. code-block:: text
+
+	http://localhost/Quickstart/Web/Acme.Demo/CoffeeBean
+
+Create a few coffee beans, edit and delete them and take a look at the database tables
+if you can't resist ...
+
+.. figure:: /Images/CoffeeBeanController.png
+	:align: center
+	:width: 600pt
+
+A Closer Look at the Example
+----------------------------
+
+In case you have been programming PHP for a while, you might be used to tackle many 
+low-level tasks yourself: Rendering HTML forms, retrieving and validating input from the
+superglobals ``$_GET``, ``$_POST`` and ``$_FILES``, validating the input, creating SQL
+queries for storing the input in the database, checking for Cross-Site Scripting,
+Cross-Site Request Forgery, SQL-Injection and much more.
+
+With this background, the following complete code listing powering the previous example 
+may seem a bit odd, if not magical to you. Taker a close look at each of the methods –
+can you imagine what they do? ::
+
+	/**
+	 * CoffeeBean controller for the Acme.Demo package 
+	 */
+	class CoffeeBeanController extends ActionController {
+
+		/**
+		 * @inject
+		 * @var \Acme\Demo\Domain\Repository\CoffeeBeanRepository
+		 */
+		protected $coffeeBeanRepository;
+
+		/**
+		 * Shows a list of coffee beans
+		 */
+		public function indexAction() {
+			$this->view->assign('coffeeBeans', $this->coffeeBeanRepository->findAll());
+		}
+
+		/**
+		 * Shows a single coffee bean object
+		 *
+		 * @param \Acme\Demo\Domain\Model\CoffeeBean $coffeeBean The coffee bean to show
+		 */
+		public function showAction(CoffeeBean $coffeeBean) {
+			$this->view->assign('coffeeBean', $coffeeBean);
+		}
+
+		/**
+		 * Shows a form for creating a new coffee bean object
+		 */
+		public function newAction() {
+		}
+
+		/**
+		 * Adds the given new coffee bean object to the coffee bean repository
+		 *
+		 * @param \Acme\Demo\Domain\Model\CoffeeBean $coffeeBean A new coffee bean to add
+		 */
+		public function createAction(CoffeeBean $newCoffeeBean) {
+			$this->coffeeBeanRepository->add($newCoffeeBean);
+			$this->flashMessageContainer->add('Created a new coffee bean.');
+			$this->redirect('index');
+		}
+
+		/**
+		 * Shows a form for editing an existing coffee bean object
+		 *
+		 * @param \Acme\Demo\Domain\Model\CoffeeBean $coffeeBean The coffee bean to edit
+		 */
+		public function editAction(CoffeeBean $coffeeBean) {
+			$this->view->assign('coffeeBean', $coffeeBean);
+		}
+
+		/**
+		 * Updates the given coffee bean object
+		 *
+		 * @param \Acme\Demo\Domain\Model\CoffeeBean $coffeeBean The coffee bean to update
+		 */
+		public function updateAction(CoffeeBean $coffeeBean) {
+			$this->coffeeBeanRepository->update($coffeeBean);
+			$this->flashMessageContainer->add('Updated the coffee bean.');
+			$this->redirect('index');
+		}
+
+		/**
+		 * Removes the given coffee bean object from the coffee bean repository
+		 *
+		 * @param \Acme\Demo\Domain\Model\CoffeeBean $coffeeBean The coffee bean to delete
+		 */
+		public function deleteAction(CoffeeBean $coffeeBean) {
+			$this->coffeeBeanRepository->remove($coffeeBean);
+			$this->flashMessageContainer->add('Deleted a coffee bean.');
+			$this->redirect('index');
+		}
+	}
+
+You will learn all the nitty-gritty details of persistence (that is storing and 
+retrieving objects in a database), Model-View Controller and validation in
+:doc:`The Definitive Guide <../TheDefinitiveGuide/Index>`. With some hints
+for each of the actions of this controller though, you'll get some first impression of
+how basic operations like creating or deleting objects are handled in FLOW3.
+
+Without further ado let's take a closer look at some of the actions:
+
+indexAction
+~~~~~~~~~~~
+
+The ``indexAction`` displays a list of existing coffee beans. All ``CoffeeBean``
+objects are stored in the ``CoffeeBeanRepository``. The simplest operation it provides is
+the ``findAll()`` method which returns a list of all existing ``CoffeeBean`` objects. 
+
+Now here's the first challenge: There must be only one instance of the
+``CoffeeBeanRepository`` class in the whole system, because otherwise there would be
+multiple repositories storing ``CoffeeBean`` objects – and which one would you then ask
+for retrieving coffee beans back from the database?
+The ``CoffeeBeanRepository`` is therefore tagged with a so-called *annotation* stating
+that only a single instance may exist at a time::
+
+	/**
+	 * A repository for CoffeeBeans
+	 *
+	 * @scope singleton
+	 */
+	class CoffeeBeanRepository extends \TYPO3\FLOW3\Persistence\Repository {
+
+FLOW3's object management detects the ``@scope singleton`` annotation and takes care of 
+all the details. All you need to do in order to get the right ``CoffeeBeanRepository`` 
+instance is telling FLOW3 to *inject* it into a class property you defined::
+
+	/**
+	 * @inject
+	 * @var \Acme\Demo\Domain\Repository\CoffeeBeanRepository
+	 */
+	protected $coffeeBeanRepository;
+
+If you wondered where the ``CoffeeBeanRepository`` comes from, you now found the answer:
+FLOW3 will set the ``$coffeeBeanRepository`` right after the ``CoffeeBeanController``
+class has been instantiated.
+
+.. tip::
+
+	This feature is called *Dependency Injection* and is an important feature of FLOW3.
+	Although it is blindingly easy to use, you'll want to read some more about it later
+	in the :doc:`related section <../TheDefinitiveGuide/PartIII/ObjectManagement>` of
+	the main manual.
+
+FLOW3 adheres to the Model-View-Controller pattern – that's why the actual output is not 
+generated by the action method itself. This task is delegated to the *view*, and that is,
+by default, a *Fluid* template (Fluid is the name of the templating engine FLOW3 uses).
+Following the conventions, there should be a directory structure in the
+:file:`Resources/Private/Templates/` folder of a package which corresponds to the
+controllers and actions. For the ``index`` action of the ``CoffeeBeanController`` the 
+template :file:`Resources/Private/Templates/CoffeeBean/Index.html` will be used for
+rendering.
+
+Let's recap: The ``indexAction`` retrieves all existing coffee beans from the coffee
+bean repository. That repository has been injected previously by Dependency Injection.
+For the ``indexAction`` of the ``CoffeeBeanController`` an HTML file stored as
+:file:`Resources/Private/Templates/CoffeeBean/Index.html` is selected as the view.
+
+The coffee beans retrieved from the repository are assigned to the template variable
+``coffeeBeans`` so that they can be displayed by the Fluid template. Finally the template
+uses a for-each loop for rendering a list of coffee beans:
+
+.. code-block:: html
+
+	<ul>
+		<f:for each="{coffeeBeans}" as="coffeeBean">
+			<li>
+				{coffeeBean.name}
+			</li>
+		</f:for>
+	</ul>
+
+Fluid provides a very easy way to access properties or sub objects of other objects or
+arrays. ``{coffeeBean.name}`` will output the ``name`` property of the ``coffeeBean``
+object.
+
+showAction
+~~~~~~~~~~
+
+The ``showAction`` displays a single coffee bean::
+
+	/**
+	 * Shows a single coffee bean object
+	 *
+	 * @param \Acme\Demo\Domain\Model\CoffeeBean $coffeeBean The coffee bean to show
+	 */
+	public function showAction(CoffeeBean $coffeeBean) {
+		$this->view->assign('coffeeBean', $coffeeBean);
+	}
+
+You already know the basic mechanism: FLOW3 will try to find a matching Fluid template
+by checking for a file called :file:`Resources/Private/Templates/CoffeeBean/Show.html`.
+The ``show`` template basically displays the ``coffeeBean`` object. Like in the
+``indexAction``, the actual coffee bean object has been assigned to a Fluid variable::
+
+	$this->view->assign('coffeeBean', $coffeeBean);
+
+So far this action works pretty much like the first one, despite the fact that it
+accepts a ``CoffeeBean`` as its method argument. In the list of coffee beans, rendered
+by the ``indexAction``, each entry links to the corresponding ``showAction``. The links
+are rendered by a so-called *view helper* in the Fluid template :file:`Index.html`:
+
+.. code-block:: html
+
+	<f:link.action action="show" arguments="{coffeeBean: coffeeBean}">…</f:link.action>
+
+The interesting part is the ``{coffeeBean: coffeeBean}`` argument assignment: 
+it makes sure that the ``CoffeeBean`` object which is stored in the ``coffeeBean``
+template variable will be passed to the ``$coffeeBean`` parameter of the ``showAction``.
+
+Of course you cannot put a PHP object like the coffee bean into a URL. That's why
+the view helper will render an address like the following:
+
+.. code-block:: text
+
+	http://localhost/Quickstart/Web/acme.demo/coffeebean/show?
+		coffeeBean%5B__identity%5D=910c2440-ea61-49a2-a68c-ee108a6ee429
+
+Instead of the real PHP object, its unique identifier was included as a GET parameter.
+
+.. note::
+
+	That certainly is not a beautiful URL for a coffee bean – but you'll learn how to
+	create nice ones in the main manual.
+
+Before the ``showAction``method is actually called, FLOW3 will analyze the GET and POST
+parameters and convert identifiers into the real objects again and eventually passes
+it as an argument::
+
+	public function showAction(CoffeeBean $coffeeBean) {
+
+newAction
+~~~~~~~~~
+
+The ``newAction`` contains no PHP code – all it does is displaying the corresponding
+Fluid template which renders a form.
+
+createAction
+~~~~~~~~~~~~
+
+The ``createAction`` is called after submitting the form displayed by the ``newAction``.
+Like the ``showAction`` it expects a ``CoffeeBean`` as its argument::
+
+	/**
+	 * Adds the given new coffee bean object to the coffee bean repository
+	 *
+	 * @param \Acme\Demo\Domain\Model\CoffeeBean $coffeeBean A new coffee bean to add
+	 */
+	public function createAction(CoffeeBean $newCoffeeBean) {
+		$this->coffeeBeanRepository->add($newCoffeeBean);
+		$this->flashMessageContainer->add('Created a new coffee bean.');
+		$this->redirect('index');
+	}
+
+But this time it is not an existing coffee bean but a new one. FLOW3 knows that the
+expected type is ``CoffeeBean`` (by the type hint in the method and the comment) and
+thus tries to convert the POST data sent by the form into a new ``CoffeeBean`` object.
+All you need to do is adding it to the Coffee Bean Repository.
+
+updateAction
+~~~~~~~~~~~~
+
+tbd
+
+
+Next Steps
 ----------
 
-.. toctree::
 
-	GettingIntoTheFlow.rst
+.. _FLOW3 Base Distribution:                       http://flow3.typo3.org/download
+.. _IRC channel:                                                   http://flow3.typo3.org/get-involved/irc-channel/
+.. _users mailing list:                                   http://flow3.typo3.org/get-involved/mailing-lists-newsgroups/
