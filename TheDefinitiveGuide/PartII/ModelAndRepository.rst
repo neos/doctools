@@ -251,7 +251,7 @@ Blog Repository
 
 According to our earlier reasonings, you need a repository for storing the blog:
 
-.. figure:: ../Images/GettingStarted/DomainModel-3.png
+.. figure:: /Images/GettingStarted/DomainModel-3.png
 
 	Blog Repository and Blog
 

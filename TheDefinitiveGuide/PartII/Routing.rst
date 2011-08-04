@@ -132,7 +132,7 @@ YAML::
 Reload the post index and check out the new URI of the ``createAction`` - it's
 a bit shorter now:
 
-.. image:: ../Images/GettingStarted/PostActionRoute1URI.png
+.. image:: /Images/GettingStarted/PostActionRoute1URI.png
 
 However, the edit link still looks it bit ugly:ty%5D=229e2b23-b6f3-4422-8b7a-efb196dbc88b.
 http://dev.tutorial.local/post/edit?post%5B__identi
@@ -297,6 +297,6 @@ sometimes you'll wonder which route FLOW3 eventually chose. One way to get
 this information is looking at the log file which is by default
 located in *Data/Logs/Web/*:
 
-.. image:: ../Images/GettingStarted/RoutingLogTail.png
+.. image:: /Images/GettingStarted/RoutingLogTail.png
 
 More information on routing can be found in the `FLOW3 reference manual <http://flow3.typo3.org/documentation/>`_\ .

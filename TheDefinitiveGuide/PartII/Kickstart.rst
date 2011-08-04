@@ -152,7 +152,7 @@ console::
 
 Switch to your web browser and check if the generated controller produces some output:
 
-.. image: ../Images/GettingStarted/FreshBlogPackage.png
+.. image: /Images/GettingStarted/FreshBlogPackage.png
 	
 .. tip::
 	If you get an error at this point, like a "404 Not Found" this could be

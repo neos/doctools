@@ -177,7 +177,7 @@ outputs the blog's title and post titles [#]_\ . A quick look
 at http://dev.tutorial.local/typo3.blog/post [#]_ confirms that the
 ``SetupController`` has indeed created the blog and post:
 
-.. figure:: ../Images/GettingStarted/MyFirstBlog.png
+.. figure:: /Images/GettingStarted/MyFirstBlog.png
 
 	Output of the indexAction
 
@@ -233,7 +233,7 @@ add a message to some flash message stack and redirect to the index action.
 Try calling the ``createAction`` now by accessing
 http://dev.tutorial.local/typo3.blog/post/create:
 
-.. image:: ../Images/GettingStarted/CreateActionWithoutArgument.png
+.. image:: /Images/GettingStarted/CreateActionWithoutArgument.png
 
 FLOW3 analyzed the new method signature and automatically registered ``$post``
 as a required argument for ``createAction``. Because no such argument was
