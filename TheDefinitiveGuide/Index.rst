@@ -2,6 +2,7 @@ FLOW3 – The Definitive Guide
 ----------------------------
 
 .. toctree::
+	:maxdepth: 2
 
 	PartI/Index
 	PartII/Index

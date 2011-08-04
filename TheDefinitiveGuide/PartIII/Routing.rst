@@ -4,37 +4,46 @@
 Routing
 =======
 
+.. ============================================
+.. Meta-Information for this chapter
+.. ---------------------------------
+.. Author: Bastian Waidelich ?
+.. Converted to ReST by: Rens Admiraal
+.. Updated for 1.0 beta1: YES, by Sebastian Kurfürst
+.. TODOs: none
+.. ============================================
+
 As explained in the Model View Controller chapter, in FLOW3 the dispatcher passes the
 request to a controller which then calls the respective action. But how to tell, what
 controller of what package is the right one for the current request? This is were the
 routing framework comes into play.
 
-Router
-======
+The Router
+==========
 
 The request builder asks the router for the correct package, controller and action. For
-this it passes the current request path to the routers ``match`` method. The router then
-iterates through all configured routes and invokes their ``matches`` method. The first
+this it passes the current request path to the routers ``match()`` method. The router then
+iterates through all configured routes and invokes their ``matches()`` method. The first
 route that matches, determines which action will be called with what parameters.
 
 The same works for the opposite direction: If a link is generated the router calls the
-``resolve`` method of all routes until one route can return the correct URI for the
+``resolve()`` method of all routes until one route can return the correct URI for the
 specified arguments.
 
 .. note::
 
-	If no matching route can be found, the ``indexAction`` of the ``StandardController``
+	If no matching route can be found, the ``indexAction()`` of the ``StandardController``
 	of the *FLOW3* package is called.
 
-Route
-=====
+Routes
+======
 
 A route describes the way from your browser to the controller - and back.
 
-With the *URI pattern* you can define how a route is represented in the browsers address
-bar. By setting *defaults* you can specify package, controller and action that should
+With the ``uriPattern`` you can define how a route is represented in the browser's address
+bar. By setting ``defaults`` you can specify package, controller and action that should
 apply when a request matches the route. Besides you can set arbitrary default values that
-will be available in your controller. They are called *defaults* because you can overwrite
+will be available in your controller. They are called ``defaults`` because you can overwrite
 them by so called *dynamic route parts*.
 
 But let's start with an easy example:
@@ -51,7 +60,7 @@ But let's start with an easy example:
 
 .. note::
 
-	name is optional, but it's recommended to set a name for all routes to make debugging
+	``name`` is optional, but it's recommended to set a name for all routes to make debugging
 	easier.
 
 If you insert these lines at the beginning of the file ``Configurations/Routes.yaml``,
@@ -63,8 +72,8 @@ when you open up the homepage of your FLOW3 installation (``http://localhost/``)
 	You don't have to specify action and controller in this example as the ``indexAction``
 	of the ``StandardController`` is always called by default.
 
-URI pattern
------------
+URI patterns
+============
 
 The URI pattern defines the appearance of the URI. In a simple setup the pattern only
 consists of *static route parts* and is equal to the actual URI (without protocol and
@@ -77,12 +86,12 @@ You can even mark route parts *optional*.
 But first things first.
 
 Static route parts
-~~~~~~~~~~~~~~~~~~
+------------------
 
 A static route part is really simple - it will be mapped one-to-one to the resulting URI
 without transformation.
 
-Let's create a route that calls the listAction of the CustomerController when browsing to
+Let's create a route that calls the ``listAction`` of the ``CustomerController`` when browsing to
 ``http://localhost/my/demo``:
 
 * Example: Simple route with static route parts Configuration/Routes.yaml*
@@ -98,7 +107,7 @@ Let's create a route that calls the listAction of the CustomerController when br
 	    '@action':     list
 
 Dynamic route parts
-~~~~~~~~~~~~~~~~~~~
+-------------------
 
 Dynamic route parts are enclosed in curly brackets and define parts of the URI that are
 not fixed.
@@ -126,8 +135,8 @@ With ``http://localhost/my/demo/index`` you'd invoke the ``indexAction`` and so 
 	It's not allowed to have successive dynamic route parts in the URI pattern because it
 	wouldn't be possible to determine the end of the first dynamic route part then.
 
-The @-prefix should reveal that action has a special meaning here. Other predefined keys
-are @package, @subpackage, @controller and @format. But you can use dynamic route parts to
+The ``@``-prefix should reveal that *action* has a special meaning here. Other predefined keys
+are ``@package``, ``@subpackage``, ``@controller`` and ``@format``. But you can use dynamic route parts to
 set any kind of arguments:
 
 *Example: dynamic parameters - Configuration/Routes.yaml*
@@ -142,15 +151,16 @@ set any kind of arguments:
 	    '@controller': Customer
 	    '@action':     list
 
-Browsing to ``http://localhost/clients/descending.xml`` would call the ``listAction`` in
-your ``Customer`` controller and the request argument "sortOrder" had the value of
-"descending".
+Browsing to ``http://localhost/clients/descending.xml`` will then call the ``listAction`` in
+your ``Customer`` controller and the request argument ``sortOrder`` has the value of
+``descending``.
 
 By default, dynamic route parts match anything apart from empty strings. If you have more
-specialized requirements you can create your custom route part handlers.
+specialized requirements you can create your custom *route part handlers*, as described
+in the following section.
 
-Route part handler
-~~~~~~~~~~~~~~~~~~
+Route Part Handlers
+===================
 
 Route part handlers are classes that implement
 ``TYPO3\FLOW3\MVC\Web\Routing\DynamicRoutePartInterface``. But for most cases it will be
@@ -205,17 +215,24 @@ The corresponding route might look like this:
 	    blog:
 	      handler: TYPO3\Blog\RoutePartHandlers\BlogRoutePartHandler
 
+The method ``matchValue()`` is called when translating from an URL to a request argument,
+and the method ``resolveValue()`` needs to return an URL segment when being passed an object.
+
+.. warning:: Some examples are missing here, which should explain the API better.
+
+.. TODO: fix above warning and then remove it.
+
 Have a look at the blog example for a working setup.
 
 Optional route parts
-~~~~~~~~~~~~~~~~~~~~
+====================
 
 By putting one or more route parts in round brackets you mark them optional. The following
-route matches ``http://localhost/my/demo/`` and ``http://localhost/my/demo/list.html``.
+route matches ``http://localhost/my/demo`` and ``http://localhost/my/demo/list.html``.
 
 *Example: Route with optional route parts - Configuration/Routes.yaml*
 
-.. code-block::
+.. code-block:: yaml
 
 	--
 	  name: 'Dynamic demo route'
@@ -234,8 +251,8 @@ route matches ``http://localhost/my/demo/`` and ``http://localhost/my/demo/list.
 
 	You have to define default values for all optional dynamic route parts.
 
-Case sensitivity
-~~~~~~~~~~~~~~~~
+Case Sensitivity
+================
 
 By Default the case is not changed when creating URIs. The following example with a
 username of "Kasper" will result in ``http://localhost/Users/Kasper``
@@ -268,14 +285,15 @@ You can change this behavior for routes and/or dynamic route parts:
 	    username:
 	      toLowerCase: false
 
-This will change the default behavior for this route and reset it for the username route
+The option ``toLowerCase`` will change the default behavior for this route
+and reset it for the username route
 part. Given the same username of "Kasper" the resulting URI will now be
 ``http://localhost/users/Kasper`` (note the lower case "u" in "users").
 
 .. note::
 
-	The predefined route parts @package, @subpackage, @controller, @action and @format are
-	an exception, they're always lower cased!
+	The predefined route parts ``@package``, ``@subpackage``, ``@controller``, ``@action`` and
+	``@format`` are an exception, they're always lower cased!
 
 Matching of incoming URIs is always done case insensitive. So both "Users/Kasper" and
 "users/Kasper" will match, and the value of the dynamic part will never be changed. If you
@@ -283,10 +301,10 @@ want to handle data coming in through dynamic route parts case-insensitive, you 
 handle that in your own code.
 
 Subroutes
----------
+=========
 
 For security reasons and to avoid confusion, only routes configured in your global
-configuration folder are active. But FLOW3 supports what we call subroutes enabling you to
+configuration folder are active. But FLOW3 supports what we call *subroutes* enabling you to
 provide custom routes with your package and reference them in the global routing setup.
 
 Imagine following routes in the ``Routes.yaml`` file inside your demo package:
@@ -331,12 +349,13 @@ And in your global ``Routes.yaml``:
 	      package: Demo
 
 As you can see, you can reference subroutes by putting parts of the URI pattern in angle
-brackets (like <subRoutes>). With the subRoutes setting you specify where to load the
+brackets (like ``<subRoutes>``). With the subRoutes setting you specify where to load the
 subroutes from.
 
-Internally the ConfigurationManager merges toghether the main route with its subroutes:
+Internally the ConfigurationManager merges toghether the main route with its subroutes, resulting
+in the following routing configuration:
 
-*Example: Composite routes*
+*Example: Merged routing configuration*
 
 .. code-block:: yaml
 
@@ -367,3 +386,20 @@ Internally the ConfigurationManager merges toghether the main route with its sub
 
 You can even reference multiple subroutes from one route - that will create one route for
 all possible combinations.
+
+.. tip:: You can use the following command-line command to list all routes which are currently active:
+
+	.. code-block:: bash
+
+		$ ./flow3 routing:list
+
+		Currently registered routes:
+		typo3/login(/{@action}.{@format})         TYPO3 :: Authentication
+		typo3/logout                              TYPO3 :: Logout
+		typo3/setup(/{@action})                   TYPO3 :: Setup
+		typo3                                     TYPO3 :: Backend Overview
+		typo3/content/{@action}                   TYPO3 :: Backend - Content Module
+		{node}.html/{type}                        TYPO3 :: Frontend content with format and type
+		{node}.html                               TYPO3 :: Frontend content with (HTML) format
+		({node})                                  TYPO3 :: Frontend content without a specified format
+		                                          TYPO3 :: Fallback rule – for when no site has been defined yet
