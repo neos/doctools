@@ -415,16 +415,19 @@ Without further ado let's take a closer look at some of the actions:
 indexAction
 ~~~~~~~~~~~
 
-The ``indexAction`` displays a list of existing coffee beans. All ``CoffeeBean``
-objects are stored in the ``CoffeeBeanRepository``. The simplest operation it provides is
-the ``findAll()`` method which returns a list of all existing ``CoffeeBean`` objects. 
+The ``indexAction`` displays a list of coffee beans. All it does is fetching
+all existing coffee beans from a *repository* and then handing them over to the template
+for rendering.
 
-Now here's the first challenge: There must be only one instance of the
-``CoffeeBeanRepository`` class in the whole system, because otherwise there would be
-multiple repositories storing ``CoffeeBean`` objects – and which one would you then ask
-for retrieving coffee beans back from the database?
-The ``CoffeeBeanRepository`` is therefore tagged with a so-called *annotation* stating
-that only a single instance may exist at a time::
+The ``CoffeeBeanRepository`` takes care of storing and finding stored coffee beans. The 
+simplest operation it provides is the ``findAll()`` method which returns a list of all
+existing ``CoffeeBean`` objects.
+
+For consistency reasons only one instance of the ``CoffeeBeanRepository`` class may 
+exist at a time. Otherwise there would be multiple repositories storing ``CoffeeBean``
+objects – and which one would you then ask for retrieving a specific coffee bean back from 
+the database? The ``CoffeeBeanRepository`` is therefore tagged with an *annotation* 
+stating that only a single instance may exist at a time::
 
 	/**
 	 * A repository for CoffeeBeans
@@ -432,6 +435,9 @@ that only a single instance may exist at a time::
 	 * @scope singleton
 	 */
 	class CoffeeBeanRepository extends \TYPO3\FLOW3\Persistence\Repository {
+
+Because PHP doesn't support the concept of annotations natively, we are using doc
+comments which are parsed by an annotation parser in FLOW3.
 
 FLOW3's object management detects the ``@scope singleton`` annotation and takes care of 
 all the details. All you need to do in order to get the right ``CoffeeBeanRepository`` 
@@ -443,9 +449,8 @@ instance is telling FLOW3 to *inject* it into a class property you defined::
 	 */
 	protected $coffeeBeanRepository;
 
-If you wondered where the ``CoffeeBeanRepository`` comes from, you now found the answer:
-FLOW3 will set the ``$coffeeBeanRepository`` right after the ``CoffeeBeanController``
-class has been instantiated.
+The ``@inject`` annotation tells FLOW3 to set the ``$coffeeBeanRepository`` right after 
+the ``CoffeeBeanController`` class has been instantiated.
 
 .. tip::
 
@@ -463,14 +468,14 @@ controllers and actions. For the ``index`` action of the ``CoffeeBeanController`
 template :file:`Resources/Private/Templates/CoffeeBean/Index.html` will be used for
 rendering.
 
-Let's recap: The ``indexAction`` retrieves all existing coffee beans from the coffee
-bean repository. That repository has been injected previously by Dependency Injection.
-For the ``indexAction`` of the ``CoffeeBeanController`` an HTML file stored as
-:file:`Resources/Private/Templates/CoffeeBean/Index.html` is selected as the view.
+Templates can display content which has been assigned to *template variables*. The 
+placeholder ``{name}`` will be replaced by the actual value of the template variable
+``name`` once the template is rendered. Likewise ``{coffeeBean.name}`` is substituted
+by the value of the coffee bean's ``name`` attribute.
 
 The coffee beans retrieved from the repository are assigned to the template variable
-``coffeeBeans`` so that they can be displayed by the Fluid template. Finally the template
-uses a for-each loop for rendering a list of coffee beans:
+``coffeeBeans``. The template in turn uses a for-each loop for rendering a list of coffee
+beans:
 
 .. code-block:: html
 
@@ -481,10 +486,6 @@ uses a for-each loop for rendering a list of coffee beans:
 			</li>
 		</f:for>
 	</ul>
-
-Fluid provides a very easy way to access properties or sub objects of other objects or
-arrays. ``{coffeeBean.name}`` will output the ``name`` property of the ``coffeeBean``
-object.
 
 showAction
 ~~~~~~~~~~
@@ -500,27 +501,34 @@ The ``showAction`` displays a single coffee bean::
 		$this->view->assign('coffeeBean', $coffeeBean);
 	}
 
-You already know the basic mechanism: FLOW3 will try to find a matching Fluid template
-by checking for a file called :file:`Resources/Private/Templates/CoffeeBean/Show.html`.
-The ``show`` template basically displays the ``coffeeBean`` object. Like in the
-``indexAction``, the actual coffee bean object has been assigned to a Fluid variable::
+The corresponding template for this action is stored in this file:
+
+.. code-block:: text
+
+	Acme.Demo/Resources/Private/Templates/CoffeeBean/Show.html`
+
+This template produces a simple representation of the ``coffeeBean`` object.
+Similar to the ``indexAction`` the coffee bean object is assigned to a Fluid variable::
 
 	$this->view->assign('coffeeBean', $coffeeBean);
 
-So far this action works pretty much like the first one, despite the fact that it
-accepts a ``CoffeeBean`` as its method argument. In the list of coffee beans, rendered
-by the ``indexAction``, each entry links to the corresponding ``showAction``. The links
-are rendered by a so-called *view helper* in the Fluid template :file:`Index.html`:
+The ``showAction`` method requires a ``CoffeeBean`` object as its method argument.
+But we need to look into the template of the ``indexAction`` again to understand how
+coffee beans are actually passed to the ``showAction``.
+
+In the list of coffee beans, rendered by the ``indexAction``, each entry links to the 
+corresponding ``showAction``. The links are rendered by a so-called *view helper* in the 
+Fluid template :file:`Index.html`:
 
 .. code-block:: html
 
 	<f:link.action action="show" arguments="{coffeeBean: coffeeBean}">…</f:link.action>
 
 The interesting part is the ``{coffeeBean: coffeeBean}`` argument assignment: 
-it makes sure that the ``CoffeeBean`` object which is stored in the ``coffeeBean``
-template variable will be passed to the ``$coffeeBean`` parameter of the ``showAction``.
+It makes sure that the ``CoffeeBean`` object, stored in the ``coffeeBean``
+template variable, will be passed to the ``showAction`` through a GET parameter.
 
-Of course you cannot put a PHP object like the coffee bean into a URL. That's why
+Of course you cannot just put a PHP object like the coffee bean into a URL. That's why
 the view helper will render an address like the following:
 
 .. code-block:: text
@@ -528,16 +536,18 @@ the view helper will render an address like the following:
 	http://localhost/Quickstart/Web/acme.demo/coffeebean/show?
 		coffeeBean%5B__identity%5D=910c2440-ea61-49a2-a68c-ee108a6ee429
 
-Instead of the real PHP object, its unique identifier was included as a GET parameter.
+Instead of the real PHP object, its *Universally Unique Identifier* (UUID) was included as
+a GET parameter.
 
 .. note::
 
 	That certainly is not a beautiful URL for a coffee bean – but you'll learn how to
 	create nice ones in the main manual.
 
-Before the ``showAction``method is actually called, FLOW3 will analyze the GET and POST
-parameters and convert identifiers into the real objects again and eventually passes
-it as an argument::
+Before the ``showAction`` method is actually called, FLOW3 will analyze the GET and POST
+parameters of the incoming HTTP request and convert identifiers into real objects 
+again. By its UUID the coffee bean is retrieved from the ``CoffeeBeanRepository`` and
+eventually passed to the action method::
 
 	public function showAction(CoffeeBean $coffeeBean) {
 
@@ -550,7 +560,7 @@ Fluid template which renders a form.
 createAction
 ~~~~~~~~~~~~
 
-The ``createAction`` is called after submitting the form displayed by the ``newAction``.
+The ``createAction`` is called when a form displayed by the ``newAction`` is submitted.
 Like the ``showAction`` it expects a ``CoffeeBean`` as its argument::
 
 	/**
@@ -564,20 +574,101 @@ Like the ``showAction`` it expects a ``CoffeeBean`` as its argument::
 		$this->redirect('index');
 	}
 
-But this time it is not an existing coffee bean but a new one. FLOW3 knows that the
-expected type is ``CoffeeBean`` (by the type hint in the method and the comment) and
-thus tries to convert the POST data sent by the form into a new ``CoffeeBean`` object.
+This time the argument contains not an existing coffee bean but a new one. FLOW3 knows
+that the expected type is ``CoffeeBean`` (by the type hint in the method and the comment) 
+and thus tries to convert the POST data sent by the form into a new ``CoffeeBean`` object.
 All you need to do is adding it to the Coffee Bean Repository.
+
+editAction
+~~~~~~~~~~~~
+
+The purpose of the ``editAction`` is to render a form pretty much like that one shown by
+the ``newAction``. But instead of empty fields, this form contains all the data from an
+existing coffee bean, including a hidden field with the coffee bean's UUID.
+
+The edit template uses Fluid's form view helper for rendering the form. The important bit
+for the edit form is the form object assignment::
+
+.. code-block:: html
+
+	<f:form action="update" object="{coffeeBean}" name="coffeeBean">
+		…
+	</f:form>
+
+The ``object="{coffeeBean}"`` attribute assignment tells the view helper to use the
+``coffeeBean`` template variable as its subject. The individual form elements, such
+as the text box, can now refer to the coffee bean object properties:
+
+.. code-block:: html
+
+	<f:form.textbox property="name" id="name" />
+
+On submitting the form, the user will be redirected to the ``updateAction``.
 
 updateAction
 ~~~~~~~~~~~~
 
-tbd
+The ``updateAction`` receives the modified coffee bean through its ``$coffeeBean``
+argument::
 
+	/**
+	 * Updates the given coffee bean object
+	 *
+	 * @param \Acme\Demo\Domain\Model\CoffeeBean $coffeeBean The coffee bean to update
+	 */
+	public function updateAction(CoffeeBean $coffeeBean) {
+		$this->coffeeBeanRepository->update($coffeeBean);
+		$this->flashMessageContainer->add('Updated the coffee bean.');
+		$this->redirect('index');
+	}
+
+Although this method looks quite similar to the ``showAction``, there is an important
+difference you should be aware of: While the parameter passed to the ``showAction`` 
+is an already existing (that is, already *persisted*) coffee bean object, the 
+``updateAction`` receives a *clone* of an existed coffee bean with the modifications
+submitted by the user already applied.
+
+Any changes you apply to *persisted* objects will eventually be stored automatically!
+There is no *save* method you'd have to call. Contrary to persisted objects, cloned
+objects will not be stored – you have to explicitly tell FLOW3 to apply the changes.
+
+As you can see in the example, it is fairly easy to convert a *cloned* object into
+a *persisted* object::
+
+	$this->coffeeBeanRepository->update($coffeeBean);
 
 Next Steps
 ----------
 
+Congratulations! You already learned the most important concepts of FLOW3 development.
+
+Certainly this tutorial will have raised more questions than it answered. Some of
+these concepts – and many more you will learn – take some time to get used to.
+The best advice I can give you is to expect things to be rather simple and
+not look out for the complicated solution (you know, the *not to see the wood for 
+the trees* thing ...).
+
+Next you should experiment a bit with FLOW3 on your own. After you've collected
+even more questions, I suggest reading the
+:doc:`Getting Started Tutorial <../TheDefinitiveGuide/PartII/Index>`.
+
+At the time of this writing, The Definitive Guide is not yet complete and still
+contains a few rough parts. Also the Getting Started Tutorial needs some love
+and restructuring. Still, it already may be a valuable source for further
+information and I recommend reading it.
+
+Get in touch with the growing FLOW3 community and make sure to share your ideas
+about how we can improve FLOW3 and its documentation:
+
+* `IRC channel`_
+* `users mailing list`_
+
+I am sure that, if you're a passionate developer, you will love FLOW3! Because it
+was made with you, the developer, in mind.
+
+Happy FLOW3 Experience!
+
+*Robert on behalf of the FLOW3 team*
 
 .. _FLOW3 Base Distribution:                       http://flow3.typo3.org/download
 .. _IRC channel:                                                   http://flow3.typo3.org/get-involved/irc-channel/
