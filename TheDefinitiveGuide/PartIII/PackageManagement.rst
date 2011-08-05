@@ -47,8 +47,8 @@ packages reside in the ``Application`` directory:
 
 		* *TYPO3.TYPO3/*
 			For example the TYPO3 package
-		* *Good.Coffee/*
-			Or the coffee package
+		* *Acme.Demo/*
+			Or the demo package
 
 The reason for separating packages into separate directories is that the core packages
 residing in ``Framework/`` can reside in a different, shared location and be symlinked
