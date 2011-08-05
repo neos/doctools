@@ -2,6 +2,15 @@
 Resource Management
 ===================
 
+.. ============================================
+.. Meta-Information for this chapter
+.. ---------------------------------
+.. Author: Robert Lemke
+.. Converted to ReST by: Rens Admiraal
+.. Updated for 1.0 beta1: YES, by Sebastian Kurfürst
+.. ============================================
+
+
 Traditionally a PHP application deals directly with all kinds of files. Realizing a file
 upload is usually an excessive task because you need to create a proper upload form, deal
 with deciphering the ``$_FILES`` superglobal and move the uploaded file from the temporary
@@ -22,16 +31,16 @@ FLOW3 packages may provide any amount of static resources. They might be images,
 stylesheets, javascripts, templates or any other file which is used within the application
 or published to the web. Static resources may either be public or private:
 
-* public resources are automatically mirrored to the public web directory and are publicly
-	accessible without any restrictions (provided you know the filename)
-* private resources are not published by default. They can either be used internally (for
-	example as templates) or published with certain access restrictions
+* *public resources* are automatically mirrored to the public web directory and are publicly
+  accessible without any restrictions (provided you know the filename)
+* *private resources* are not published by default. They can either be used internally (for
+  example as templates) or published with certain access restrictions.
 
 Whether a static package resource is public or private is determined by its parent
-directory. For a package *Foo* the public resources reside in a folder called
-``Foo/Resources/Public/`` while the private resources are stored in
-``Foo/Resources/Private/``. The directory structure below ``Public`` and ``Private`` is up
-to you and will be cloned to the web resources folder.
+directory. For a package *Acme.Demo* the public resources reside in a folder called
+*Acme.Demo/Resources/Public/* while the private resources are stored in
+*Acme.Demo/Resources/Private/*. The directory structure below *Public* and *Private* is up
+to you.
 
 Persistent Resources
 ====================
@@ -49,10 +58,12 @@ New persistent resources can be created by either importing or uploading a file.
 case the result is a new ``Resource`` object which can be attached to any other object. A
 resource exists as long as the ``Resource`` object is connected to another entity or value
 object which is persisted. If a resource is not attached to any other persisted object,
-its data will be permanently removed at the end of the script run.
+its data will be permanently removed by a cleanup task.
+
+.. note:: Right now, garbage collecton of unused files is not yet implemented.
 
 Importing Resources
-===================
+-------------------
 
 Importing resources is one way to create a new resource object. The ``ResourceManager``
 provides a simple API method for this purpose:
@@ -78,7 +89,7 @@ provides a simple API method for this purpose:
 		public function importImageAction($imagePathAndFilename) {
 			$newResource = $this->resourceManager->importResource($imagePathAndFilename);
 
-			$newImage = $this->objectManager->create('MyCompany\MyPackage\Domain\Model\Image');
+			$newImage = new \Acme\Demo\Domain\Model\Image();
 			$newImage->setOriginalResource($newResource);
 
 			$this->imageRepository->add($newImage);
@@ -93,22 +104,23 @@ provide a "thumbnail resource" for a smaller version of the original.
 
 This is what happens in detail while executing the ``importImageAction`` method:
 
-1. The URI (in our case an absolute path and filename) is passed to the ``importResource``
-	method which analyzes the file found at that location.
+1. The URI (in our case an absolute path and filename) is passed to the ``importResource()``
+   method which analyzes the file found at that location.
 2. The file is imported into FLOW3's persistent resources storage  using the sha1 hash over
-	the file content as its filename. If a file with exactly the same content is imported
-	it will reuse the already stored resource.
+   the file content as its filename. If a file with exactly the same content is imported
+   it will reuse the already stored resource.
 3. The Resource Manager returns a new ``Resource`` object which refers to the newly
-	imported file.
+   imported file.
 4. A new ``Image`` object is created and the resource is attached to it.
 5. The image is added to the ``ImageRepository``. Only from now on the new image and the
-	related resource will be persisted. If we omitted that step, the image, the resource
-	and in the end the imported file would be discarded at the end of the script run.
-6. In order to delete a resource just disconnect the resource object from the persisted
-	object, for example by unsetting ``originalResource`` in the ``Image`` object.
+   related resource will be persisted. If we omitted that step, the image, the resource
+   and in the end the imported file would be discarded at the end of the script run.
+
+In order to delete a resource just disconnect the resource object from the persisted
+object, for example by unsetting ``originalResource`` in the ``Image`` object.
 
 Resource Uploads
-================
+----------------
 
 The second way to create new resources is uploading them via a POST request. FLOW3's MVC
 framework detects incoming file uploads and automatically converts them into ``Resource``
@@ -129,32 +141,24 @@ Consider the following Fluid template:
 
 This form allows for submitting a new image which consists of an image title and the image
 resource (e.g. a JPEG file). The following controller can handle the submission of the above
-form: ::
+form::
 
 	class ImageController {
 
 	   /**
-	    * @inject
-	    * @var \TYPO3\FLOW3\Resource\ResourceManager
-	    */
-	   protected $resourceManager;
-
-	   // ... more code here ...
-
-	   /**
 	    * Creates a new image
 	    *
-	    * @param \TYPO3\MyPacakge\Domain\Model\Image $newImage The new image
+	    * @param \Acme\Demo\Domain\Model\Image $newImage The new image
 	    * @return void
 	    */
-	   public function createAction(\TYPO3\MyPacakge\Domain\Model\Image $newImage) {
+	   public function createAction(\Acme\Demo\Domain\Model\Image $newImage) {
 	      $this->imageRepository->add($newImage);
 	      $this->forward('index');
 	   }
 	}
 
-Provided that the ``Image`` class has a ``title`` and a ``originalResource`` property and
-that they are accessible through ``setTitle`` and ``setOriginalResource`` respectively the
+Provided that the ``Image`` class has a ``$title`` and a ``$originalResource`` property and
+that they are accessible through ``setTitle()`` and ``setOriginalResource()`` respectively the
 above code will work just as expected.
 
 .. tip::
@@ -166,34 +170,33 @@ above code will work just as expected.
 Resource Publishing
 ===================
 
+The process of *resource publishing* makes the resources in the system available,
+and to provide an URL by which the given resource can be retrieved by the client.
+
 Static Resources
 ----------------
 
-By default static resources (usually provided by packages) are published to the web
-directory on the first script run and whenever packages are activated or deactivated. If
-resource files are added, removed or changed after the first run, they won't be published
-again. This behavior is desired in a production context where it would be to time
-intensive to check for updated resources on every run.
+Static resources (provided by packages) are published to the web directory on the first
+script run and whenever packages are activated or deactivated.
 
-In a development context however, you'll gladly sacrifice some microseconds for the
-convenience of automatically updated resource files. This can be achieved by setting
-"resource: publishing: detectPackageResourceChanges" to yes – which is already the case in
-the Development context settings in FLOW3's standard distribution.
+.. note:: Internally, we do not copy all the resource files but just generate a symlink
+	by default. This makes sure all changes you do in the *Resources/Public/* folder
+	of your package are automatically visible.
 
 Published static resources can be used in Fluid templates via the built-in resource view
 helper:
 
 .. code-block:: html
 
-	<img src="{f:uri.resource(path: 'Images/Icons/FooIcon.png', package: 'MyPackage')}" />
+	<img src="{f:uri.resource(path: 'Images/Icons/FooIcon.png', package: 'Acme.Demo')}" />
 
-Note that the <parameter>package</parameter> parameter is optional and defaults to the
+Note that the ``package`` parameter is optional and defaults to the
 package containing the currently active controller.
 
 .. warning::
 
 	Although it might be tempting shortcut, never refer to the resource files directly
-	through a URL like ``_Resources/Static/Packages/MyPackage/Images/Icons/FooIcon.png``
+	through a URL like ``_Resources/Static/Packages/Acme.Demo/Images/Icons/FooIcon.png``
 	because you can't really rely on this path. Always use the resource view helper
 	instead.
 
@@ -201,7 +204,7 @@ Persistent Resources
 --------------------
 
 Persistent resources are published on demand because FLOW3 cannot know which resources are
-meant to be public and which ones are to kept private. The trigger for publishing
+meant to be public and which ones need to be kept private. The trigger for publishing
 persistent resources is the generation of its public web URI. A very common way to do that
 is displaying a resource in a Fluid template:
 
@@ -209,7 +212,7 @@ is displaying a resource in a Fluid template:
 
 	<img src="{f:uri.resource(resource: image.originalResource)}" />
 
-The resource view helper (``f:uri.resource()``) will ask the ``ResourcePublisher`` for the
+The resource view helper (``f:uri.resource`` ) will ask the ``ResourcePublisher`` for the
 web URI of the resource stored in ``image.originalResource``. The publisher checks if the
 given resource has already been published and if not publishes it right away.
 
@@ -231,25 +234,30 @@ A URI produced by the above template would look like this:
 You can define as many titles for each resource as you want – the resulting file is always
 the same, identified by the sha1 hash.
 
+.. note:: Internally, FLOW3 uses a rewrite rule to map the speaking titles to the hash files.
+
 Mirror Mode
 -----------
 
-Publishing resources basically means copying files from a private location to the public
-web directory. Creating copies however comes with a little speed penalty and in some cases
-the size of duplicated resources can become an issue.
+.. warning:: The setting ``mirrorMode`` might be removed in the future.
 
-If your operating system supports symbolic links, you can speed up the publication process
-by telling FLOW3 to create symlinks instead of copies. This can be achieved through some
+Publishing resources basically means copying files from a private location to the public
+web directory. By default, FLOW3 creates symbolic links, making the resource publishing
+process fast.
+
+If your operating system does not support symbolic links, you need to tell FLOW3 to create
+copies instead of symlinks. This can be achieved through some
 setting in FLOW3's ``Settings.yaml``:
 
 .. code-block:: yaml
 
-	FLOW3:
-	  resource:
-	    publishing:
-	      fileSystem:
-	        # Strategy for mirroring files: Either "copy" or "link"
-	        mirrorMode: link
+	TYPO3:
+	  FLOW3:
+	    resource:
+	      publishing:
+	        fileSystem:
+	          # Strategy for mirroring files: Either "copy" or "link"
+	          mirrorMode: copy
 
 Resource Stream Wrapper
 =======================
@@ -261,17 +269,17 @@ relative to your package. A much better and more convenient way is using FLOW3's
 stream package resources wrapper.
 
 The following example reads the content of the file
-``MyPackage/Resources/Private/Templates/SomeTemplate.html`` into a variable:
+``Acme.Demo/Resources/Private/Templates/SomeTemplate.html`` into a variable:
 
 *Example: Accessing static resources* ::
 
 	$template = file_get_contents(
-		'resource://MyCompany\MyPackage/Private/Templates/SomeTemplate.html
+		'resource://Acme.Demo/Private/Templates/SomeTemplate.html
 	');
 
 Likewise you might get into a situation where you need to programmatically access
 persistent resources. The resource stream wrapper also supports these, all you need to do
-is passing the resource hash as the URI host:
+is passing the resource hash:
 
 *Example: Accessing persisted resources* ::
 
