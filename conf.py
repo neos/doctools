@@ -41,7 +41,7 @@ master_doc = 'Index'
 
 # General information about the project.
 project = u'FLOW3'
-copyright = u'2011, Robert Lemke'
+copyright = u'2011, FLOW3 Core Team'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the

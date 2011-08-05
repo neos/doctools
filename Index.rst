@@ -5,12 +5,16 @@ FLOW3 Documentation
 
 	This documentation is still incomplete and has rough edges – it's a beta version.
 	While we're working on it, we'd already love to get your feedback! Please share
-	your thoughts in the FLOW3 mailing list or the #FLOW3 channel on irc.freenode.net
+	your thoughts in the `FLOW3 mailing list <http://lists.typo3.org/cgi-bin/mailman/listinfo/typo3-project-5_0-general>`_
+	or the #FLOW3 channel on irc.freenode.net
+
+	Help is always greatly appreciated, read :ref:`ch-contributing` to find out how
+	you can improve FLOW3.
 
 Quickstart
 ----------
 
-Get a first overview and a working example within 15 minutes: :doc:`Quickstart 
+Get a first overview and a working example within 15 minutes: :doc:`Quickstart
 <Quickstart/Index>`
 
 .. toctree::
