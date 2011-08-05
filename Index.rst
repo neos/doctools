@@ -1,10 +1,17 @@
 FLOW3 Documentation
 ===================
 
+.. note::
+
+	This documentation is still incomplete and has rough edges – it's a beta version.
+	While we're working on it, we'd already love to get your feedback! Please share
+	your thoughts in the FLOW3 mailing list or the #FLOW3 channel on irc.freenode.net
+
 Quickstart
 ----------
 
-Get a rough overview and a working example within 10 minutes: :doc:`Quickstart <Quickstart/Index>`
+Get a first overview and a working example within 15 minutes: :doc:`Quickstart 
+<Quickstart/Index>`
 
 .. toctree::
 	:hidden:
