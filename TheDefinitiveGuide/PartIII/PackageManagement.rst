@@ -2,19 +2,26 @@
 Package Management
 ==================
 
-Packages
-========
+.. ============================================
+.. Meta-Information for this chapter
+.. ---------------------------------
+.. Author: Robert Lemke
+.. Converted to ReST by: Rens Admiraal
+.. Updated for 1.0 beta1: YES, by Sebastian Kurfürst
+.. ============================================
+
 
 FLOW3 is a package-based system. In fact, FLOW3 itself is just a package as well - but
 obviously an important one. Packages act as a container for different matters: Most of
 them contain PHP code which adds certain functionality, others only contain documentation
 and yet other packages consist of templates, images or other resources. The
-`TYPO3 project`_ hosts a package repository which acts as a convenient hub for
+`TYPO3 project`_ will host a package repository which acts as a convenient hub for
 interchanging FLOW3 based packages with other community members.
 
 .. note::
 
 	At the time of writing the package repository for FLOW3 is still in the planning phase.
+	In order to publish packages, use `TYPO3 Forge <http://forge.typo3.org>`_ for now.
 
 Package Locations
 =================
@@ -22,18 +29,18 @@ Package Locations
 Framework and Application Packages
 ----------------------------------
 
-FLOW3 packages are located in a sub folder of the ``Packages`` directory. A typical
+FLOW3 packages are located in a sub folder of the *Packages/* directory. A typical
 application (such as TYPO3 for example) will use the core packages which are bundled with
-FLOW3 and use additional packages which are specific to the application.The framework
-\packages are kept in a directory called ``Framework`` while the application specific
-packages reside in the ``Application`` directory:
+FLOW3 and use additional packages which are specific to the application. The framework
+packages are kept in a directory called *Framework* while the application specific
+packages reside in the *Application* directory. This leads to the following
+folder structure:
 
 * *Configuration/*
 	The global configuration folder
 * *Data/*
 	The various data folders, temporary as well as persistent
 * *Packages/*
-
 	* *Framework/*
 		The Framework directory contains packages of the FLOW3 distribution (just examples):
 
@@ -51,22 +58,22 @@ packages reside in the ``Application`` directory:
 			Or the demo package
 
 The reason for separating packages into separate directories is that the core packages
-residing in ``Framework/`` can reside in a different, shared location and be symlinked
-from the application using it. Just delete the ``Framework`` directory and replace it with
-a symlink pointing to the ``Packages/Framework/`` directory of the FLOW3 distribution.
+in *Framework/* can reside in a different, shared location and be symlinked
+from the application using it. In this case, just delete the *Framework* directory and replace it with
+a symlink pointing to the *Packages/Framework/* directory of the FLOW3 distribution.
 
 We recommend that you keep a version of the FLOW3 distribution in
-``/var/lib/flow3/flow3-x.y.z/`` and flag all its content read-only for the web server's
+*/var/lib/flow3/flow3-x.y.z/* and flag all its content read-only for the web server's
 user. By doing that you can assure that no FLOW3 package (or other PHP script) can tamper
 with the  FLOW3 package and its built-in security framework.
 
 Additional Package Locations
 ----------------------------
 
-Apart from the ``Application`` and ``Framework`` packages you may define your very own
+Apart from the *Application* and *Framework* package directories you may define your very own
 additional package locations by just creating another directory or symlink in the
-application's ``Packages`` directory. One example for this is the TYPO3 package, which
-expects packages with website resources in a folder named ``Sites``.
+application's *Packages* directory. One example for this is the TYPO3 distribution, which
+expects packages with website resources in a folder named *Sites*.
 
 Loading Order
 -------------
@@ -74,6 +81,10 @@ Loading Order
 If multiple package locations exist, the Package Manager will assure that packages from
 the location FLOW3 itself is located will be loaded first. The loading order of all other
 package locations is undefined.
+
+.. warning:: The above about loading order might not anymore be correct.
+
+.. TODO: fix the above warning and remove it then.
 
 Package Directory Layout
 ========================
@@ -89,24 +100,22 @@ The suggested directory layout of a FLOW3 package is as follows:
 	* *Classes*
 		This directory contains the actual source code for the package. Package authors
 		are free to add (only!) class or interface files directly to this directory or add
-		subdirectories to organize the content if necessary. All classes or interfaces
+		subdirectories to organize the content as necessary. All classes or interfaces
 		below this directory are handled by the autoloading mechanism and will be
 		registered at the object manager automatically (and will thus be considered
 		"registered objects").
 
-		One special file in here is the ``Package.php`` which contains the class with the
+		One special file in here is the *Package.php* which contains the class with the
 		package's bootstrap code.
 	* *Configuration*
 		All kinds of configuration which are delivered with the package reside in this
 		directory. The configuration files are immutable and must not be changed by the
 		user or administrator. The most prominent configuration files are the
-		``Objects.yaml`` file which may be used to configure the package's objects and
-		the ``Settings.yaml`` file which contains general user-level settings.
+		*Objects.yaml* file which may be used to configure the package's objects and
+		the *Settings.yaml* file which contains general user-level settings.
 	* *Documentation*
-		Holds the package documentation. The English manual must be located in a
-		subdirectory called ``Manual/en/``. The format for manuals is `DocBook`_. Please
-		refer to the Documentor's Guide for more details about the directories and files
-		within this directory.
+		Holds the package documentation. Please refer to the Documentor's Guide for
+		more details about the directories and files within this directory.
 	* *Meta*
 		A folder which provides some meta information about the package.
 
@@ -118,17 +127,22 @@ The suggested directory layout of a FLOW3 package is as follows:
 	* *Resources*
 		Contains static resources the package needs, such as library code, template files,
 		graphics, ... In general, there is a distinction between public and private
-		resources. While public resources will be mirrored into FLOW3's ``Web`` directory
-		by the Resource Manager (and therefore become accessible from the web) all
-		resources in the ``Private`` directory remain protected.
+		resources.
 
 		* *Private*
-			Contains private resources for the package.
+			Contains private resources for the package. All files inside this directory
+			will never be directly available from the web.
 		* *Public*
-			Contains public resources for the package.
+			Contains public resources for the package. All files in this directory
+			will be mirrored into FLOW3's *Web* directory by the Resource Manager
+			(and therefore become accessible from the web).
 
 		Although it is up to the package author to name the directories, we suggest the
 		following conventions for directories below ``Private`` and ``Public``:
+
+		.. warning:: The following folder structure is not yet finalized, it is more a rough draft.
+
+		.. TODO: fix the above warning and then remove it.
 
 		* *Media*
 			This directory holds images, PDF, Flash, CSS and other files that will be
@@ -151,15 +165,15 @@ The suggested directory layout of a FLOW3 package is as follows:
 
 		* *Unit*
 			Holds the unit tests for the package.
-		* *Functional
+		* *Functional*
 			Holds the functional tests for the package.
 
-As already mentioned, all classes which are found in the ``Classes`` directory will be
+As already mentioned, all classes which are found in the *Classes* directory will be
 detected and registered. However, this only works if you follow the naming rules equally
 for the class name as well as the file name. An example for a valid class name is
 ``\MyCompany\MyPackage\Controller\StandardController`` while the file containing this
-class would be named ``StandardController.php`` and is expected to be in a directory
-``MyPackage/Classes/Controller``.
+class would be named *StandardController.php* and is expected to be in a directory
+*MyPackage/Classes/Controller*.
 
 All details about naming files, classes, methods and variables correctly can be found in
 the FLOW3 Coding Guidelines. You're highly encouraged to read (and follow) them.
@@ -171,78 +185,39 @@ Package keys are used to uniquely identify packages and provide them with a name
 different purposes. They save you from conflicts between packages which were provided by
 different parties.
 
+We use *vendor namespaces* for package keys, i.e. all packages which are released
+and maintained by the TYPO3 and FLOW3 core teams start with ``TYPO3.*``. In your company,
+we suggest that you use your company name as vendor namespace.
+
 Importing and Installing Packages
 =================================
 
 At this time the features for import and installation of packages have not been
 implemented fully. The current behavior is that all directories which are found below the
-``Packages`` folder are assumed to be packages. Just make sure that you created a
-``Package.xml`` file in the ``Meta`` directory of your package.
+*Packages* folder are assumed to be packages. Just make sure that you created a
+*Package.xml* file in the *Meta* directory of your package and a *Package.php* file
+in the *Classes* directory.
 
-If no ``PackageStates.php`` exists in your ``Configuration`` folder, it will be created
-and all found packages will be activated. If ``PackageStates.php`` exists, you can use the
+If no *PackageStates.php* exists in your *Configuration* folder, it will be created
+and all found packages will be activated. If *PackageStates.php* exists, you can use the
 package manager to activate and deactivate packages through the FLOW3 command line script.
-The script ``flow3`` resides in the main directory of the FLOW3 distribution. From a Unix
-shell you should be able to run the script by entering ``./flow3``:
 
-.. code-block :: text
+.. tip:: It is very convenient for continuous integration and deployment scenarios that
+	all found packages on the first hit will be automatically registered.
 
-	myhost:tutorial johndoe$ ./flow3 FLOW3 1.0.0-beta1 (Production)
-	usage: ./flow3 <command identifier>
+The FLOW3 command line interface is triggered through the *flow3* script
+in the main directory of the FLOW3 distribution. From a Unix
+shell you should be able to run the script by entering ``./flow3`` (on windows,
+use ``flow3.bat``).
 
-The following commands are currently available:
+To activate a package, use the ``package:activate`` command:
 
-.. code-block:: text
+.. code-block:: bash
 
-	FLOW3
+	$ ./flow3 package:activate <PackageKey>
 
-	    flow3:cache:flush                       Flush all caches
-
-	    flow3:core:compile                      Explicitly compile proxy classes
-	    flow3:core:shell                        Run the interactive Shell
-
-	    flow3:doctrine:validate                 Validate the class/table mappings
-	    flow3:doctrine:create                   Create the database schema based on
-	                                            current mapping information
-	    flow3:doctrine:update                   Update the database schema without data
-	                                            loss (as far as possible)
-	    flow3:doctrine:updateandclean           Update database schema and remove obsolete
-	                                            tables / fields
-	    flow3:doctrine:compileproxies           Compile the Doctrine proxy classes
-	    flow3:doctrine:info                     Show the current status of entities and
-	                                            mappings
-	    flow3:doctrine:dql                      Run arbitrary DQL and display results
-	    flow3:doctrine:migrationstatus          Show the current migration status
-	    flow3:doctrine:migrate                  Migrate the database schema
-	    flow3:doctrine:migrationdiff            Generate a migration diff
-	    flow3:doctrine:migrationgenerate        Generate an empty migration
-	    flow3:doctrine:migrationexecute         Execute a single migration
-
-	    flow3:help:help                         Display help for a command
-
-	    flow3:package:create                    Create a new package
-	    flow3:package:delete                    Delete an existing package
-	    flow3:package:activate                  Activate an available package
-	    flow3:package:deactivate                Deactivate a package
-	    flow3:package:listavailable             List available (active and inactive)
-	                                            packages
-	    flow3:package:listactive                List active packages
-
-	    flow3:routing:list                      List the known routes
-
-	    flow3:security:help
-	    flow3:security:importpublickey          Read a PEM formatted public key from stdin
-	                                            and import it into the RSAWalletService
-	    flow3:security:importprivatekey         Read a PEM formatted private key from stdin
-	                                            and import it into the RSAWalletService
-
-
-Depending on your FLOW3 version and the installed packages you'll see more or less the
-above available commands listed.
-
-.. note::
-
-	On Windows use the ``flow3.bat`` batch
+To deactivate a package, use ``package:deactivate``. For a listing of all packages
+(active and inactive) use ``package:list``.
 
 Package Manager
 ===============
@@ -259,9 +234,14 @@ packages and registers their objects and resources.
 Creating a New Package
 ======================
 
-Just create the package folder and subdirectories manually and copy & adapt a
-``Package.xml`` and ``Package.php`` file from one of the other packages. Apart from that
-no further steps are necessary.
+Use the ``package:create`` command to create a new package:
+
+.. code-block:: bash
+
+	$ ./flow3 package:create Acme.Demo
+
+This will create the package in *Packages/Application*. After that, adjust *Meta/Package.xml*
+to your needs. Apart from that no further steps are necessary.
 
 Package Meta Information
 ========================
@@ -277,12 +257,12 @@ empty class, if no bootstrap code is needed.
 
 *Example: Minimal Package.php* ::
 
-	namespace TYPO3\FLOW3;
+	namespace Acme\Demo;
 
 	use \TYPO3\FLOW3\Package\Package as BasePackage;
 
 	/**
-	 * The FooBar Package
+	 * The Acme.Demo Package
 	 *
 	 */
 	class Package extends BasePackage {
@@ -295,7 +275,7 @@ This file contains some meta information for the package manager. The format of 
 follows a RelaxNG schema which is available at
 `http://typo3.org/ns/2008/flow3/package/Package.rng`_.
 
-Here is an example of a valid ``Package.xml`` file:
+Here is an example of a valid *Package.xml* file:
 
 *Example: Package.xml*
 
