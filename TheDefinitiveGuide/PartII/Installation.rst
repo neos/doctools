@@ -14,7 +14,7 @@ Installation
 FLOW3 Download
 ==============
 
-The most recent FLOW3 release can be obtained from 
+The most recent FLOW3 release can be obtained from
 http://flow3.typo3.org/download/ as a .tgz, .zip or .bz2 archive. For the
 purpose of this tutorial we recommend that you download the special **Getting
 Started** distribution which not only contains FLOW3 but also resources you
@@ -29,11 +29,11 @@ directory of your choice, e.g. like this for the gzipped tar archive:
 
 	mkdir -p /var/apache2/htdocs/tutorial
 	tar xfz FLOW3-GettingStarted-1.0.0-beta1.tgz /var/apache2/htdocs/tutorial/
-	
+
 On Windows you create a directory (e.g. *c:\xampp\htdocs\tutorial*), move
 the .zip file into the new directory and unzip it with the Windows Explorer.
 
-The FLOW3 distributions can also be cloned from our Git repository. The 
+The FLOW3 distributions can also be cloned from our Git repository. The
 following Unix command would download the FLOW3 distribution:
 
 *command line*::
@@ -46,7 +46,7 @@ following Unix command would download the FLOW3 distribution:
 	Started distribution in */var/apache2/htdocs/tutorial* and that
 	*/var/apache2/htdocs* is the document root of your web server. On a Windows
 	machine you might use *c:\xampp\htdocs* instead.
-	
+
 Directory Structure
 ===================
 
@@ -65,7 +65,7 @@ Web/					Public web root
 
 A FLOW3 application usually consists of the above directories. As you see, most
 of them contain data which is specific to your application, therefore upgrading
-the FLOW3 distribution is a matter of replacing *Packages/Framework/* by 
+the FLOW3 distribution is a matter of replacing *Packages/Framework/* by
 a new release.
 
 FLOW3 is a package based system which means that all code, documentation and
@@ -84,6 +84,8 @@ be called *Shared/* which points to packages shared by multiple applications.
 
 File Permissions
 ================
+
+.. warning:: |documentationNotReady|
 
 Most of the directories and files must be readable and writable for the user
 you're running FLOW3 with. This user will usually be the same one running your
@@ -109,7 +111,7 @@ In practice you'll use the script like this:
 	cd /var/apache2/htdocs/tutorial
 	sudo ./Packages/Framework/TYPO3.FLOW3/Scripts/setfilepermissions.sh \
 	johndoe _www _www
-	
+
 Now that the file permissions are set, all users who plan using FLOW3 from the
 command line need to join the web server's group. On a Linux machine this can
 be done by typing:
@@ -117,13 +119,13 @@ be done by typing:
 *command line*::
 
 	sudo usermod -a -G _www johndoe
-	
+
 On a Mac you can add a user to the web group with the following command:
 
 *command line*::
 
 	sudo dscl . -append /Groups/_www GroupMembership johndoe
-    
+
 You will have to exit your shell / terminal window and open it again for the
 new group membership to take effect.
 
@@ -131,9 +133,9 @@ new group membership to take effect.
 	In this example the web user was ``_www`` and the web group
 	is called ``_www`` as well (that's the case on a Mac using
 	`MacPorts <http://www.macports.org/>`_ ). On your system the user or group
-	might be ``www-data``, ``httpd`` or the like - make sure to find out and 
+	might be ``www-data``, ``httpd`` or the like - make sure to find out and
 	specify the correct user and group for your environment.
-	
+
 Web Server Configuration
 ========================
 
@@ -153,7 +155,7 @@ host by adding the following directions to your Apache configuration
 loaded with ``Include`` in *httpd.conf*):
 
 *httpd.conf*::
-	
+
 	<VirtualHost *:80>
 		DocumentRoot /var/apache2/htdocs/tutorial/Web/
 		ServerName tutorial.local
@@ -187,7 +189,7 @@ following virtual host to your Apache configuration:
 		SetEnv FLOW3_CONTEXT Development
 	</VirtualHost>
 
-You'll be able to access the same application running in ``Development`` 
+You'll be able to access the same application running in ``Development``
 context by accessing the URL http://dev.tutorial.local. What's left is telling
 your operating system that the invented domain names can be found on your local
 machine. Add the following line to your */etc/hosts* file
@@ -204,11 +206,11 @@ machine. Add the following line to your */etc/hosts* file
 	line:
 	``# You can specify a default context by activating this option:``
 	``SetEnv FLOW3_CONTEXT Development``
-	
+
 Welcome to FLOW3
 ----------------
 
-Restart Apache and test your new configuration by accessing 
+Restart Apache and test your new configuration by accessing
 http://dev.tutorial.local in a web browser. You should be greeted by FLOW3's
 welcome screen:
 

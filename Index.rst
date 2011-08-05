@@ -11,6 +11,8 @@ FLOW3 Documentation
 	Help is always greatly appreciated, read :ref:`ch-contributing` to find out how
 	you can improve FLOW3.
 
+.. tip:: You can also use the left and right arrow keys to jump to the previous or next chapter.
+
 Quickstart
 ----------
 

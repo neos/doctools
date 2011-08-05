@@ -270,3 +270,9 @@ epub_copyright = u'2011, Robert Lemke'
 
 # Example configuration for intersphinx: refer to the Python standard library.
 intersphinx_mapping = {'http://docs.python.org/': None}
+
+
+rst_prolog = """
+.. |documentationNotReady| replace:: This part of the documentation has **not yet been adjusted** to FLOW3 1.0, and might contain **incomplete or wrong information**. We :ref:`need your help <ch-contributing>` to fix this!
+
+"""

@@ -7,11 +7,11 @@ FLOW3 makes it easy to start with a new application. The
   generating an initial layout of packages, controllers, models and
   views.
 
-.. note:: 
+.. note::
 	At the time of this writing these functions are only available through
 	FLOW3's command line interface. Please note that this might change in the
 	future because the philosophy of FLOW3 is using
-	
+
 	- the command line for **automatization** and **system administrative tasks and**
     - a clear web interface for **modeling** and **development**
 
@@ -19,7 +19,9 @@ FLOW3 makes it easy to start with a new application. The
 Command Line Tool
 =================
 
-The script *flow3* resides in the main directory of the FLOW3 distribution. 
+.. warning:: |documentationNotReady|
+
+The script *flow3* resides in the main directory of the FLOW3 distribution.
 From a Unix shell you should be able to run the script by entering ``./flow3``:
 
 console::
@@ -27,16 +29,16 @@ console::
 	myhost:tutorial johndoe$ ./flow3
 	FLOW3 1.0.0-beta1 (Development)
 	usage: ./flow3 &lt;command identifier>
-	
+
 	The following commands are currently available:
-	
+
 	PACKAGE "TYPO3.FLOW3":
-	
+
 		typo3.flow3:cache:flush                             Flush all caches
-	
+
 		typo3.flow3:core:compile                            Explicitly compile proxy classes
 		typo3.flow3:core:shell                              Run the interactive Shell
-	
+
 		typo3.flow3:doctrine:validate                       Validate the class/table mappings
 		typo3.flow3:doctrine:create                         Create the database schema based on current mapping information
 		typo3.flow3:doctrine:update                         Update the database schema, not using migrations
@@ -48,23 +50,23 @@ console::
 		typo3.flow3:doctrine:migrationexecute               Execute a single migration
 		typo3.flow3:doctrine:migrationversion               Mark/unmark a migration as migrated
 		typo3.flow3:doctrine:migrationgenerate              Generate a new migration
-	
+
 		typo3.flow3:help:help                               Display help for a command
-	
+
 		typo3.flow3:package:create                          Create a new package
 		typo3.flow3:package:delete                          Delete an existing package
 		typo3.flow3:package:activate                        Activate an available package
 		typo3.flow3:package:deactivate                      Deactivate a package
 		typo3.flow3:package:listavailable                   List available (active and inactive) packages
 		typo3.flow3:package:listactive                      List active packages
-	
+
 		typo3.flow3:routing:list                            List the known routes
-	
+
 		typo3.flow3:security:importpublickey                Import a public key
 		typo3.flow3:security:importprivatekey               Import a private key
-	
+
 	PACKAGE "TYPO3.KICKSTART":
-	
+
 		typo3.kickstart:kickstart:package                   Kickstart a package
 		typo3.kickstart:kickstart:controller                Kickstart a controller class
 		typo3.kickstart:kickstart:model                     Kickstart a domain model
@@ -79,7 +81,7 @@ commands listed.
 	We haven't developed a Windows batch script yet so for the time being
 	you'll have to call FLOW3 manually. Before you can run the FLOW3 command
 	line script you need to set some environment variables:
-	
+
 console::
 
 	c:\> set FLOW3_CONTEXT=Development
@@ -88,9 +90,9 @@ console::
 
 If you like to make those variable settings permanent, so they are valid for
 more than just the current shell session, you can use the ``setx`` command:
-      
+
 console::
-    
+
 	c:\> setx FLOW3_CONTEXT Development
 	c:\> setx FLOW3_ROOTPATH C:\xampp\htdocs\tutorial
 	c:\> setX FLOW3_WEBPATH C:\xampp\htdocs\tutorial\Web
@@ -100,10 +102,12 @@ Listing the available packages is then as easy as typing:
 console::
 
 	c:\> (php Packages\Framework\FLOW3\Scripts\FLOW3.php FLOW3 Package PackageManager listavailable)
-   
+
 
 Kickstart the package
 =====================
+
+.. warning:: |documentationNotReady|
 
 Let's create a new package **Blog** inside the Vendor namespace **TYPO3**:
 
@@ -153,10 +157,10 @@ console::
 Switch to your web browser and check if the generated controller produces some output:
 
 .. image: /Images/GettingStarted/FreshBlogPackage.png
-	
+
 .. tip::
 	If you get an error at this point, like a "404 Not Found" this could be
-	caused by outdated cache entries. Because FLOW3 should be running in 
+	caused by outdated cache entries. Because FLOW3 should be running in
 	``Development`` context at this point, it is supposed to detect changes to
 	code and resource files, but this seems to sometimes fail... Before you go
 	crazy looking for an error on your side, **try clearing the cache manually**
@@ -199,7 +203,7 @@ respectively.
 
 .. tip::
 	If you can't access the newly created controllers one reason might be that
-	you did not run FLOW3 in the development context (did you set the 
+	you did not run FLOW3 in the development context (did you set the
 	``FLOW3_CONTEXT`` environment variable as explained earlier?). As already
 	mentioned, FLOW3 does not clear caches automatically in a production
 	context so you better work in development mode while you're developing.
@@ -211,17 +215,17 @@ Kickstart Models and Repositories
 =================================
 
 The kickstarter can also generate models and repositories [#]_\ . However, at
-this point you will stop using the kickstarter because 
+this point you will stop using the kickstarter because
 	a) writing models and repositories by hand is really easy and
 	b) as mentioned before, the command line won't be the preferred way of
 	generating scaffolds in the future. We are not completely happy with the
     parameter syntax yet and therefore it is better not to teach it to you
-    
-    
+
+
 -----
 
 .. [#]	Want to try it out? The syntax is
-		``./flow3 typo3.kickstart:kickstart:model PackageKey ModelName 
+		``./flow3 typo3.kickstart:kickstart:model PackageKey ModelName
 		propertyName:type propertyName:type``
         ... or on Windows
         ``php Packages\Framework\FLOW3\Scripts\FLOW3.php Kickstart Kickstart

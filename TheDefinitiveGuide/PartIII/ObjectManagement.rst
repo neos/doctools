@@ -611,9 +611,7 @@ The ``doSomething`` method will output the settings of the ``MyPackage`` package
 Required and Optional Dependencies
 ----------------------------------
 
-.. warning:: The following section is not correct anymore for FLOW3 1.0
-
-.. TODO: update this part. it is plain wrong :) and then remove the above comment
+.. warning:: |documentationNotReady|
 
 All dependencies defined in a constructor are, by its nature, required. If a dependency
 can't be solved by autowiring or by configuration, FLOW3's object builder will throw an
@@ -1079,9 +1077,7 @@ whose name starts with ``inject``.
 Custom Factories
 ----------------
 
-.. warning:: The following section is not yet fully up-to-date for FLOW3 1.0.
-
-.. TODO: re-work the factories example and remove this TODO notice.
+.. warning:: |documentationNotReady|
 
 Complex objects might require a custom factory which takes care of all important settings
 and dependencies. As we have seen previously, a cache consists of a frontend, a backend
