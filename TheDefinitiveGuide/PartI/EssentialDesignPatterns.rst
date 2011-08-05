@@ -1,2 +1,2 @@
-Essential Design Patterns
-=========================
+Essential Design Patterns (to be written)
+=========================================
