@@ -320,7 +320,28 @@ properties and methods. This can be very useful, e.g. for giving a method of
 a child class a new functionality. Let's have a look at the method
 ``startEngine()`` for example:
 
-TODO: Enter Code
+PHP Code::
+
+	class Ship {
+	   …
+	   $engineStatus = 'OFF';
+	   …
+	   function startEngine() {
+		  $this->engineStatus = 'ON';
+	   }
+	   …
+	}
+	
+	class Luxusliner extends Ship {
+	   …
+	   $additionalEngineStatus = 'OFF';
+	   …
+	   function startEngine() {
+		  $this->engineStatus = 'ON';
+		  $this->additionalEngineStatus = 'ON';
+	   }
+	   …
+	}
 
 Our luxury liner (of course) has an additional motor, so this has to be
 switched on also, if the method ``startEngine()`` is called. The child class
@@ -339,7 +360,28 @@ exactly what can be done by using the key word ``parent``. With
 ``parent::methodname()`` the method of the parent class can be accessed
 comfortably - so our former example can be re-written in a smarter way:
 
-TODO: Enter Code
+PHP Code::
+
+	class Ship {
+	   …
+	   $engineStatus = 'OFF';
+	   …
+	   function startEngine() {
+		  $this->engineStatus = 'ON';
+	   }
+	   …
+	}
+	
+	class Luxusliner extends Ship {
+	   …
+	   $additionalEngineStatus = 'OFF';
+	   …
+	   function startEngine() {
+		  parent::startEngine();
+		  $this->additionalEngineStatus = 'ON';
+	   }
+	   …
+	}
 
 Abstract classes
 ----------------
@@ -352,7 +394,25 @@ ship is to be handled differently for each has a proper configuration. So each
 ship must have such a method but the concrete implementation is to be done
 separately for each ship type.
 
-TODO: Enter Code
+PHP Code::
+
+	abstract class Ship {
+	…
+	   function __construct() {
+		  $this->setupCoaches();
+	   } 
+	   abstract function setupCoaches();
+	…
+	}
+	
+	class Luxusliner extends Ship {
+	…
+	   function setupCoaches() {
+		  echo 'Kabinen werden eingerichtet';
+	   }
+	}
+	
+	$luxusschiff = new Luxusliner();
 
 In the parent class we have defined only the body of the 
 method ``setupCoaches()``. The key word ``abstract`` makes sure that the method
@@ -370,7 +430,24 @@ satellite TV and some who don't. The ships who do, have the methods
 ``enableTV()`` and ``disableTV()``. It is useful to define an interface
 for that:
 
-TODO: Enter Code
+PHP Code::
+
+	interface SatelliteTV {  
+	   public function enableTV();
+	   public function disableTV();
+	}
+	
+	class Luxusliner extends Ship implements SatelliteTV {
+	   
+	   protected $tvEnabled = FALSE;
+	   
+	   public function enableTV() {
+		  $this->tvEnabled = TRUE;
+	   }
+	   public function disableTV() {
+		  $this->tvEnabled = FALSE;
+	   }
+	}
 
 Using the key word ``implements`` it is made sure, that the class implements
 the given interface. All methods in the interface definition then have to be
@@ -400,7 +477,22 @@ Access to Properties
 
 This small example demonstrates how to work with protected properties:
 
-TODO: Enter Code
+PHP Code::
+
+	abstract class Ship {
+	   protected $coaches;
+	   …
+	   abstract protected function setupCoaches();
+	}
+	
+	class Luxusliner extends Ship {
+	   protected function setupCoaches() {
+		  $this->coaches = 300;
+	   }
+	}
+
+$luxusliner = new Luxusliner('Fidelio', 100);
+echo 'Anzahl Kabinen: ' . $luxusliner->coaches; // Funktioniert NICHT!
 
 The ``LuxuryLiner`` may alter the property ``coaches``, for this is ``protected``.
 If it was ``private`` no access from inside of the child class would 
@@ -426,7 +518,32 @@ Often you'll have to read or set properties of an object from outside. So you'll
 need special methods that are able to set or get a property. These methods are
 called **setter** respectively **getter**. See the example.
 
-TODO: Enter Code
+PHP Code::
+
+	class Ship {
+	  
+	   protected $coaches;
+	   protected $classification = 'NORMAL';
+	  
+	   public function getCoaches() {
+		  return $this->coaches;
+	   }
+		
+	   public function setCoaches($numberOfCoaches) {
+		  if ($numberOfCoaches > 500) {
+			 $this->classification = 'LARGE';
+		  } else {
+			 $this->classification = 'NORMAL';
+		  }
+		  $this->coaches = $numberOfCoaches;
+	   }
+	
+	   public function getClassification() {
+		  return $this->classification;
+	   }
+		
+	   …
+	}
 
 We now have a method ``setCoaches()`` which sets the number of coaches. 
 Furthermore it changes - depending on the number of coaches - the ship
@@ -458,7 +575,36 @@ same shipyard. in case of technical emergency, all ships need to know the
 actual emergency phone number of this shipyard. So we save this number in a
 static property ``$shipyardSupportTelephoneNumber``:
 
-TODO: Enter Code
+PHP Code::
+
+	class Luxusliner extends Ship {
+	   protected static $shipyardSupportTelephoneNumber = '+49 30 123456';
+	   
+	   public function reportTechnicalProblem() {
+		  echo 'Auf dem Schiff ' . $this->name . ' wurde ein Problem festgestellt. Bitte informieren Sie ' . self::$shipyardSupportTelephoneNumber;
+	   }
+	
+	   public static function setShipyardSupportTelephoneNumber($newNumber) {
+		  self::$shipyardSupportTelephoneNumber = $newNumber;
+	   }
+	}
+	
+	$fidelio = new Luxusliner('Fidelio', 100);
+	$figaro = new Luxusliner('Figaro', 200);
+	
+	$fidelio->reportTechnicalProblem();
+	$figaro->reportTechnicalProblem();
+	
+	Luxusliner::setShipyardSupportTelephoneNumber('+01 1000');
+	
+	$fidelio->reportTechnicalProblem();
+	$figaro->reportTechnicalProblem();
+	
+	// Ausgabe
+	Auf dem Schiff Fidelio wurde ein Problem festgestellt. Bitte informieren Sie +49 30 123456
+	Auf dem Schiff Figaro wurde ein Problem festgestellt. Bitte informieren Sie +49 30 123456
+	Auf dem Schiff Fidelio wurde ein Problem festgestellt. Bitte informieren Sie +01 1000
+	Auf dem Schiff Figaro wurde ein Problem festgestellt. Bitte informieren Sie +01 1000
 
 What happens here? We instantiate two different ships, which both have a problem
 and do contact the shipyard. Inside the method ``reportTechnicalProblem()`` you
@@ -503,7 +649,32 @@ with ``@scope singleton``\. An example: our luxury liners are all constructed
 in the same shipyard. So there is no sense in having more than one instance of
 the shipyard object:
 
-TODO: Enter Code
+PHP Code::
+
+	/**
+	 * @scope singelton
+	 */
+	class LuxuslinerShipyard {
+	   protected $numberOfShipsBuilt = 0;
+	
+	   public function getNumberOfShipsBuilt() {
+		  return $this->numberOfShipsBuilt;
+	   }
+	
+	   public function buildShip() {
+		  $this->numberOfShipsBuilt++;
+		  // Schiff bauen und zurückgeben
+	   }
+	}
+
+	$luxuslinerShipyard = new LuxuslinerFactory();
+	$luxuslinerShipyard->buildShip();
+	
+	$theSameLuxuslinerShipyard = new LuxuslinerFactory();
+	$theSameLuxuslinerShipyard->buildShip();
+	
+	echo $luxuslinerShipyard->getNumberOfShipsBuilt(); // 2
+	echo $theSameLuxuslinerShipyard->getNumberOfShipsBuilt(); // 2
 
 Prototype
 ---------
