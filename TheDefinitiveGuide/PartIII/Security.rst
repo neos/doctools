@@ -24,7 +24,7 @@ following value in *Settings.yaml* configuration file:
 
 	FLOW3: security: enable: yes
 
-If set to "yes", which is the default, the security framework engages with FLOW3 
+If set to "yes", which is the default, the security framework engages with FLOW3
 by vowing in two AOP advices into the MVC dispatcher and another two into the
 persistence layer classes.
 
@@ -104,14 +104,14 @@ you provided valid credentials an account will be authenticated afterwards. [#]_
 
 .. note::
 
-	After authentication the ``authenticate()`` action will automatically redirect to the 
+	After authentication the ``authenticate()`` action will automatically redirect to the
 	original request, if the authentication process has been triggerd due missing privileges
 	while handling this original request.
 
 The internal authentication process
 -----------------------------------
 
-Now that you know, how you can authenticate, let's have a look at the internal process. 
+Now that you know, how you can authenticate, let's have a look at the internal process.
 The following sequence diagram shows the participating components and their interaction:
 
 .. figure:: /Images/TheDefinitiveGuide/PartIII/Security_BasicAuthenticationProcess.png
@@ -134,7 +134,7 @@ An authentication token holds the status of a specific authentication mechanism,
 example it receives the credentials (e.g. an username and password) needed for
 authentication and stores one of the following authentication states in the session. [#]_
 
-These constants are defined in the authentication token interface 
+These constants are defined in the authentication token interface
 (``TYPO3\FLOW3\Security\Authentication\TokenInterface``) and the status can be obtained
 from the ``getAuthenticationStatus()``method of any token.
 
@@ -236,21 +236,21 @@ to create a simple username/password account for the DefaultProvider:
 	$account = $this->accountFactory->createAccountWithPassword($identifier, $password, $roles, $authenticationProviderName);
 	$this->accountRepository->add($account);
 
-The way the credentials are stored internally is completely up to the authentication provider. 
-The ``PersistedUsernamePasswordProvider`` uses the 
+The way the credentials are stored internally is completely up to the authentication provider.
+The ``PersistedUsernamePasswordProvider`` uses the
 ``TYPO3\FLOW3\Security\Cryptography\HashService`` to verify the given password. In the
 example above, the given plaintext password will be securely hashed by the ``HashService``.
-The hashing is the main magic happening in the ``AccountFactory`` and the reason why we don't 
-create  the account object directly. If you want to learn more about secure password hashing 
-in FLOW3, you should read the section about :ref:`Cryptography` below. You can also see, that there 
-is an array of roles added to the account. This is used by the policy system and will be 
+The hashing is the main magic happening in the ``AccountFactory`` and the reason why we don't
+create  the account object directly. If you want to learn more about secure password hashing
+in FLOW3, you should read the section about :ref:`Cryptography` below. You can also see, that there
+is an array of roles added to the account. This is used by the policy system and will be
 explained in the according section below.
 
 .. note::
 
 	This example expects the account factory and account repository to be available in
 	``$this->accountFactory`` and ``$this->accountRepository`` respectively. If you
-	use this snippet in an action controller, these can be injected very easily by 
+	use this snippet in an action controller, these can be injected very easily by
 	dependency injection.
 
 .. _Advanced authentication configuration:
@@ -272,7 +272,7 @@ again the configuration of the default authentication provider:
 	    authentication:
 	      providers:
 	        DefaultProvider:
-	          providerClass: PersistedUsernamePasswordProvider</programlisting></para> 
+	          providerClass: PersistedUsernamePasswordProvider
 
 If you have a closer look at this configuration, you can see, that the word providers is
 plural. That means, you have the possibility to configure more than one provider and use
@@ -336,7 +336,7 @@ which can be specified in the provider settings. By this option you can specify 
 token should be used for a provider. Remember the token is responsible for the credentials
 retrieval, i.e. if you want to authenticate let's say via username and password this setting
 enables to to specify where these credentials come from. So e.g. you could reuse the one
-username/password provider class and specify, wether authentication credentials are sent 
+username/password provider class and specify, wether authentication credentials are sent
 in a POST request or set in a HTTP Basic authentication header.
 
 *Example: Specifying a specific token type for an authentication provider*
@@ -457,7 +457,7 @@ example, that redirects to a login page (Using the ``WebRedirect`` entry point).
 
 .. tip::
 
-	If a request has been intercepted by an ``AuthenticationRequired`` exception, this 
+	If a request has been intercepted by an ``AuthenticationRequired`` exception, this
 	request will be stored in the security context. By this, the authentication process
 	can resume this request afterwards. Have a look at the FLOW3 authentication controller
 	if you want to see this feature in action.
@@ -498,7 +498,7 @@ Simple username/password authentication
 
 The implementation of the corresponding authentication provider resides in the class
 ``TYPO3\FLOW3\Security\Authentication\Provider\PersistedUsernamePasswordProvider``.
-It is able to authenticate tokens of the type 
+It is able to authenticate tokens of the type
 ``TYPO3\FLOW3\Security\Authentication\Token\UsernamePassword``. It expects a credentials
 array in the token which looks like that: ::
 
@@ -530,7 +530,7 @@ from the HTTP POST data, look at the following program listing for details: ::
 
 	$postArguments = $environment->getRawPostArguments();
 
-	$credentials['username'] = 
+	$credentials['username'] =
 		\TYPO3\FLOW3\Reflection\ObjectAccess::getPropertyPath($postArguments, 'TYPO3.FLOW3.Security.Authentication.Token.UsernamePassword.username');
 	$credentials['password'] =
 		\TYPO3\FLOW3\Reflection\ObjectAccess::getPropertyPath($postArguments, 'TYPO3.FLOW3.Security.Authentication.Token.UsernamePassword.password');
@@ -568,7 +568,7 @@ information.
 *Authentication provider*
 
 After that you'll have to implement your own authentication strategy by providing a class,
-that implements the interface 
+that implements the interface
 ``TYPO3\FLOW3\Security\Authentication\AuthenticationProviderInterface``:
 
 1. In the constructor you will get the name, that has been configured for the provider and
@@ -596,7 +596,7 @@ deviate from this procedure.
 
 		2. Retrieve the corresponding account object from the account repository, which
 		you should inject into your provider by dependency injection. The repository
-		provides a convenient find method for this task: 
+		provides a convenient find method for this task:
 		``findActiveByAccountIdentifierAndAuthenticationProviderName()``.
 
 		3. The ``credentialsSource`` property of the account will hold the credentials
@@ -667,7 +667,7 @@ following voting process to meet its decision:
 ``VOTE_DENY``" vote. In all other cases an access denied exception will be thrown.
 
 *On access decision voters*
- 
+
 As you have seen, the default way of deciding on access is done by voting. This makes the
 whole authorization process very flexible and very easily extensible. You can at any time
 write your own voter classes and register them, just make sure to implement the interface
@@ -686,7 +686,7 @@ register your custom voter as shown below:
 	By default there is always one voter registered:
 	``TYPO3\FLOW3\Security\Authorization\Voter\Policy``. This voter connects the
 	authorization system to the policy component, by returning a vote depending on the
-	configured security policy. Read the section about Policies, to learn more about the 
+	configured security policy. Read the section about Policies, to learn more about the
 	default policy handling in FLOW3.
 
 If asked, each voter has to return one of the three possibles votes: grant, deny or
@@ -695,7 +695,7 @@ use for that. You might imagine that a voter has to return an abstain vote, if i
 able to give a proper grant or deny vote.
 
 Now it could be the case that all registered voters abstain. Usually the access decision
-manager will deny access then. However, you can change that behavior by configuring the 
+manager will deny access then. However, you can change that behavior by configuring the
 following option:
 
 .. code-block:: yaml
@@ -777,13 +777,13 @@ firewall configuration will look like:
 	            patternValue: some pattern value
 	            interceptor:  MyCompany\MyPackage\Security\MyOwnSecurityInterceptor
 
-As you can see, you can easily use your own implementations for request patterns and 
+As you can see, you can easily use your own implementations for request patterns and
 security interceptors.
 
 .. note::
 
-	You might have noticed the ``rejectAll`` option. If this is set to ``yes``, 
-	only request which are explicitly allowed by a request filter will be able 
+	You might have noticed the ``rejectAll`` option. If this is set to ``yes``,
+	only request which are explicitly allowed by a request filter will be able
 	to pass the firewall.
 
 .. _Access Control Lists:
@@ -799,7 +799,7 @@ three major objects, which are explained below: roles, resources and acl entries
 policy definitions are configured in the ``Policy.yaml`` files.
 
 *Roles*
- 
+
 In the section about authentication so called roles were introduced. A role can be
 attached to an users security context, to determine which privileges should be granted to
 her. I.e. the access rights of a user are decoupled from the user object itself, making it
@@ -835,7 +835,7 @@ protect, for example you want to configure which roles are allowed to access a c
 resource. The policy configuration deals with method and entity resources.
 
 Entity resources are related to content security, which are explained in the
-:ref:`Content security` section below. In this section we will deal with method 
+:ref:`Content security` section below. In this section we will deal with method
 resources only.
 
 *Example: resources definition in the *Policy.yaml* file*
@@ -882,8 +882,8 @@ have a look at an example for such ACL entries:
 	      TYPO3_FooPackage_update: GRANT
 	      TYPO3_FooPackage_delete: DENY
 
-This will end up in ``Administrators`` being able to call all ``update*`` and ``list*`` 
-methods in the class ``SomeClass`` and all ``delete*`` methods no matter which class in 
+This will end up in ``Administrators`` being able to call all ``update*`` and ``list*``
+methods in the class ``SomeClass`` and all ``delete*`` methods no matter which class in
 the whole package ``FooPackage``. However, ``Customers`` are only able to call the ``list*``
 methods, while ``PrivilegedCustomers`` are also allowed to call the ``update*`` methods.
 And all this without touching one line of PHP code, isn't that convenient?
@@ -1047,7 +1047,7 @@ RSA wallet service
 .. [#] Well, it holds them in member variables, but lies itself in the security context,
 	which is a class configured as scope session.
 
-.. [#] The specification can be downloaded from 
+.. [#] The specification can be downloaded from
 	`http://www.oasis-open.org/committees/tc_home.php?wg_abbrev=ciq`_. The implementation of
 	this specification resides in the "Party" package, which is part of the official FLOW3
 	distribution.
