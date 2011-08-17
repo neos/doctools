@@ -17,7 +17,7 @@ What Is FLOW3?
 --------------
 
 FLOW3 is a PHP-based application framework which is especially well-suited for
-enterprise-grade applications. Its architecture and conventions keep your head clear and 
+enterprise-grade applications. Its architecture and conventions keep your head clear and
 let you focus on the essential parts of your application. Although stability, security and
 performance are all important elements of the framework's design, the fluent user
 experience is the one underlying theme which rules them all.
@@ -30,7 +30,7 @@ a lot of universal development techniques you can learn.
 
 .. tip::
 
-	This tutorial goes best with a Caffè Latte or, if it's afternoon or late night 
+	This tutorial goes best with a Caffè Latte or, if it's afternoon or late night
 	already, with a few shots of Espresso ...
 
 Downloading FLOW3
@@ -193,7 +193,7 @@ action method like this one::
 
 .. important::
 
-	Always make sure to properly document all your functions and class properties. This 
+	Always make sure to properly document all your functions and class properties. This
 	will not only help other developers to understand your code, but is also essential for
 	FLOW3 to work properly: In the above example FLOW3 will, for example, determine that
 	the expected type of the parameter *$name* is *string* and adjust some validation
@@ -225,10 +225,10 @@ hardly note that content is actually stored in a database. Your code won't conta
 SQL query and you don't have to deal with setting up table structures.
 
 But before you can store anything, you still need to set up a database and tell FLOW3 how
-to access it. The credentials and driver options need to be specified in the global 
+to access it. The credentials and driver options need to be specified in the global
 FLOW3 settings.
 
-After you have created an empty database and set up a user with sufficient access 
+After you have created an empty database and set up a user with sufficient access
 rights, copy the file *Configuration/Settings.yaml.example* and save it as
 *Settings.yaml*. Open and adjust the file to your needs – for a common MySQL setup, it
 would look similar to this:
@@ -318,18 +318,18 @@ if you can't resist ...
 A Closer Look at the Example
 ----------------------------
 
-In case you have been programming PHP for a while, you might be used to tackle many 
+In case you have been programming PHP for a while, you might be used to tackle many
 low-level tasks yourself: Rendering HTML forms, retrieving and validating input from the
 superglobals ``$_GET``, ``$_POST`` and ``$_FILES``, validating the input, creating SQL
 queries for storing the input in the database, checking for Cross-Site Scripting,
 Cross-Site Request Forgery, SQL-Injection and much more.
 
-With this background, the following complete code listing powering the previous example 
+With this background, the following complete code listing powering the previous example
 may seem a bit odd, if not magical to you. Taker a close look at each of the methods –
 can you imagine what they do? ::
 
 	/**
-	 * CoffeeBean controller for the Acme.Demo package 
+	 * CoffeeBean controller for the Acme.Demo package
 	 */
 	class CoffeeBeanController extends ActionController {
 
@@ -404,7 +404,7 @@ can you imagine what they do? ::
 		}
 	}
 
-You will learn all the nitty-gritty details of persistence (that is storing and 
+You will learn all the nitty-gritty details of persistence (that is storing and
 retrieving objects in a database), Model-View Controller and validation in
 :doc:`The Definitive Guide <../TheDefinitiveGuide/Index>`. With some hints
 for each of the actions of this controller though, you'll get some first impression of
@@ -419,14 +419,14 @@ The ``indexAction`` displays a list of coffee beans. All it does is fetching
 all existing coffee beans from a *repository* and then handing them over to the template
 for rendering.
 
-The ``CoffeeBeanRepository`` takes care of storing and finding stored coffee beans. The 
+The ``CoffeeBeanRepository`` takes care of storing and finding stored coffee beans. The
 simplest operation it provides is the ``findAll()`` method which returns a list of all
 existing ``CoffeeBean`` objects.
 
-For consistency reasons only one instance of the ``CoffeeBeanRepository`` class may 
+For consistency reasons only one instance of the ``CoffeeBeanRepository`` class may
 exist at a time. Otherwise there would be multiple repositories storing ``CoffeeBean``
-objects – and which one would you then ask for retrieving a specific coffee bean back from 
-the database? The ``CoffeeBeanRepository`` is therefore tagged with an *annotation* 
+objects – and which one would you then ask for retrieving a specific coffee bean back from
+the database? The ``CoffeeBeanRepository`` is therefore tagged with an *annotation*
 stating that only a single instance may exist at a time::
 
 	/**
@@ -439,8 +439,8 @@ stating that only a single instance may exist at a time::
 Because PHP doesn't support the concept of annotations natively, we are using doc
 comments which are parsed by an annotation parser in FLOW3.
 
-FLOW3's object management detects the ``@scope singleton`` annotation and takes care of 
-all the details. All you need to do in order to get the right ``CoffeeBeanRepository`` 
+FLOW3's object management detects the ``@scope singleton`` annotation and takes care of
+all the details. All you need to do in order to get the right ``CoffeeBeanRepository``
 instance is telling FLOW3 to *inject* it into a class property you defined::
 
 	/**
@@ -449,7 +449,7 @@ instance is telling FLOW3 to *inject* it into a class property you defined::
 	 */
 	protected $coffeeBeanRepository;
 
-The ``@inject`` annotation tells FLOW3 to set the ``$coffeeBeanRepository`` right after 
+The ``@inject`` annotation tells FLOW3 to set the ``$coffeeBeanRepository`` right after
 the ``CoffeeBeanController`` class has been instantiated.
 
 .. tip::
@@ -459,16 +459,16 @@ the ``CoffeeBeanController`` class has been instantiated.
 	in the :doc:`related section <../TheDefinitiveGuide/PartIII/ObjectManagement>` of
 	the main manual.
 
-FLOW3 adheres to the Model-View-Controller pattern – that's why the actual output is not 
+FLOW3 adheres to the Model-View-Controller pattern – that's why the actual output is not
 generated by the action method itself. This task is delegated to the *view*, and that is,
 by default, a *Fluid* template (Fluid is the name of the templating engine FLOW3 uses).
 Following the conventions, there should be a directory structure in the
 :file:`Resources/Private/Templates/` folder of a package which corresponds to the
-controllers and actions. For the ``index`` action of the ``CoffeeBeanController`` the 
+controllers and actions. For the ``index`` action of the ``CoffeeBeanController`` the
 template :file:`Resources/Private/Templates/CoffeeBean/Index.html` will be used for
 rendering.
 
-Templates can display content which has been assigned to *template variables*. The 
+Templates can display content which has been assigned to *template variables*. The
 placeholder ``{name}`` will be replaced by the actual value of the template variable
 ``name`` once the template is rendered. Likewise ``{coffeeBean.name}`` is substituted
 by the value of the coffee bean's ``name`` attribute.
@@ -516,15 +516,15 @@ The ``showAction`` method requires a ``CoffeeBean`` object as its method argumen
 But we need to look into the template of the ``indexAction`` again to understand how
 coffee beans are actually passed to the ``showAction``.
 
-In the list of coffee beans, rendered by the ``indexAction``, each entry links to the 
-corresponding ``showAction``. The links are rendered by a so-called *view helper* in the 
+In the list of coffee beans, rendered by the ``indexAction``, each entry links to the
+corresponding ``showAction``. The links are rendered by a so-called *view helper* in the
 Fluid template :file:`Index.html`:
 
 .. code-block:: html
 
 	<f:link.action action="show" arguments="{coffeeBean: coffeeBean}">…</f:link.action>
 
-The interesting part is the ``{coffeeBean: coffeeBean}`` argument assignment: 
+The interesting part is the ``{coffeeBean: coffeeBean}`` argument assignment:
 It makes sure that the ``CoffeeBean`` object, stored in the ``coffeeBean``
 template variable, will be passed to the ``showAction`` through a GET parameter.
 
@@ -545,7 +545,7 @@ a GET parameter.
 	create nice ones in the main manual.
 
 Before the ``showAction`` method is actually called, FLOW3 will analyze the GET and POST
-parameters of the incoming HTTP request and convert identifiers into real objects 
+parameters of the incoming HTTP request and convert identifiers into real objects
 again. By its UUID the coffee bean is retrieved from the ``CoffeeBeanRepository`` and
 eventually passed to the action method::
 
@@ -575,7 +575,7 @@ Like the ``showAction`` it expects a ``CoffeeBean`` as its argument::
 	}
 
 This time the argument contains not an existing coffee bean but a new one. FLOW3 knows
-that the expected type is ``CoffeeBean`` (by the type hint in the method and the comment) 
+that the expected type is ``CoffeeBean`` (by the type hint in the method and the comment)
 and thus tries to convert the POST data sent by the form into a new ``CoffeeBean`` object.
 All you need to do is adding it to the Coffee Bean Repository.
 
@@ -587,12 +587,12 @@ the ``newAction``. But instead of empty fields, this form contains all the data 
 existing coffee bean, including a hidden field with the coffee bean's UUID.
 
 The edit template uses Fluid's form view helper for rendering the form. The important bit
-for the edit form is the form object assignment::
+for the edit form is the form object assignment:
 
 .. code-block:: html
 
 	<f:form action="update" object="{coffeeBean}" name="coffeeBean">
-		…
+		...
 	</f:form>
 
 The ``object="{coffeeBean}"`` attribute assignment tells the view helper to use the
@@ -623,8 +623,8 @@ argument::
 	}
 
 Although this method looks quite similar to the ``showAction``, there is an important
-difference you should be aware of: While the parameter passed to the ``showAction`` 
-is an already existing (that is, already *persisted*) coffee bean object, the 
+difference you should be aware of: While the parameter passed to the ``showAction``
+is an already existing (that is, already *persisted*) coffee bean object, the
 ``updateAction`` receives a *clone* of an existed coffee bean with the modifications
 submitted by the user already applied.
 
@@ -645,7 +645,7 @@ Congratulations! You already learned the most important concepts of FLOW3 develo
 Certainly this tutorial will have raised more questions than it answered. Some of
 these concepts – and many more you will learn – take some time to get used to.
 The best advice I can give you is to expect things to be rather simple and
-not look out for the complicated solution (you know, the *not to see the wood for 
+not look out for the complicated solution (you know, the *not to see the wood for
 the trees* thing ...).
 
 Next you should experiment a bit with FLOW3 on your own. After you've collected
