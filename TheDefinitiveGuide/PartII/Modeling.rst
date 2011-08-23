@@ -46,7 +46,7 @@ from the other applications and resides in its own layer, the **domain layer**.
 .. tip::
 	Of course there is much more to say about Domain-Driven Design which
 	doesn't belong in this tutorial. A good starter is the `section about
-    principles <http://flow3.typo3.org/about/principles/>`_ on the FLOW3 website.
+	principles <http://flow3.typo3.org/about/principles/>`_ on the FLOW3 website.
 
 Domain Model
 ============

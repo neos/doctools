@@ -136,7 +136,7 @@ authentication and stores one of the following authentication states in the sess
 
 These constants are defined in the authentication token interface
 (``TYPO3\FLOW3\Security\Authentication\TokenInterface``) and the status can be obtained
-from the ``getAuthenticationStatus()``method of any token.
+from the ``getAuthenticationStatus()`` method of any token.
 
 .. tip::
 
@@ -969,7 +969,7 @@ example, which should be more or less self-explanatory:
 
 *Example: the ``ifAccess`` view helper*
 
-..code-block:: html
+.. code-block:: html
 
 	<f:security.ifAccess resource="someResource">
 		This is being shown in case you have access to the given resource
@@ -1017,6 +1017,8 @@ Channel security
 ================
 
 Currently channel security is an open task. Stay tuned for great features!
+
+.. _Cryptography:
 
 Cryptography
 ============

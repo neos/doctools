@@ -8,12 +8,13 @@ FLOW3 makes it easy to start with a new application. The
   views.
 
 .. note::
+
 	At the time of this writing these functions are only available through
 	FLOW3's command line interface. Please note that this might change in the
 	future because the philosophy of FLOW3 is using
 
 	- the command line for **automatization** and **system administrative tasks and**
-    - a clear web interface for **modeling** and **development**
+	- a clear web interface for **modeling** and **development**
 
 
 Command Line Tool
@@ -196,9 +197,11 @@ console::
 	+ ...omment/Index.html
 
 These new controllers can now be accessed via
+
 	- http://dev.tutorial.local/typo3.blog/setup,
 	- http://dev.tutorial.local/typo3.blog/post and
-    - http://dev.tutorial.local/typo3.blog/comment
+	- http://dev.tutorial.local/typo3.blog/comment
+
 respectively.
 
 .. tip::
@@ -216,10 +219,11 @@ Kickstart Models and Repositories
 
 The kickstarter can also generate models and repositories [#]_\ . However, at
 this point you will stop using the kickstarter because
-	a) writing models and repositories by hand is really easy and
-	b) as mentioned before, the command line won't be the preferred way of
-	generating scaffolds in the future. We are not completely happy with the
-    parameter syntax yet and therefore it is better not to teach it to you
+
+a) writing models and repositories by hand is really easy and
+b) as mentioned before, the command line won't be the preferred way of
+   generating scaffolds in the future. We are not completely happy with the
+   parameter syntax yet and therefore it is better not to teach it to you.
 
 
 -----
@@ -227,7 +231,7 @@ this point you will stop using the kickstarter because
 .. [#]	Want to try it out? The syntax is
 		``./flow3 typo3.kickstart:kickstart:model PackageKey ModelName
 		propertyName:type propertyName:type``
-        ... or on Windows
-        ``php Packages\Framework\FLOW3\Scripts\FLOW3.php Kickstart Kickstart
-        generateModel --packageKey Blog --modelName ModelName foo:string
-        bar:integer``
+		... or on Windows
+		``php Packages\Framework\FLOW3\Scripts\FLOW3.php Kickstart Kickstart
+		generateModel --packageKey Blog --modelName ModelName foo:string
+		bar:integer``

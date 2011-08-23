@@ -249,7 +249,7 @@ would look similar to this:
 
 .. note::
 
-	If you have never written :term:`YAML`, there are two things you should know at least:
+	If you have never written `YAML`, there are two things you should know at least:
 
 	* indentation has a meaning: by different levels of indentation, a structure is
 	  defined.

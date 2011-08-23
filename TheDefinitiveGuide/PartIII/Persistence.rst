@@ -107,7 +107,7 @@ need to write tons of XML, a few annotations in your code are enough:
 The first annotation to note is the ``@Entity`` annotation, which tells the persistence
 framework it needs to persist ``Blog`` instances if they have been added to a Repository. In
 the ``Blog`` class we have some member variables, they are persisted as well by default. The
-persistence framework knows their types by looking at the ``@var??  annotation you use anyway
+persistence framework knows their types by looking at the ``@var``  annotation you use anyway
 when documenting your code (you do document your code, right?).
 
 The *@Column* annotation on ``$title`` is an optimisation since we allow only 80 chars
