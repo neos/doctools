@@ -341,10 +341,10 @@ with their name, scope and meaning:
 + ``@ManyToMany``, +          + difference to plain Doctrine 2 is that the               +
 + ``@OneToOne``    +          + ``targetEntity`` parameter can be omitted, it is taken   +
 +                  +          + from the ``@var`` annotation.                            +
-+                  +          +                                                          *
++                  +          +                                                          +
 +                  +          + The ``cascade`` attribute is set to cascade all          +
 +                  +          + operations on associations within aggregate boundaries.  +
-+                  +          + In that case orphanRemoval is turned on as well.         *
++                  +          + In that case orphanRemoval is turned on as well.         +
 +------------------+----------+----------------------------------------------------------+
 + ``@var``         + Variable + Is used to detect the type a variable has. For           +
 +                  +          + collections, the type is given in angle brackets.        +

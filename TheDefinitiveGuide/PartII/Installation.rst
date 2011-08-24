@@ -97,20 +97,18 @@ are set accordingly.
 
 We recommend setting ownership of directories and files to the web server's
 group. All users who also need to launch FLOW3 must also be added this group.
-Setting the correct permissions is easily done with a little script delivered
-with the FLOW3 distribution:
+But don't worry, this is simply done by changing to the FLOW3 base directory
+and calling the following command:
 
-*command line*::
+.. code-block:: bash
 
-	setfilepermissions.sh commandlineuser webuser webgroup
+	./flow3 core:setfilepermissions john www-data www-data
 
-In practice you'll use the script like this:
+.. note::
 
-*command line*::
-
-	cd /var/apache2/htdocs/tutorial
-	sudo ./Packages/Framework/TYPO3.FLOW3/Scripts/setfilepermissions.sh \
-	johndoe _www _www
+	Setting file permissions is not necessary and not possible on Windows machines.
+	For Apache to be able to create symlinks, it needs to be started with Administrator
+	privileges, though.
 
 Now that the file permissions are set, all users who plan using FLOW3 from the
 command line need to join the web server's group. On a Linux machine this can
@@ -118,7 +116,7 @@ be done by typing:
 
 *command line*::
 
-	sudo usermod -a -G _www johndoe
+	sudo usermod -a -G _www john
 
 On a Mac you can add a user to the web group with the following command:
 

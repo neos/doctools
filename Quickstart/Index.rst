@@ -83,6 +83,8 @@ installations on Mac OS X this would be both *_www* instead of *www-data*.
 .. note::
 
 	Setting file permissions is not necessary and not possible on Windows machines.
+	For Apache to be able to create symlinks, it needs to be started with Administrator
+	privileges, though.
 
 Testing the Installation
 ------------------------
