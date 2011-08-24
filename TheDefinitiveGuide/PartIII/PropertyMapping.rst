@@ -326,7 +326,7 @@ where it left off in the above algorithm.
 
 For simple target types, the steps 2 and 3 are omitted.
 
-Writing 0wn TypeConverters
+Writing Own TypeConverters
 --------------------------
 
 Often, it is enough to subclass

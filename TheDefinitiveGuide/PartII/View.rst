@@ -9,15 +9,15 @@ engine), write your own custom PHP view class or use almost any other template
 engine by writing a thin wrapper building a bridge between FLOW3's interfaces
 and the template engine's functions. In this tutorial we focus on Fluid-based
 templates as this is what you usually want to use.
-  
+
 Resources
 =========
 
 Before we design our first Fluid template we need to spend a thought on the
 resources our template is going to use (I'm talking about all the images, style
-sheets and javascript files which are referred to by your HTML code). 
+sheets and javascript files which are referred to by your HTML code).
 You remember that only the *Web* directory is accessible from the web, right?
-And the resources are part of the package and thus hidden from the public. 
+And the resources are part of the package and thus hidden from the public.
 That's why FLOW3 comes with a powerful resource manager whose main task is to
 manage access to your package's resources.
 
@@ -54,7 +54,7 @@ the next hit.
 	and icons. If you'd like to brush up the following examples a little, then
 	it's now time to copy all files from
 	*Packages/Application/GettingStarted/Resources/Private/CheatSheet/Resources/Public/**
-	to your blog's public resources folder 
+	to your blog's public resources folder
 	(*Packages/Application/TYPO3.Blog/Resources/Public*).
 
 Layouts
@@ -106,7 +106,7 @@ HTML Code::
 				<div class="clear"></div>
 			</div>
 			<div id="footer">
-				<a href="http://flow3.typo3.org">Powered by FLOW3 
+				<a href="http://flow3.typo3.org">Powered by FLOW3
 					<img src="{f:uri.resource(path: 'FLOW3-Logo-11px.png')}" width="11" height="11" />
 				</a>
 			</div>
@@ -162,7 +162,7 @@ This tag tells Fluid to insert the section ``mainbox`` defined in the current
 template at this place. For this to work there must be a section with the
 specified name in the template referring to the layout – because that's the way
 it works: A template declares on which layout it is based on, defines sections
-which in return are included by the layout. Confusing? Let's look at a 
+which in return are included by the layout. Confusing? Let's look at a
 concrete example.
 
 Templates
@@ -178,7 +178,7 @@ meaningful HTML:
 HTML Code::
 
 	<f:layout name="Master" />
-	
+
 	<f:section name="mainbox">
 		<f:flashMessages class="flashmessages" />
 		<f:if condition="{posts}">
@@ -273,7 +273,7 @@ Forms
 Create a New Post
 -----------------
 
-Time to create a form which allows you to enter details for a new post. 
+Time to create a form which allows you to enter details for a new post.
 The first component you need is the ``newAction`` whose sole purpose is
 displaying the form:
 
@@ -324,7 +324,7 @@ attributes are similar to the action link view helper you might have seen in
 previous examples: ``action`` specifies the action to be called on submission
 of the form, ``controller`` would specify the controller and ``package`` the
 package respectively. If ``controller`` or ``package`` are not set, the URI
-builder will assume the current controller or package respectively. 
+builder will assume the current controller or package respectively.
 ``name`` finally declares the name of the form and at the same time specifies
 **the name of the action method argument** which will receive the form values.
 
@@ -399,7 +399,7 @@ HTML code:
 HTML Code::
 
 	<f:layout name="Master" />
-	
+
 	<f:section name="mainbox">
 		<h2 class="flow3-firstHeader">Edit post "{post.title}"</h2>
 		<f:form method="post" action="update" object="{post}" name="post" enctype="multipart/form-data">
@@ -419,9 +419,9 @@ HTML Code::
 	</f:section>
 
 Most of this should already look familiar. However, there is a tiny difference
-to the ``new`` form you created earlier: in this edit form you added 
+to the ``new`` form you created earlier: in this edit form you added
 ``object="{blog}"`` to the ``<f:form>`` tag. This attribute binds the variable
-``{blog}`` to the form and it simplifies the further definition of the 
+``{blog}`` to the form and it simplifies the further definition of the
 form's elements. Each element – in our case the text box and the text
 area – comes with a ``property`` attribute declaring the name of the property
 which is supposed to be displayed and edited by the respective element.
@@ -430,7 +430,7 @@ Because you specified ``property="title"`` for the text box, Fluid will fetch
 the value of the blog's ``title`` property and display it as the default value
 for the rendered text box. The resulting ``input`` tag will also contain the
 name ``"title"`` due to the ``property`` attribute you defined. The ``id``
-attribute only serves as a target for the ``label`` tag and is not required 
+attribute only serves as a target for the ``label`` tag and is not required
 by Fluid.
 
 What's missing now is the PHP code displaying the edit form:

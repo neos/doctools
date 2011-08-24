@@ -1,2 +1,2 @@
-Internationalization (to be written)
-====================================
+Internationalization (to be converted)
+======================================

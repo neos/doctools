@@ -668,6 +668,6 @@ Happy FLOW3 Experience!
 
 *Robert on behalf of the FLOW3 team*
 
-.. _FLOW3 Base Distribution:                       http://flow3.typo3.org/download
-.. _IRC channel:                                                   http://flow3.typo3.org/get-involved/irc-channel/
-.. _users mailing list:                                   http://flow3.typo3.org/get-involved/mailing-lists-newsgroups/
+.. _FLOW3 Base Distribution: http://flow3.typo3.org/download
+.. _IRC channel:             http://flow3.typo3.org/get-involved/irc-channel/
+.. _users mailing list:      http://flow3.typo3.org/get-involved/mailing-lists-newsgroups/
