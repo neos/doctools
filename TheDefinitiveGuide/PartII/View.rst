@@ -9,15 +9,15 @@ engine), write your own custom PHP view class or use almost any other template
 engine by writing a thin wrapper building a bridge between FLOW3's interfaces
 and the template engine's functions. In this tutorial we focus on Fluid-based
 templates as this is what you usually want to use.
-  
+
 Resources
 =========
 
 Before we design our first Fluid template we need to spend a thought on the
 resources our template is going to use (I'm talking about all the images, style
-sheets and javascript files which are referred to by your HTML code). 
+sheets and javascript files which are referred to by your HTML code).
 You remember that only the *Web* directory is accessible from the web, right?
-And the resources are part of the package and thus hidden from the public. 
+And the resources are part of the package and thus hidden from the public.
 That's why FLOW3 comes with a powerful resource manager whose main task is to
 manage access to your package's resources.
 
@@ -54,7 +54,7 @@ the next hit.
 	and icons. If you'd like to brush up the following examples a little, then
 	it's now time to copy all files from
 	*Packages/Application/GettingStarted/Resources/Private/CheatSheet/Resources/Public/**
-	to your blog's public resources folder 
+	to your blog's public resources folder
 	(*Packages/Application/TYPO3.Blog/Resources/Public*).
 
 Layouts
@@ -106,7 +106,7 @@ HTML Code::
 				<div class="clear"></div>
 			</div>
 			<div id="footer">
-				<a href="http://flow3.typo3.org">Powered by FLOW3 
+				<a href="http://flow3.typo3.org">Powered by FLOW3
 					<img src="{f:uri.resource(path: 'FLOW3-Logo-11px.png')}" width="11" height="11" />
 				</a>
 			</div>
@@ -162,7 +162,7 @@ This tag tells Fluid to insert the section ``mainbox`` defined in the current
 template at this place. For this to work there must be a section with the
 specified name in the template referring to the layout – because that's the way
 it works: A template declares on which layout it is based on, defines sections
-which in return are included by the layout. Confusing? Let's look at a 
+which in return are included by the layout. Confusing? Let's look at a
 concrete example.
 
 Templates
@@ -178,7 +178,7 @@ meaningful HTML:
 HTML Code::
 
 	<f:layout name="Master" />
-	
+
 	<f:section name="mainbox">
 		<f:flashMessages class="flashmessages" />
 		<f:if condition="{posts}">
@@ -273,7 +273,7 @@ Forms
 Create a New Post
 -----------------
 
-Time to create a form which allows you to enter details for a new post. 
+Time to create a form which allows you to enter details for a new post.
 The first component you need is the ``newAction`` whose sole purpose is
 displaying the form:
 
@@ -324,7 +324,7 @@ attributes are similar to the action link view helper you might have seen in
 previous examples: ``action`` specifies the action to be called on submission
 of the form, ``controller`` would specify the controller and ``package`` the
 package respectively. If ``controller`` or ``package`` are not set, the URI
-builder will assume the current controller or package respectively. 
+builder will assume the current controller or package respectively.
 ``name`` finally declares the name of the form and at the same time specifies
 **the name of the action method argument** which will receive the form values.
 
@@ -399,7 +399,7 @@ HTML code:
 HTML Code::
 
 	<f:layout name="Master" />
-	
+
 	<f:section name="mainbox">
 		<h2 class="flow3-firstHeader">Edit post "{post.title}"</h2>
 		<f:form method="post" action="update" object="{post}" name="post" enctype="multipart/form-data">
@@ -419,9 +419,9 @@ HTML Code::
 	</f:section>
 
 Most of this should already look familiar. However, there is a tiny difference
-to the ``new`` form you created earlier: in this edit form you added 
+to the ``new`` form you created earlier: in this edit form you added
 ``object="{blog}"`` to the ``<f:form>`` tag. This attribute binds the variable
-``{blog}`` to the form and it simplifies the further definition of the 
+``{blog}`` to the form and it simplifies the further definition of the
 form's elements. Each element – in our case the text box and the text
 area – comes with a ``property`` attribute declaring the name of the property
 which is supposed to be displayed and edited by the respective element.
@@ -430,7 +430,7 @@ Because you specified ``property="title"`` for the text box, Fluid will fetch
 the value of the blog's ``title`` property and display it as the default value
 for the rendered text box. The resulting ``input`` tag will also contain the
 name ``"title"`` due to the ``property`` attribute you defined. The ``id``
-attribute only serves as a target for the ``label`` tag and is not required 
+attribute only serves as a target for the ``label`` tag and is not required
 by Fluid.
 
 What's missing now is the PHP code displaying the edit form:
@@ -465,7 +465,7 @@ PHP Code::
 	/**
 	 * Updates an existing post
 	 *
-	 * @param \TYPO3\Blog\Domain\Model\Post $post A not yet persisted clone of the original post containing the modifications
+	 * @param \TYPO3\Blog\Domain\Model\Post $post Post containing the modifications
 	 * @return void
 	 */
 	public function updateAction(\TYPO3\Blog\Domain\Model\Post $post) {
@@ -492,55 +492,14 @@ read on ...
 
 The ``updateAction`` expects one argument, namely the **edited post**. "Edited
 post" means that this is a ``Post`` object which already contains the values
-submitted by the edit form but is **not yet connected** to the repository in
-any way. At the time the ``updateAction`` receives the post object two posts
-with the same identity (i.e. with the same internal unique identifier) exist:
-One is the original, unmodified post residing in the repository and the other
-one is a **clone** of the original post with the new values already applied.
+submitted by the edit form.
 
-Cloning an entity object, such as a post, with PHP's ``clone`` keyword creates
-an exact copy of the original with the only difference that the copy is not
-connected to the repository and therefore modifications to this instance will
-**not be persisted**. Consider the following example:
-
-PHP Code::
-
-	$postA = $postRepository->findByTitle('My first post');
-	$postB = clone $postA;
-	
-	$postA->setContent('Modified');
-	$postB->setContent('Modified');
-
-The new content of ``$postA`` will be persisted automatically at the end of the
-request, all modification to ``$postB`` however will be lost because it is only
-a clone.
-
-Now that you know that the ``post`` passed to the ``updateAction`` is a clone
-and therefore not stored in a repository, you might wonder how to replace the
-original post object with the edited post clone. The repository's ``update``
-method does exactly that: it takes a clone, determines its technical identity,
-tries to find an object in the repository having the same identity and finally
-replaces the original by the clone.
-
-The following two solutions are equivalent:
-
-PHP Code::
-
-	 // using update():
-	$postRepository->update($editedPost);
-
-	 // using replace():
-	$uuid = $persistenceManager->getIdentifierByObject($editedPost);
-	$originalPost = $persistenceManager->getObjectByIdentifier($uuid);
-	$postRepository->replace($originalPost, $editedPost);
-
-In some situations it is completely okay and even necessary to use the
-repository's ``replace`` method, for example if you want to replace an existing
-object by a completely new (i.e. not cloned) instance. However, if you know
-that you're dealing with a clone, always prefer ``update``.
+These modifications will **not be persisted** automatically. To persist the
+changes to the post object, call the PostRepository's ``update`` method. It schedules
+an object for the dirty check at the end of the request.
 
 If all these details didn't scare you, you might now ask yourself how FLOW3
-could know that the ``updateAction`` expects a clone and not the original?
+could know that the ``updateAction`` expects a modified object and not the original?
 Great question. And the answer is – literally – hidden in the form generated
 by Fluid's form view helper:
 
@@ -552,12 +511,9 @@ HTML Code::
 	   ...
 	</form>
 
-Fluid automatically rendered a hidden field containing information about the
-technical identity of the form's object. This information is added in
-two cases:
-
-	-	if the object is an original, previously retrieved from a repository
-	-	if the object is a clone of an original
+Fluid automatically renders a hidden field containing information about the
+technical identity of the form's object, if the object is an original, previously
+retrieved from a repository.
 
 On receiving a request, the MVC framework checks if a special identity field
 (such as the above hidden field) is present and if further properties have been
@@ -573,10 +529,10 @@ submitted. This results in three different cases:
 	+-------------------+---------------+---------------------------------------+
 	| identity present, | Show /        | Retrieve original object with         |
 	| properties missing| Delete / ...  | given identifier                      |
-	+-------------------+---------------+---------------------------------------+									
-	| identity present, | Edit /        | Retrieve original object, clone it    | 
-	| properties present| Update        | and set the given properties          |
+	+-------------------+---------------+---------------------------------------+
+	| identity present, | Edit /        | Retrieve original object, and set the |
+	| properties present| Update        | given properties                      |
 	+-------------------+---------------+---------------------------------------+
 
-Because the edit form contained both identity and properties, FLOW3 prepared a
-clone with the given properties for our ``updateAction``.
+Because the edit form contained both identity and properties, FLOW3 prepared an
+instance with the given properties for our ``updateAction``.
