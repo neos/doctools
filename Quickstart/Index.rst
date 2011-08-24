@@ -623,19 +623,17 @@ argument::
 	}
 
 Although this method looks quite similar to the ``showAction``, there is an important
-difference you should be aware of: While the parameter passed to the ``showAction``
-is an already existing (that is, already *persisted*) coffee bean object, the
-``updateAction`` receives a *clone* of an existed coffee bean with the modifications
-submitted by the user already applied.
+difference you should be aware of: The parameter passed to the ``showAction``
+is an already existing (that is, already *persisted*) coffee bean object with the
+modifications submitted by the user already applied.
 
-Any changes you apply to *persisted* objects will eventually be stored automatically!
-There is no *save* method you'd have to call. Contrary to persisted objects, cloned
-objects will not be stored – you have to explicitly tell FLOW3 to apply the changes.
-
-As you can see in the example, it is fairly easy to convert a *cloned* object into
-a *persisted* object::
+Changes you apply to *persisted* objects will not be stored automatically! You have
+to explicitly tell FLOW3 to apply the changes::
 
 	$this->coffeeBeanRepository->update($coffeeBean);
+
+This allows for a very efficient dirty checking and is a safety measure - as it leaves
+control over the changes in your hands.
 
 Next Steps
 ----------

@@ -465,7 +465,7 @@ PHP Code::
 	/**
 	 * Updates an existing post
 	 *
-	 * @param \TYPO3\Blog\Domain\Model\Post $post A not yet persisted clone of the original post containing the modifications
+	 * @param \TYPO3\Blog\Domain\Model\Post $post Post containing the modifications
 	 * @return void
 	 */
 	public function updateAction(\TYPO3\Blog\Domain\Model\Post $post) {
@@ -492,55 +492,14 @@ read on ...
 
 The ``updateAction`` expects one argument, namely the **edited post**. "Edited
 post" means that this is a ``Post`` object which already contains the values
-submitted by the edit form but is **not yet connected** to the repository in
-any way. At the time the ``updateAction`` receives the post object two posts
-with the same identity (i.e. with the same internal unique identifier) exist:
-One is the original, unmodified post residing in the repository and the other
-one is a **clone** of the original post with the new values already applied.
+submitted by the edit form.
 
-Cloning an entity object, such as a post, with PHP's ``clone`` keyword creates
-an exact copy of the original with the only difference that the copy is not
-connected to the repository and therefore modifications to this instance will
-**not be persisted**. Consider the following example:
-
-PHP Code::
-
-	$postA = $postRepository->findByTitle('My first post');
-	$postB = clone $postA;
-	
-	$postA->setContent('Modified');
-	$postB->setContent('Modified');
-
-The new content of ``$postA`` will be persisted automatically at the end of the
-request, all modification to ``$postB`` however will be lost because it is only
-a clone.
-
-Now that you know that the ``post`` passed to the ``updateAction`` is a clone
-and therefore not stored in a repository, you might wonder how to replace the
-original post object with the edited post clone. The repository's ``update``
-method does exactly that: it takes a clone, determines its technical identity,
-tries to find an object in the repository having the same identity and finally
-replaces the original by the clone.
-
-The following two solutions are equivalent:
-
-PHP Code::
-
-	 // using update():
-	$postRepository->update($editedPost);
-
-	 // using replace():
-	$uuid = $persistenceManager->getIdentifierByObject($editedPost);
-	$originalPost = $persistenceManager->getObjectByIdentifier($uuid);
-	$postRepository->replace($originalPost, $editedPost);
-
-In some situations it is completely okay and even necessary to use the
-repository's ``replace`` method, for example if you want to replace an existing
-object by a completely new (i.e. not cloned) instance. However, if you know
-that you're dealing with a clone, always prefer ``update``.
+These modifications will **not be persisted** automatically. To persist the
+changes to the post object, call the PostRepository's ``update`` method. It schedules
+an object for the dirty check at the end of the request.
 
 If all these details didn't scare you, you might now ask yourself how FLOW3
-could know that the ``updateAction`` expects a clone and not the original?
+could know that the ``updateAction`` expects a modified object and not the original?
 Great question. And the answer is – literally – hidden in the form generated
 by Fluid's form view helper:
 
@@ -552,12 +511,9 @@ HTML Code::
 	   ...
 	</form>
 
-Fluid automatically rendered a hidden field containing information about the
-technical identity of the form's object. This information is added in
-two cases:
-
-	-	if the object is an original, previously retrieved from a repository
-	-	if the object is a clone of an original
+Fluid automatically renders a hidden field containing information about the
+technical identity of the form's object, if the object is an original, previously
+retrieved from a repository.
 
 On receiving a request, the MVC framework checks if a special identity field
 (such as the above hidden field) is present and if further properties have been
@@ -573,10 +529,10 @@ submitted. This results in three different cases:
 	+-------------------+---------------+---------------------------------------+
 	| identity present, | Show /        | Retrieve original object with         |
 	| properties missing| Delete / ...  | given identifier                      |
-	+-------------------+---------------+---------------------------------------+									
-	| identity present, | Edit /        | Retrieve original object, clone it    | 
-	| properties present| Update        | and set the given properties          |
+	+-------------------+---------------+---------------------------------------+
+	| identity present, | Edit /        | Retrieve original object, and set the |
+	| properties present| Update        | given properties                      |
 	+-------------------+---------------+---------------------------------------+
 
-Because the edit form contained both identity and properties, FLOW3 prepared a
-clone with the given properties for our ``updateAction``.
+Because the edit form contained both identity and properties, FLOW3 prepared an
+instance with the given properties for our ``updateAction``.

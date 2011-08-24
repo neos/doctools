@@ -119,12 +119,9 @@ the persistence layer::
 	// The $person object with UUID 14d20100-9d70-11e0-aa82-0800200c9a66 is fetched from the persistence layer
 
 In case some more properties are specified in the array (besides ``__identity``),
-the object is cloned and on the clone, the submitted properties are modified.
-By cloning a domain object, it looses its connection to the persistence layer,
-and modifications are not automatically saved to the database at the end of the
-request.
-
-.. warning:: This will change after FLOW3 1.0.0 beta1
+the submitted properties are modified on the fetched object. These modifications are
+not automatically saved to the database at the end of the request, you need to pass
+such an instance to ``update`` on the corresponding repository to persist the changes.
 
 So, let's walk through a more complete input example::
 
@@ -137,8 +134,7 @@ So, let's walk through a more complete input example::
 In this case, the following steps happen:
 
 * The ``Person``object with identity ``14d20100-9d70-11e0-aa82-0800200c9a66`` is
-  fetched from persistence. After that, it is cloned, and loses its connection
-  to the persistence layer (i.e. modifications are not automatically persisted anymore).
+  fetched from persistence.
 * The ``$name`` of the fetched ``$person`` object is updated to ``John Doe``
 * As the ``$mother`` property is also of type ``Person``, the ``PersistentObjectConverter``
   is invoked recursively. It fetches the ``Person`` object with UUID
@@ -146,8 +142,6 @@ In this case, the following steps happen:
   property of the original person.
 
 Here, you see that we can also set associations using the Property Mapper.
-
-.. warning:: This will change after FLOW3 1.0.0 beta1
 
 Configuring the Conversion Process
 ==================================

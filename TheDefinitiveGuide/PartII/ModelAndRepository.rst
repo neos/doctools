@@ -144,7 +144,7 @@ PHP Code::
 		 * @return \Doctrine\Common\Collections\ArrayCollection<\TYPO3\Blog\Domain\Model\Post> The posts of this blog
 		 */
 		public function getPosts() {
-			return clone $this->posts;
+			return $this->posts;
 		}
 	
 	}

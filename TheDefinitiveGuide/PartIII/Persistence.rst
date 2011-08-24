@@ -68,10 +68,8 @@ objects it manages. In our model the ``Blog`` is the entry point to our object t
 so we will add a ``BlogRepository``, allowing us to find ``Blog`` instances by the criteria we need.
 
 Now, before we can find a ``Blog``, we need to create and save one. What we do is create the
-object and add it to the ``BlogRepository``. This will
-automagically persist your Blog and you can retrieve it again later. No ``save()`` call
-needed. Oh, and the posts, comments and tags in your Blog are persisted as well, of
-course.
+object and ``add`` it to the ``BlogRepository``. This will automagically persist your Blog
+and you can retrieve it again later.
 
 For all that magic to work as expected, you need to give some hints. This doesn't mean you
 need to write tons of XML, a few annotations in your code are enough:
@@ -79,6 +77,7 @@ need to write tons of XML, a few annotations in your code are enough:
 *Example: Persistence-related annotations in the Blog class* ::
 
 	namespace TYPO3\Blog\Domain\Model;
+
 	/**
 	 * A Blog object
 	 *
@@ -95,7 +94,7 @@ need to write tons of XML, a few annotations in your code are enough:
 
 	    /**
 	     * @var \Doctrine\Common\Collections\ArrayCollection<\TYPO3\Blog\Domain\Model\Post>
-	     * @OneToMany(mappedBy="blog",cascade={"all"})
+	     * @OneToMany(mappedBy="blog")
 	     * @OrderBy({"date" = "DESC"})
 	     */
 	    protected $posts;
@@ -203,10 +202,26 @@ to ignore transient objects for queries [#]_.
 If you need to query for objects you just created, feel free to have the
 ``PersistenceManager`` injected and use ``persistAll()`` in your code.
 
+How changes are persisted
+-------------------------
+
+When you ``add`` or ``remove`` an object to or from a repository, the object will be added to
+or removed from the underlying persistence as expected upon ``persistAll``. But what about
+changes to already persisted objects? As we have seen, those changes are only persisted, if
+the changed object is given to ``update`` on the corresponding repository.
+
+Now, for objects that have no corresponding repository, how are changes persisted? In the
+same way you fetch those objets from their parent - by traversal. FLOW3 follows references
+from objects managed in a repository (aggregate roots) for all persistence operations,
+unless the referenced object itself is an aggregate root.
+
+When using the Doctrine 2 persistence, this is done by virtually creating cascade attributes
+on the mapped associations.
+
 Conventions for File and Class Names
 ====================================
 
-To allow FLOW3 to detect the object type a repository is responsible for certain
+To allow FLOW3 to detect the object type a repository is responsible for, certain
 conventions need to be followed:
 
 * Domain models should reside in a *Domain/Model* directory
@@ -230,6 +245,10 @@ conventions need to be followed:
 	      \Repository
 	        BlogRepository
 	        PostRepository
+
+Another way to bind a repository to a model is to define a class constant named
+``ENTITY_CLASSNAME`` in your repository and give it the desired model name as value. This
+should be done only when following the conventions outlined above is not feasible.
 
 Lazy Loading
 ============
@@ -322,12 +341,16 @@ with their name, scope and meaning:
 + ``@ManyToMany``, +          + difference to plain Doctrine 2 is that the               +
 + ``@OneToOne``    +          + ``targetEntity`` parameter can be omitted, it is taken   +
 +                  +          + from the ``@var`` annotation.                            +
++                  +          +                                                          *
++                  +          + The ``cascade`` attribute is set to cascade all          +
++                  +          + operations on associations within aggregate boundaries.  +
++                  +          + In that case orphanRemoval is turned on as well.         *
 +------------------+----------+----------------------------------------------------------+
 + ``@var``         + Variable + Is used to detect the type a variable has. For           +
 +                  +          + collections, the type is given in angle brackets.        +
 +------------------+----------+----------------------------------------------------------+
 + ``@transient``   + Variable + Makes the persistence framework ignore the variable.     +
-+                  +          + Neither will its value be persisted, nor will it be      +
++                  +          + Neither will it's value be persisted, nor will it be     +
 +                  +          + touched during reconstitution.                           +
 +------------------+----------+----------------------------------------------------------+
 + ``@identity``    + Variable + Marks the variable as being relevant for determining     +
@@ -452,7 +475,7 @@ An entity with only the annotations needed in FLOW3::
 
 	  /**
 	   * @var \Doctrine\Common\Collections\ArrayCollection<\TYPO3\Blog\Domain\Model\Comment>
-	   * @OneToMany(mappedBy="post", cascade={"all"}, orphanRemoval="true")
+	   * @OneToMany(mappedBy="post")
 	   * @OrderBy({"date" = "DESC"})
 	   */
 	  protected $comments;
