@@ -172,6 +172,17 @@ you need to make sure that the directory grants the neccessary rights:
 		AllowOverride FileInfo
 	</Directory>
 
+The way FLOW3 addresses resources on the web makes it incompatible with the ``MultiViews``
+feature of Apache. This needs to be turned off, the default ``.htaccess`` file distributed
+with FLOW3 contains this code already::
+
+	<IfModule mod_negotiation.c>
+
+		# prevents Apache's automatic file negotiation, it breaks resource URLs
+		Options -MultiViews
+
+	</IfModule>
+
 Configure a Context
 -------------------
 

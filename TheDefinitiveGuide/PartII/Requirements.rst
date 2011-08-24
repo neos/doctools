@@ -25,12 +25,8 @@ haven't really tested them). Please make sure that the `mod_rewrite module <http
 is enabled.
 
 .. warning::
-	XAMPP 1.7.2a on MacOS does *not* work, it complains about syntax errors in
-	the source files, probably caused by a bug in the implementation of the
-	zend string optimizer.
-
-	FLOW3's persistence mechanism (Doctrine) requires a `PDO compatible database <http://php.net/manual/pdo.drivers.php>`_ . By
-	default	we use MySQL, but you can also use PostgreSQL, Sqlite or the like.
+	FLOW3's persistence mechanism requires a `PDO compatible database <http://php.net/manual/pdo.drivers.php>`_ . By
+	default we use MySQL, but you can also use PostgreSQL, Sqlite or the like.
 
 PHP
 ===
