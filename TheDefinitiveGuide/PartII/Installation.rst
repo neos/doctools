@@ -7,7 +7,7 @@ Installation
 .. ---------------------------------
 .. Author: Robert Lemke
 .. Converted to ReST by: Christian Müller
-.. Updated for 1.0 beta1: NO
+.. Updated for 1.0 beta1: YES
 .. TODOs: none
 .. ============================================
 
@@ -30,7 +30,7 @@ directory of your choice, e.g. like this for the gzipped tar archive:
 	mkdir -p /var/apache2/htdocs/tutorial
 	tar xfz FLOW3-GettingStarted-1.0.0-beta1.tgz /var/apache2/htdocs/tutorial/
 
-On Windows you create a directory (e.g. *c:\xampp\htdocs\tutorial*), move
+On Windows you create a directory (e.g. *c:\\xampp\\htdocs\\tutorial*), move
 the .zip file into the new directory and unzip it with the Windows Explorer.
 
 The FLOW3 distributions can also be cloned from our Git repository. The
@@ -45,7 +45,7 @@ following Unix command would download the FLOW3 distribution:
 	Throughout this tutorial we assume that you installed the FLOW3 Getting
 	Started distribution in */var/apache2/htdocs/tutorial* and that
 	*/var/apache2/htdocs* is the document root of your web server. On a Windows
-	machine you might use *c:\xampp\htdocs* instead.
+	machine you might use *c:\\xampp\\htdocs* instead.
 
 Directory Structure
 ===================
@@ -84,8 +84,6 @@ be called *Shared/* which points to packages shared by multiple applications.
 
 File Permissions
 ================
-
-.. warning:: |documentationNotReady|
 
 Most of the directories and files must be readable and writable for the user
 you're running FLOW3 with. This user will usually be the same one running your
@@ -213,6 +211,7 @@ machine. Add the following line to your */etc/hosts* file
 	enable the ``Development`` context by editing the *.htaccess* file in the
 	*Web* directory and remove the comment sign in front of the ``SetEnv``
 	line:
+
 	``# You can specify a default context by activating this option:``
 	``SetEnv FLOW3_CONTEXT Development``
 

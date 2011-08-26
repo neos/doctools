@@ -15,7 +15,6 @@ models and views.
 	- the command line for **automatization** and **system administrative tasks and**
 	- a clear web interface for **modeling** and **development**
 
-
 Command Line Tool
 =================
 
@@ -31,47 +30,55 @@ console::
 	The following commands are currently available:
 
 	PACKAGE "TYPO3.FLOW3":
+	-------------------------------------------------------------------------------
+	* flow3:cache:flush                        Flush all caches
+	  cache:warmup                             Warm up caches
 
-	  ⚒ typo3.flow3:cache:flush                             Flush all caches
-		typo3.flow3:cache:warmup                            Warm up caches
+	* flow3:core:setfilepermissions            Adjust file permissions for CLI and
+	                                           web server access
+	* flow3:core:shell                         Run the interactive Shell
 
-	  ⚒ typo3.flow3:core:setfilepermissions                 Adjust file permissions for CLI and web server access
-	  ⚒ typo3.flow3:core:shell                              Run the interactive Shell
+	  doctrine:validate                        Validate the class/table mappings
+	  doctrine:create                          Create the database schema based on
+	                                           current mapping information
+	  doctrine:update                          Update the database schema, not
+	                                           using migrations
+	  doctrine:compileproxies                  Compile the Doctrine proxy classes
+	  doctrine:entitystatus                    Show the current status of entities
+	                                           and mappings
+	  doctrine:dql                             Run arbitrary DQL and display
+	                                           results
+	  doctrine:migrationstatus                 Show the current migration status
+	  doctrine:migrate                         Migrate the database schema
+	  doctrine:migrationexecute                Execute a single migration
+	  doctrine:migrationversion                Mark/unmark a migration as migrated
+	  doctrine:migrationgenerate               Generate a new migration
 
-		typo3.flow3:doctrine:validate                       Validate the class/table mappings
-		typo3.flow3:doctrine:create                         Create the database schema based on current mapping information
-		typo3.flow3:doctrine:update                         Update the database schema, not using migrations
-		typo3.flow3:doctrine:compileproxies                 Compile the Doctrine proxy classes
-		typo3.flow3:doctrine:entitystatus                   Show the current status of entities and mappings
-		typo3.flow3:doctrine:dql                            Run arbitrary DQL and display results
-		typo3.flow3:doctrine:migrationstatus                Show the current migration status
-		typo3.flow3:doctrine:migrate                        Migrate the database schema
-		typo3.flow3:doctrine:migrationexecute               Execute a single migration
-		typo3.flow3:doctrine:migrationversion               Mark/unmark a migration as migrated
-		typo3.flow3:doctrine:migrationgenerate              Generate a new migration
+	  help                                     Display help for a command
 
-		typo3.flow3:help:help                               Display help for a command
+	  package:create                           Create a new package
+	  package:delete                           Delete an existing package
+	  package:activate                         Activate an available package
+	  package:deactivate                       Deactivate a package
+	  package:list                             List available packages
 
-		typo3.flow3:package:create                          Create a new package
-		typo3.flow3:package:delete                          Delete an existing package
-		typo3.flow3:package:activate                        Activate an available package
-		typo3.flow3:package:deactivate                      Deactivate a package
-		typo3.flow3:package:list                            List available packages
+	  routing:list                             List the known routes
 
-		typo3.flow3:routing:list                            List the known routes
+	  security:importpublickey                 Import a public key
+	  security:importprivatekey                Import a private key
 
-		typo3.flow3:security:importpublickey                Import a public key
-		typo3.flow3:security:importprivatekey               Import a private key
 
 	PACKAGE "TYPO3.KICKSTART":
+	-------------------------------------------------------------------------------
+	  kickstart:package                        Kickstart a new package
+	  kickstart:actioncontroller               Kickstart a new action controller
+	  kickstart:commandcontroller              Kickstart a new command controller
+	  kickstart:model                          Kickstart a new domain model
+	  kickstart:repository                     Kickstart a new domain repository
 
-		typo3.kickstart:kickstart:package                   Kickstart a new package
-		typo3.kickstart:kickstart:actioncontroller          Kickstart a new action controller
-		typo3.kickstart:kickstart:commandcontroller         Kickstart a new command controller
-		typo3.kickstart:kickstart:model                     Kickstart a new domain model
-		typo3.kickstart:kickstart:repository                Kickstart a new domain repository
+	* = compile time command
 
-	⚒ compile time command
+	See './flow3 help <commandidentifier>' for more information about a specific command.
 
 Depending on your FLOW3 version you'll see more or less the above available
 commands listed.
@@ -84,7 +91,7 @@ Let's create a new package **Blog** inside the Vendor namespace **TYPO3**:
 
 console::
 
-	myhost:tutorial johndoe$ ./flow3 typo3.kickstart:kickstart:package TYPO3.Blog
+	myhost:tutorial johndoe$ ./flow3 kickstart:package TYPO3.Blog
 
 The kickstarter will create two files
 
@@ -141,7 +148,7 @@ with the kickstarter as well:
 
 console::
 
-	myhost:tutorial johndoe$ ./flow3 typo3.kickstart:kickstart;controller TYPO3.Blog --controllerName Setup,Post,Comment
+	myhost:tutorial johndoe$ ./flow3 kickstart:actioncontroller TYPO3.Blog Setup,Post,Comment
 
 resulting in:
 
@@ -169,7 +176,7 @@ Kickstart Models and Repositories
 =================================
 
 The kickstarter can also generate models and repositories::
-		``./flow3 typo3.kickstart:kickstart:model PackageKey ModelName propertyName:type propertyName:type``
+	``./flow3 kickstart:model PackageKey ModelName propertyName:type propertyName:type``
 
 However, at this point you will stop using the kickstarter because writing models and
 repositories by hand is really easy.

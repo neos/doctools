@@ -7,7 +7,7 @@ Introduction
 .. ---------------------------------
 .. Author: Robert Lemke
 .. Converted to ReST by: Christian Müller
-.. Updated for 1.0 beta1: NO
+.. Updated for 1.0 beta1: YES
 .. TODOs: none
 .. ============================================
 
@@ -19,7 +19,7 @@ enterprise-grade applications and explicitly supports Domain-Driven Design, a
 powerful software design philosophy. Convention over configuration, Test-Driven
 Development, Continuous Integration and an easy-to-read source code are other
 important principles we follow for the development of FLOW3. Needless to say,
-FLOW3 provides you with a full-stack MVC framework for building 
+FLOW3 provides you with a full-stack MVC framework for building
 state-of-the-art web applications. More exciting though are the first class
 Dependency Injection support and the Aspect-Oriented Programming capabilities
 which can be used without a single line of configuration.
@@ -40,14 +40,14 @@ to produce clean code in no time.
 	that changes to the API are still possible. However, we're quite
 	confident that the concepts described in this tutorial will remain the same
 	in FLOW3 1.0.0 final.
-	
+
 	If you're stuck at some point or stumble over some weirdnesses during the
 	tutorial, please let us know! We appreciate any feedback in our mailing
 	lists, as a ticket in our issue tracker or via private email. [#]
 
 .. tip::
 	This tutorial goes best with a Caffè Latte or, if it's afternoon or late night already, with a few shots of Espresso ...
-	
+
 ------
 
 .. [#] I'll read any feedback you send me to robert@typo3.org but I don't always manage to answer quickly.

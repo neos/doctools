@@ -17,24 +17,30 @@ Setup Controller
 The ``SetupController`` will be in charge of creating a ``Blog`` object,
 setting a title and description and storing it in the ``BlogRepository``.
 The kickstarter created a very basic setup controller containing only one
-action, the ``indexAction``. Let's create and store a 
+action, the ``indexAction``. Let's create and store a
 new blog once the index action is called:
 
 PHP Code::
 
 	<?php
 	namespace TYPO3\Blog\Controller;
-	
+
 	// ...
-	
+
 	class SetupController extends \TYPO3\FLOW3\MVC\Controller\ActionController {
-	
+
 		/**
 		 * @inject
 		 * @var \TYPO3\Blog\Domain\Repository\BlogRepository
 		 */
 		protected $blogRepository;
-	
+
+		/**
+		 * @inject
+		 * @var \TYPO3\Blog\Domain\Repository\PostRepository
+		 */
+		protected $postRepository;
+
 		/**
 		 * Sets up a fresh blog and creates a sample post.
 		 *
@@ -42,19 +48,20 @@ PHP Code::
 		 */
 		public function indexAction() {
 			$this->blogRepository->removeAll();
-	
+
 			$blog = new \TYPO3\Blog\Domain\Model\Blog();
 			$blog->setTitle('My Blog');
 			$blog->setDescription('A blog about Foo, Bar and Baz.');
 			$this->blogRepository->add($blog);
-	
+
 			$post = new \TYPO3\Blog\Domain\Model\Post();
 			$post->setAuthor('John Doe');
 			$post->setTitle('Example Post');
 			$post->setContent('Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.');
-	
+			$this->postRepository->add($post);
+
 			$blog->addPost($post);
-	
+
 			return 'Successfully created a blog';
 		}
 	}
@@ -63,14 +70,15 @@ PHP Code::
 You can probably figure out easily what the ``indexAction`` does – it empties
 the ``BlogRepository``, creates a new ``Blog`` object and adds it to the
 ``BlogRepository``. In addition a sample blog post is created and added to the
-blog. Note that if you had ommitted the line
+``PostRepository`` and blog. Note that if you had ommitted the lines
 
 ``$this->blogRepository->add($blog);``
+``$this->postRepository->add($post);``
 
 the blog and the post would have been created in memory but not persisted to
 the database.
 
-Using the blog repository sounds plausible, but where do you get the 
+Using the blog repository sounds plausible, but where do you get the
 ``blogRepository`` from?
 
 PHP Code::
@@ -93,7 +101,7 @@ There's a lot more to discover about **Dependency Injection** and we recommend
 that you read the whole chapter about objects in the `FLOW3 Reference <http://flow3.typo3.org/documentation/manuals/>`_
 once you start with your own coding.
 
-To create the required database tables we now use the command line support. 
+To create the required database tables we now use the command line support.
 The first command is to set up the basic tables, while the second command is
 used to generate the tables for our package:
 
@@ -102,7 +110,7 @@ console::
 	myhost:tutorial johndoe$ ./flow3 typo3.flow3:doctrine:migrate
 	myhost:tutorial johndoe$ ./flow3 typo3.flow3:doctrine:update
 
-Try out the ``SetupController`` by accessing 
+Try out the ``SetupController`` by accessing
 http://dev.tutorial.local/typo3.blog/setup/index. If all went right (and you
 copied the needed files, e.g. the ``Post`` model, from the *CheatSheet* folder
 to the right places), you should see the *Successfully created a blog* message
@@ -112,7 +120,7 @@ to the ``BlogRepository``:
 PHP Code::
 
 	class BlogRepository extends \TYPO3\FLOW3\Persistence\Repository {
-	
+
 		/**
 		 * Finds the active blog.
 		 *
@@ -139,17 +147,17 @@ PHP Code::
 
 	<?php
 	namespace TYPO3\Blog\Controller;
-	
+
 	// ...
-	
+
 	class PostController extends \TYPO3\FLOW3\MVC\Controller\ActionController {
-	
+
 		/**
 		 * @var \TYPO3\Blog\Domain\Repository\BlogRepository
 		 * @inject
 		 */
 		protected $blogRepository;
-	
+
 		/**
 		 * Index action
 		 *
@@ -158,22 +166,22 @@ PHP Code::
 		public function indexAction() {
 			$blog = $this->blogRepository->findActive();
 			$output = '
-				&lt;h1>Posts of "' . $blog->getTitle() . '"&lt;/h1>
-				&lt;ol>';
-	
+				<h1>Posts of "' . $blog->getTitle() . '"</h1>
+				<ol>';
+
 			foreach ($blog->getPosts() as $post) {
-				$output .= '&lt;li>' . $post->getTitle() . '&lt;/li>';
+				$output .= '<li>' . $post->getTitle() . '</li>';
 			}
-	
-			$output .= '&lt;/ol>';
-	
+
+			$output .= '</ol>';
+
 			return $output;
 		}
 	}
 	?>
 
 The ``indexAction`` retrieves the active blog from the ``BlogRepository`` and
-outputs the blog's title and post titles [#]_\ . A quick look 
+outputs the blog's title and post titles [#]_\ . A quick look
 at http://dev.tutorial.local/typo3.blog/post [#]_ confirms that the
 ``SetupController`` has indeed created the blog and post:
 
@@ -217,6 +225,7 @@ PHP Code::
 	 */
 	public function createAction(\TYPO3\Blog\Domain\Model\Post $post) {
 		$this->blog->addPost($post);
+		$this->postRepository->add($post);
 		$this->flashMessageContainer->add('Your new post was created.');
 		$this->redirect('index');
 	}
@@ -229,7 +238,7 @@ PHP Code::
 
 The ``createAction`` expects a parameter ``$post`` which is the ``Post`` object
 to be persisted. The code is quite straight-forward: add the post to the blog,
-add a message to some flash message stack and redirect to the index action. 
+add a message to some flash message stack and redirect to the index action.
 Try calling the ``createAction`` now by accessing
 http://dev.tutorial.local/typo3.blog/post/create:
 

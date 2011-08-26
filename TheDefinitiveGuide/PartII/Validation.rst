@@ -28,7 +28,6 @@ three types:
 	-	**Base Properties** – a set of rules defining the minimum requirements
 		on the properties of a model which must be met before a model may
 		be persisted.
-
 	-	**Base Model** – a set of rules or custom validator enforcing the
 		minimum requirements on the combination of properties of a model which
 		must be met before a model may be persisted.
@@ -47,7 +46,6 @@ PHP Code::
 	/**
 	 * @var string
 	 * @validate StringLength(minimum = 3, maximum = 50)
-	 * @identity
 	 */
 	protected $title;
 
@@ -65,8 +63,9 @@ dedicated lines by further ``@validate`` annotations.
 	FLOW3 provides a range of built-in validators which can be found in the
 	*FLOW3\Validation\Validator* sub package. The names used in the
 	``@validate`` declarations are just the  class names of these validators.
+
 	It is possible and very simple to program custom validators by implementing
-	the ``TYPO3\FLOW3\Validation\Validator\ValidatorInterface``. 
+	the ``TYPO3\FLOW3\Validation\Validator\ValidatorInterface``.
 	Such validators must, however, be referred to by their fully qualified
 	class name (i.e. including the namespace).
 
@@ -92,7 +91,7 @@ validation errors. Just add the ``<f:form.errors>`` view helper to your
 HTML Code::
 
 	<f:layout name="master" />
-	
+
 	<f:section name="mainbox">
 		<h2 class="flow3-firstHeader">Create a new post</h2>
 		<f:flashMessages class="flashmessages"/>
@@ -101,7 +100,6 @@ HTML Code::
 				<strong>{error.propertyName}</strong>: <f:for each="{error.errors}" as="errorDetail">{errorDetail.message}</f:for>
 			</div>
 		</f:form.errors>
-
 
 Similar to the ``<f:for>`` view helper ``<f:form.errors>`` defines a loop
 iterating over validation errors. The attribute ``as`` is optional and if it's
@@ -126,7 +124,7 @@ Now that you know how validation errors can be displayed, you should add a
 HTML Code::
 
 	<f:layout name="master" />
-	
+
 	<f:section name="mainbox">
 		<h2 class="flow3-firstHeader">Edit post</h2>
 		<f:flashMessages class="flashmessages"/>
@@ -180,7 +178,7 @@ request to another action which can handle the error. This is, unfortunately,
 still the ``editAction`` which in the end results in an infinite loop.
 
 So the problem is that FLOW3 tries to validate the ``$post`` argument for the
-``editAction`` although we don't need a valid post at this point. What's 
+``editAction`` although we don't need a valid post at this point. What's
 important is that the post submitted to``updateAction`` or ``createAction`` is
 valid, but we don't really care about the ``editAction`` or ``newAction`` which
 only displays the form.
@@ -211,4 +209,4 @@ error message is displayed above the edit form.
 
 -----
 
-.. [#]	See also: `Separation of Concerns (Wikipedia) <http://en.wikipedia.org/wiki/Separation_of_concerns>`_ 
+.. [#]	See also: `Separation of Concerns (Wikipedia) <http://en.wikipedia.org/wiki/Separation_of_concerns>`_

@@ -14,7 +14,7 @@ persistence, logging, visualization and much more. FLOW3 preaches legible code,
 well-proven design patterns, true object orientation and provides first class
 support for Domain-Driven Design. And it takes care of most of the cross-
 cutting concerns, separating them from the business logic of the application. [#]_ [#]_
-      
+
 Domain-Driven Design
 ====================
 
@@ -52,8 +52,8 @@ Domain Model
 ============
 
 Our first FLOW3 application will be a blog system. Not because programming
-blogs is particularly fancy but because you will 
-a) feel instantly at home with the domain and 
+blogs is particularly fancy but because you will
+a) feel instantly at home with the domain and
 b) it is comparable with tutorials you might know from other frameworks.
 
 So, what does our model look like? Our blog has a number of posts, written by a
@@ -66,13 +66,13 @@ A first sketch shows which domain models (classes) we will need:
 .. figure:: /Images/GettingStarted/DomainModel-1.png
 
 	A simple model
-	
+
 Let's add some properties to each of the models:
 
 .. figure:: /Images/GettingStarted/DomainModel-2.png
 
 	Domain Model with properties
-	
+
 
 To be honest, the above model is not the best example of a rich Domain Model,
 compared to Active Records which usually contain not only properties but also
@@ -88,19 +88,19 @@ setter method for each property you want to be accessible from the outside.
 You'll end up with a lot of methods like ``getTitle``, ``setAuthor``,
 ``addComment`` and the like [#]_ . Posts (i.e. ``Post`` objects) are stored in
 a ``Blog`` object in an array or better in an
-``Doctrine/Common/Collections/ArrayCollection`` [#]_ . For retrieving all posts
+``Doctrine/Common/Collections/Collection`` [#]_ instance. For retrieving all posts
 from a given Blog all you need to do is calling the ``getPosts`` method of the
 Blog in question:
 
 code::
-	
-	$posts = $blog-&gt;getPosts();
+
+	$posts = $blog->getPosts();
 
 Executing ``getComments`` on the Post would return all related comments:
 
 code::
 
-	$comments = $post-&gt;getComments();
+	$comments = $post->getComments();
 
 In the same manner ``getTags`` returns all tags attached to a given Post. But
 how do you retrieve the active Blog object?
@@ -119,7 +119,7 @@ As you see, the Blog Repository provides methods for adding, removing and
 finding blogs. In our example application only one blog at a time is supported
 so all we need is a function to find the **active** blog – even though the
 repository can contain more than one blog.
-    
+
 Now, what if you want to display a list of the 5 latests posts, no matter what
 blog they belong to? One option would be to find all blogs, iterate over their
 posts and inspect each ``date`` property to create a list of the 5 most recent
@@ -133,7 +133,6 @@ better create a dedicated ``PostRepository`` which provides a specialized
 .. figure:: /Images/GettingStarted/DomainModel-4.png
 
 	A dedicated Post Repository
-
 
 I silently added the ``findPrevious`` and ``findNext`` methods because you will
 later need them for navigating between posts.
@@ -156,7 +155,6 @@ the **Aggregate Root**:
 
 	The Post Aggregate
 
-
 The concept of aggregates simplifies the overall model because all objects of
 an aggregate can be seen as a whole: on deleting a post, the framework also
 deletes all associated comments and tags because it knows that no direct
@@ -173,7 +171,7 @@ first let's get our hands dirty and start with the actual implementation!
 		just love clean code due to the advantages I discovered in my real-
 		world projects.
 .. [#]	If it doesn't, we recommend reading our introductory sections about MVC
-		in the `FLOW3 reference <http://flow3.typo3.org/documentation/reference/>`.
+		in the :doc:`FLOW3 reference <../PartIII/ModelViewController>`.
 .. [#]	see http://en.wikipedia.org/wiki/Active_record_pattern
 .. [#]	Of course we considered magic getters and setters. But then, how do you
 		restrict read or write access to single properties?
@@ -181,4 +179,4 @@ first let's get our hands dirty and start with the actual implementation!
 		of your IDE's autocompletion feature. Fortunately IDEs like Netbeans or
 		Zend Studio provide functions to create getters and
 		setters automatically.
-.. [#]	see http://www.doctrine-project.org/api/common/2.0/doctrine/common/collections/arraycollection.html
+.. [#]	see http://www.doctrine-project.org/api/common/2.0/doctrine/common/collections/collection.html
