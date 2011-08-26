@@ -1,11 +1,11 @@
-===========================================
-Object-Oriented Programming (to be written)
-===========================================
+===========================
+Object-Oriented Programming
+===========================
 
 .. ============================================
 .. Meta-Information for this chapter
 .. ---------------------------------
-.. Author: Sebastian Kurfürst ?
+.. Author: Patrick Lobacher
 .. Converted to ReST by: Christian Müller
 .. Updated for 1.0 beta1: NO
 .. TODOs: none
@@ -25,7 +25,7 @@ working to much and finally decided to go on vacation) and a program, promising
 recuperation by booking a coach on one of the luxury liners for him and
 his wife.
 
-Object Orientation assumes that a concrete problem is to be solved by a 
+Object Orientation assumes that a concrete problem is to be solved by a
 program, and a concrete problem is caused by real objects. Therefore focus is
 on the object. This can be abstract of course: it will not be something as
 concrete as a car or a ship all the time, but can also be a reservation,
@@ -33,7 +33,7 @@ an account or a graphical symbol.
 
 objects are "containers" for data and corresponding functionality. The data of
 an object is stored in its **Properties**. The functionality is provided by
-**Methods**, which can for example alter the properties of the object. 
+**Methods**, which can for example alter the properties of the object.
 In regard to the cruise liner we can say, that it has a certain amount of
 coaches, a length and width and a maximum speed. Further it has methods to
 start the motor (and hopefully to stop it again also), change the direction as
@@ -53,11 +53,11 @@ procedural, thus stringing together functions.
 
 Procedural programming has some severe disadvantages though:
 
-	- 	Properties and methods belonging together with regard to content can 
+	- 	Properties and methods belonging together with regard to content can
 		not be united. This methodology, called **Encapsulation** in Object
 		Orientation, is necessary, if only because of clear arrangement.
 	-	It is rather difficult to re-use code
-	-	All properties can be altered everywhere throughout the code. 
+	-	All properties can be altered everywhere throughout the code.
 		This leads to hard-to-find errors.
 	-	Procedural code gets confusing easily. This is called Spaghetti code.
 
@@ -74,7 +74,7 @@ simulator and satellite TV.
 On the following pages, we'll try to be as graphic as possible (but still
 semantically correct) to familiarize you with object orientation. There is a
 specific reason: The more you can identify with the object and its methods, the
-more open you'll be for the Theory behind Object Orientated Programming. 
+more open you'll be for the Theory behind Object Orientated Programming.
 Both is necessary for successful programming – even though you'll often not be
 able to imagine the objects you'll later work with as clearly as in
 our examples.
@@ -84,19 +84,19 @@ Classes and Objects
 
 Let's now take a step back and imagine there'd be a blueprint for ships
 in general. We now focus not the ship but this blueprint. It is called
-**Class**, in this case is is the class ``ship``. In PHP this is written as
+**class**, in this case is is the class ``Ship``. In PHP this is written as
 follows;
 
 PHP Code::
 
 	<?php
-	
-	class ship {
-	
+
+	class Ship {
+
 	...
-	
+
 	}
-	
+
 	?>
 
 .. tip::
@@ -109,18 +109,18 @@ and methods are written. we'll now add these properties and methods:
 
 PHP Code::
 
-	class ship {
-	
+	class Ship {
+
 		public $name;
 		public $coaches;
 		public $engineStatus;
 		public $speed;
-		
-	
+
+
 		function startEngine() {}
 		function stopEngine() {}
 		function moveTo($location) {}
-	
+
 	}
 
 Our ship now has a name (``$name``\ ), a number of coaches (``$coaches``\ ) and a
@@ -149,11 +149,11 @@ the blueprint and ``$fidelio`` the concrete object.
 PHP Code::
 
 	$fidelio = new Ship();
-	
+
 	// Display the object
 	var_dump($fidelio);
 
-The key word new is used to create a concrete object from the class. 
+The key word new is used to create a concrete object from the class.
 This object is also called **Instance **and the creation process
 consequentially **Instantiation**. We can use the command ``var_dump()`` to
 closely examine the object. We'll see the following
@@ -161,15 +161,15 @@ closely examine the object. We'll see the following
 PHP Code::
 
 	object(Ship)#1 (3) {
-	
+
 	["name"] => NULL
-	
+
 	["coaches"] => NULL
-	
+
 	["engineStatus"] => NULL
-	
+
 	["speed"] => NULL
-	
+
 	}
 
 We can clearly see that our object has 4 properties with a concrete value, at
@@ -181,7 +181,7 @@ PHP Code::
 
 	$fidelio1 = new Ship();
 	$fidelio2 = new Ship();
-	
+
 	if ($fidelio1 === $fidelio2) {
 		echo 'objects are identical!'
 	} else {
@@ -203,9 +203,9 @@ PHP Code::
 
 	$ship = new Ship();
 	$ship->name = "FIDELIO";
-	
+
 	echo "The ship's Name is ". $ship->name;
-	
+
 	$ship->startEngine();
 	$ship->moveTo('Bahamas');
 	$ship->stopEngine();
@@ -224,19 +224,19 @@ variable ``$this``.
 PHP Code::
 
 	class Ship {
-	
+
 		...
-		
+
 		public $speed;
-		
+
 		...
-		
+
 		function startEngine() {
-		
+
 			$this->speed = 200;
-		
+
 		}
-	
+
 	}
 
 With ``$this->speed`` you can acces the property *speed* in the actual object,
@@ -277,23 +277,23 @@ by using the key word ``extends``\.
 PHP Code::
 
 	class LuxuryLiner extends Ship {
-	
+
 		public $luxuryCoaches;
-		
+
 		function golfSimulatorStart() {
-		
+
 			echo 'Golf simulator on ship ' . $this->name . '
 			started.';
-		
+
 		}
-		
+
 		function golfSimulatorStop() {
-		
+
 			echo 'Golf simulator on ship ' . $this->name . '
 			stopped.';
-		
+
 		}
-	
+
 	}
 
 	$luxuryShip = new LuxuryLiner('FIDELIO2','600')
@@ -323,24 +323,24 @@ a child class a new functionality. Let's have a look at the method
 PHP Code::
 
 	class Ship {
-	   …
+	   ...
 	   $engineStatus = 'OFF';
-	   …
+	   ...
 	   function startEngine() {
 		  $this->engineStatus = 'ON';
 	   }
-	   …
+	   ...
 	}
-	
+
 	class Luxusliner extends Ship {
-	   …
+	   ...
 	   $additionalEngineStatus = 'OFF';
-	   …
+	   ...
 	   function startEngine() {
 		  $this->engineStatus = 'ON';
 		  $this->additionalEngineStatus = 'ON';
 	   }
-	   …
+	   ...
 	}
 
 Our luxury liner (of course) has an additional motor, so this has to be
@@ -363,24 +363,24 @@ comfortably - so our former example can be re-written in a smarter way:
 PHP Code::
 
 	class Ship {
-	   …
+	   ...
 	   $engineStatus = 'OFF';
-	   …
+	   ...
 	   function startEngine() {
 		  $this->engineStatus = 'ON';
 	   }
-	   …
+	   ...
 	}
-	
+
 	class Luxusliner extends Ship {
-	   …
+	   ...
 	   $additionalEngineStatus = 'OFF';
-	   …
+	   ...
 	   function startEngine() {
 		  parent::startEngine();
 		  $this->additionalEngineStatus = 'ON';
 	   }
-	   …
+	   ...
 	}
 
 Abstract classes
@@ -397,26 +397,26 @@ separately for each ship type.
 PHP Code::
 
 	abstract class Ship {
-	…
+	...
 	   function __construct() {
 		  $this->setupCoaches();
-	   } 
+	   }
 	   abstract function setupCoaches();
-	…
+	...
 	}
-	
+
 	class Luxusliner extends Ship {
-	…
+	...
 	   function setupCoaches() {
-		  echo 'Kabinen werden eingerichtet';
+		  echo 'Coaches are being set up';
 	   }
 	}
-	
+
 	$luxusschiff = new Luxusliner();
 
-In the parent class we have defined only the body of the 
+In the parent class we have defined only the body of the
 method ``setupCoaches()``. The key word ``abstract`` makes sure that the method
-must be implemented in the child class. So using abstract classes, we can 
+must be implemented in the child class. So using abstract classes, we can
 define which methods have to be present later without having to implement them
 right away.
 
@@ -432,15 +432,15 @@ for that:
 
 PHP Code::
 
-	interface SatelliteTV {  
+	interface SatelliteTV {
 	   public function enableTV();
 	   public function disableTV();
 	}
-	
+
 	class Luxusliner extends Ship implements SatelliteTV {
-	   
+
 	   protected $tvEnabled = FALSE;
-	   
+
 	   public function enableTV() {
 		  $this->tvEnabled = TRUE;
 	   }
@@ -481,21 +481,21 @@ PHP Code::
 
 	abstract class Ship {
 	   protected $coaches;
-	   …
+	   ...
 	   abstract protected function setupCoaches();
 	}
-	
+
 	class Luxusliner extends Ship {
 	   protected function setupCoaches() {
 		  $this->coaches = 300;
 	   }
 	}
 
-$luxusliner = new Luxusliner('Fidelio', 100);
-echo 'Anzahl Kabinen: ' . $luxusliner->coaches; // Funktioniert NICHT!
+	$luxusliner = new Luxusliner('Fidelio', 100);
+	echo 'Number of coaches: ' . $luxusliner->coaches; // Does NOT work!
 
 The ``LuxuryLiner`` may alter the property ``coaches``, for this is ``protected``.
-If it was ``private`` no access from inside of the child class would 
+If it was ``private`` no access from inside of the child class would
 be possible. Access from outside of the hierarchy of inheritance (like in the
 last line of the example) is not possible. It would only be possible if the
 property was ``public``.
@@ -510,25 +510,25 @@ Access to Methods
 
 All methods the object makes available to the outside have to be defined as
 ``public``. All methods containing implementation details, e.g.
-``setupCoaches()`` in the above example, should be defined as ``protected``. 
+``setupCoaches()`` in the above example, should be defined as ``protected``.
 The visibility ``private`` should be used most rarely, for it prevents methods
 from being overwritten or extended.
 
-Often you'll have to read or set properties of an object from outside. So you'll 
+Often you'll have to read or set properties of an object from outside. So you'll
 need special methods that are able to set or get a property. These methods are
 called **setter** respectively **getter**. See the example.
 
 PHP Code::
 
 	class Ship {
-	  
+
 	   protected $coaches;
 	   protected $classification = 'NORMAL';
-	  
+
 	   public function getCoaches() {
 		  return $this->coaches;
 	   }
-		
+
 	   public function setCoaches($numberOfCoaches) {
 		  if ($numberOfCoaches > 500) {
 			 $this->classification = 'LARGE';
@@ -537,15 +537,15 @@ PHP Code::
 		  }
 		  $this->coaches = $numberOfCoaches;
 	   }
-	
+
 	   public function getClassification() {
 		  return $this->classification;
 	   }
-		
-	   …
+
+	   ...
 	}
 
-We now have a method ``setCoaches()`` which sets the number of coaches. 
+We now have a method ``setCoaches()`` which sets the number of coaches.
 Furthermore it changes - depending on the number of coaches - the ship
 category. You now see the advantage: When using methods to get and set the
 properties, you can perform more complex operations, as e.g. setting of
@@ -579,32 +579,33 @@ PHP Code::
 
 	class Luxusliner extends Ship {
 	   protected static $shipyardSupportTelephoneNumber = '+49 30 123456';
-	   
+
 	   public function reportTechnicalProblem() {
-		  echo 'Auf dem Schiff ' . $this->name . ' wurde ein Problem festgestellt. Bitte informieren Sie ' . self::$shipyardSupportTelephoneNumber;
+		  echo 'On the ship ' . $this->name . ' a problem has been discovered.
+		        Please inform ' . self::$shipyardSupportTelephoneNumber;
 	   }
-	
+
 	   public static function setShipyardSupportTelephoneNumber($newNumber) {
 		  self::$shipyardSupportTelephoneNumber = $newNumber;
 	   }
 	}
-	
+
 	$fidelio = new Luxusliner('Fidelio', 100);
 	$figaro = new Luxusliner('Figaro', 200);
-	
+
 	$fidelio->reportTechnicalProblem();
 	$figaro->reportTechnicalProblem();
-	
+
 	Luxusliner::setShipyardSupportTelephoneNumber('+01 1000');
-	
+
 	$fidelio->reportTechnicalProblem();
 	$figaro->reportTechnicalProblem();
-	
-	// Ausgabe
-	Auf dem Schiff Fidelio wurde ein Problem festgestellt. Bitte informieren Sie +49 30 123456
-	Auf dem Schiff Figaro wurde ein Problem festgestellt. Bitte informieren Sie +49 30 123456
-	Auf dem Schiff Fidelio wurde ein Problem festgestellt. Bitte informieren Sie +01 1000
-	Auf dem Schiff Figaro wurde ein Problem festgestellt. Bitte informieren Sie +01 1000
+
+	// Output
+	On the ship Fidelio a problem has been discovered. Please inform +49 30 123456
+	On the ship Figaro a problem has been discovered. Please inform +49 30 123456
+	On the ship Fidelio a problem has been discovered. Please inform +01 1000
+	On the ship Figaro a problem has been discovered. Please inform +01 1000
 
 What happens here? We instantiate two different ships, which both have a problem
 and do contact the shipyard. Inside the method ``reportTechnicalProblem()`` you
@@ -644,7 +645,7 @@ Singleton
 ---------
 
 This design pattern makes sure, that only one instance of a class  can exist
-**at a time**. In FLOW3 you can mark a class as singleton by annotating it 
+**at a time**. In FLOW3 you can mark a class as singleton by annotating it
 with ``@scope singleton``\. An example: our luxury liners are all constructed
 in the same shipyard. So there is no sense in having more than one instance of
 the shipyard object:
@@ -652,15 +653,15 @@ the shipyard object:
 PHP Code::
 
 	/**
-	 * @scope singelton
+	 * @scope singleton
 	 */
 	class LuxuslinerShipyard {
 	   protected $numberOfShipsBuilt = 0;
-	
+
 	   public function getNumberOfShipsBuilt() {
 		  return $this->numberOfShipsBuilt;
 	   }
-	
+
 	   public function buildShip() {
 		  $this->numberOfShipsBuilt++;
 		  // Schiff bauen und zurückgeben
@@ -669,10 +670,10 @@ PHP Code::
 
 	$luxuslinerShipyard = new LuxuslinerFactory();
 	$luxuslinerShipyard->buildShip();
-	
+
 	$theSameLuxuslinerShipyard = new LuxuslinerFactory();
 	$theSameLuxuslinerShipyard->buildShip();
-	
+
 	echo $luxuslinerShipyard->getNumberOfShipsBuilt(); // 2
 	echo $theSameLuxuslinerShipyard->getNumberOfShipsBuilt(); // 2
 
@@ -685,13 +686,13 @@ multiple instances when using Prototype. Each class annotated with
 ``@scope prototype`` is of type **Prototype**.
 
 .. tip::
-	Originally for the design pattern **Prototype** is specified, that a new 
+	Originally for the design pattern **Prototype** is specified, that a new
 	object is to be created by cloning an object prototype. We use Prototype as
 	counterpart to Singleton, without a concrete pattern implementation in the
 	background, though. For the functionality we experience, this does not make
 	any difference: We invariably get back a new instance of a class.
 
 Now that we refreshed your knowledge of object oriented programming, we can
-take a look at the deeper concepts of FLOW3: Domain Driven Design, 
+take a look at the deeper concepts of FLOW3: Domain Driven Design,
 Model View Controller and Test Driven Development. You'll spot the basics we
 just talked about in the following frequently.
