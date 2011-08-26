@@ -11,7 +11,8 @@ div.header div.rel a {
 }
 
 .highlight pre {
-	overflow: scroll;
+	overflow: auto;
+	padding-bottom:1ex;
 }
 
 p.caption {
@@ -44,8 +45,14 @@ div.body {
 	text-align: left;
 }
 
+div.body div.sidebar {
+	margin: 1em;
+	padding:1ex;
+	border:solid 1px #ccc;
+}
+
 h2 {
-	border-bottom: 1px solid #CCC;
+	border-bottom: 1px solid #ccc;
 }
 
 div.document h2 {
