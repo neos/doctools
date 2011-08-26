@@ -91,10 +91,10 @@ form you can use for that:
 
 	<form action="flow3/authenticate" method="post" name="loginform">
 		<input type="text" id="username"
-			name="TYPO3[FLOW3][Security][Authentication][Token][UsernamePassword][username]"
+			name="__authentication[TYPO3][FLOW3][Security][Authentication][Token][UsernamePassword][username]"
 			value="" tabindex="1" />
 		<input type="password" id="password"
-			name="TYPO3[FLOW3][Security][Authentication][Token][UsernamePassword][password]"
+			name="__authentication[TYPO3][FLOW3][Security][Authentication][Token][UsernamePassword][password]"
 			value="" tabindex="2" />
 		<input type="submit" value="Login" tabindex="3" />
 	</form>
@@ -156,8 +156,8 @@ from the ``getAuthenticationStatus()`` method of any token.
 Now you might ask yourself, how a token receives its credentials. The simple answer
 is: It's up to the token, to fetch them from somewhere. The default ``UsernamePassword``
 token for example looks for a username and password in the two POST parameters:
-``TYPO3[FLOW3][Security][Authentication][Token][UsernamePassword][username]`` and
-``TYPO3[FLOW3][Security][Authentication][Token][UsernamePassword][password]`` (see
+``__authentication[TYPO3][FLOW3][Security][Authentication][Token][UsernamePassword][username]`` and
+``__authentication[TYPO3][FLOW3][Security][Authentication][Token][UsernamePassword][password]`` (see
 :ref:`Using the authentication controller`). The framework only makes sure that
 ``updateCredentials()`` is called on every token, then the token has to set possibly
 available credentials itself, e.g. from available headers or parameters or anything else
