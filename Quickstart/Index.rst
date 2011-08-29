@@ -80,6 +80,23 @@ Please replace *john* by your own username. The second argument is supposed to b
 username of your web server and the last one specifies the web server's group. For most
 installations on Mac OS X this would be both *_www* instead of *www-data*.
 
+It can and usually will happen that FLOW3 is launched from the command line by a different
+user. All users who plan using FLOW3 from the command line need to join the web server's
+group. On a Linux machine this can be done by typing:
+
+*command line*::
+
+	sudo usermod -a -G _www john
+
+On a Mac you can add a user to the web group with the following command:
+
+*command line*::
+
+	sudo dscl . -append /Groups/_www GroupMembership johndoe
+
+You will have to exit your shell / terminal window and open it again for the
+new group membership to take effect.
+
 .. note::
 
 	Setting file permissions is not necessary and not possible on Windows machines.
@@ -110,9 +127,8 @@ permissions.
 
 .. tip::
 
-	There are some friendly ghosts in our `IRC channel`_ and in the
-	`users mailing list`_ –  they will gladly help you out if describe your problem as
-	precisely as possible.
+	There are some friendly ghosts in our `IRC channel`_ and in the `users mailing list`_
+	– they will gladly help you out if you describe your problem as precisely as possible.
 
 .. rubric:: Some Note About Speed
 
@@ -170,8 +186,8 @@ some content. You should be able to access it through the following URL:
 
 		http://localhost/Quickstart/Web/index_php/Acme.Demo
 
-		If this the case, keep in mind to add ``index.php`` to the following URLs in this
-		Quickstart tutorial.
+	If this the case, keep in mind to add ``index.php`` to the following URLs in this
+	Quickstart tutorial.
 
 Hello World
 -----------
@@ -244,9 +260,9 @@ to access it. The credentials and driver options need to be specified in the glo
 FLOW3 settings.
 
 After you have created an empty database and set up a user with sufficient access
-rights, copy the file *Configuration/Settings.yaml.example* and save it as
-*Settings.yaml*. Open and adjust the file to your needs – for a common MySQL setup, it
-would look similar to this:
+rights, copy the file *Configuration/Settings.yaml.example* to
+*Configuration/Settings.yaml*. Open and adjust the file to your needs – for a common MySQL
+setup, it would look similar to this:
 
 .. code-block:: yaml
 
@@ -255,20 +271,19 @@ would look similar to this:
 	    persistence:
 	     backendOptions:
 	      driver: 'pdo_mysql'
-	      dbname: 'phoenix'    # adjust to your database name
+	      dbname: 'quickstart' # adjust to your database name
 	      user: 'root'         # adjust to your database user
 	      password: 'password' # adjust to your database password
 	      host: '127.0.0.1'    # adjust to your database host
-	      path: '127.0.0.1'    # adjust to your database host
-	      port: 3306
 
 .. note::
 
-	If you have never written `YAML`, there are two things you should know at least:
+	If you are not familiar with the `YAML` format yet, there are two things you should
+	know at least:
 
-	* indentation has a meaning: by different levels of indentation, a structure is
+	* Indentation has a meaning: by different levels of indentation, a structure is
 	  defined.
-	* spaces, no tabs: you must indent with exactly 2 spaces per level, don't use tabs.
+	* Spaces, not tabs: you must indent with exactly 2 spaces per level, don't use tabs.
 
 If you configured everything correctly, the following command will create the initial
 table structure needed by FLOW3:
@@ -342,7 +357,7 @@ queries for storing the input in the database, checking for Cross-Site Scripting
 Cross-Site Request Forgery, SQL-Injection and much more.
 
 With this background, the following complete code listing powering the previous example
-may seem a bit odd, if not magical to you. Taker a close look at each of the methods –
+may seem a bit odd, if not magical to you. Take a close look at each of the methods –
 can you imagine what they do? ::
 
 	/**
@@ -644,8 +659,8 @@ difference you should be aware of: The parameter passed to the ``showAction``
 is an already existing (that is, already *persisted*) coffee bean object with the
 modifications submitted by the user already applied.
 
-Changes you apply to *persisted* objects will not be stored automatically! You have
-to explicitly tell FLOW3 to apply the changes::
+Any modifications to the ``CoffeBean`` object will be lost at the end of the request
+unless you tell FLOW3 explicitly to apply the changes:
 
 	$this->coffeeBeanRepository->update($coffeeBean);
 
@@ -678,8 +693,8 @@ about how we can improve FLOW3 and its documentation:
 * `IRC channel`_
 * `users mailing list`_
 
-I am sure that, if you're a passionate developer, you will love FLOW3! Because it
-was made with you, the developer, in mind.
+I am sure that, if you’re a passionate developer, you will love FLOW3 – because it was
+made with you, the developer, in mind.
 
 Happy FLOW3 Experience!
 
