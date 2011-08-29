@@ -61,8 +61,8 @@ accessible by your web server. You will end up with a directory structure like t
 	    Web/              <-- your virtual host root will later point to this
 	      .htaccess
 	      index.php
-	      flow3
-	      flow3.bat
+	    flow3
+	    flow3.bat
 
 Setting File Permissions
 ------------------------
@@ -152,6 +152,7 @@ in the following structure:
 	      Documentation/
 	      Meta/
 	      Resources/
+	      Tests/
 
 The :command:`kickstart:package` command also generates a sample controller which displays
 some content. You should be able to access it through the following URL:
@@ -159,6 +160,18 @@ some content. You should be able to access it through the following URL:
 .. code-block:: text
 
 	http://localhost/Quickstart/Web/Acme.Demo
+
+.. tip::
+
+	In case your web server lacks mod_rewrite, it could be that you need to call this to access
+	the controller:
+
+	.. code-block:: text
+
+		http://localhost/Quickstart/Web/index_php/Acme.Demo
+
+		If this the case, keep in mind to add ``index.php`` to the following URLs in this
+		Quickstart tutorial.
 
 Hello World
 -----------
@@ -284,9 +297,11 @@ just generate some example with the kickstarter:
 	Created .../Acme.Demo/Classes/Domain/Model/CoffeeBean.php
 	Created .../Acme.Demo/Classes/Domain/Repository/CoffeeBeanRepository.php
 	Created .../Acme.Demo/Classes/Controller/CoffeeBeanController.php
+	Created .../Acme.Demo/Resources/Private/Layouts/Default.html
 	Created .../Acme.Demo/Resources/Private/Templates/CoffeeBean/Index.html
 	Created .../Acme.Demo/Resources/Private/Templates/CoffeeBean/New.html
 	Created .../Acme.Demo/Resources/Private/Templates/CoffeeBean/Edit.html
+	Created .../Acme.Demo/Resources/Private/Templates/CoffeeBean/Show.html
 
 Whenever a model is created or modified, the database structure needs to be adjusted to
 fit the new PHP code. This is something you should do consciously because existing data
