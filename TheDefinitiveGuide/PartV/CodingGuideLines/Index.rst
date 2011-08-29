@@ -1,0 +1,6 @@
+Coding Guidelines
+=================
+
+.. toctree::
+
+	PHP
