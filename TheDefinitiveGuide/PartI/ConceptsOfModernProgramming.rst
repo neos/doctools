@@ -61,7 +61,7 @@ different roles are involved: For instance, the customer is an expert
 in his business, and he wants to use software to solve a certain
 problem for him. Thus, he has a very clear idea on the interactions of
 the to-be-created software with the environment, and he is one of the
-people who need to use the software on a daily basis lateron. Because
+people who need to use the software on a daily basis later on. Because
 he has much knowledge about how the software is used, we call him the
 *Domain Expert*.
 
@@ -289,7 +289,7 @@ Aggregates
 When building a complex domain model, it will contain a lot of
 classes, all being on the same hierarchy level. However, often it is
 the case that certain objects are parts of a bigger object. For
-example, when modelling a ``Car`` domain object for a car
+example, when modeling a ``Car`` domain object for a car
 repair shop, it might make sense to also model the wheels and the
 engine. As they are a part of the car, this understanding should be
 also reflected in our model.
@@ -447,9 +447,10 @@ A simple domain object being marked as entity, and validation::
 A simple repository::
 
 	class AccountRepository extends \TYPO3\FLOW3\Persistence\Repository {
-		// by extending from the base repository, there is automatically a
-		// findBy* method available for every property, i.e. findByFirstName("Sebastian")
-		// will return all accounts with the first name "Sebastian".
+
+			// by extending from the base repository, there is automatically a
+			// findBy* method available for every property, i.e. findByFirstName("Sebastian")
+			// will return all accounts with the first name "Sebastian".
 		public function findByName($firstName, $lastName) {
 			$query = $this->createQuery();
 			$query->matching(
