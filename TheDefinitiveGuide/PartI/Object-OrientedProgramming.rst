@@ -2,14 +2,7 @@
 Object-Oriented Programming
 ===========================
 
-.. ============================================
-.. Meta-Information for this chapter
-.. ---------------------------------
-.. Author: Patrick Lobacher
-.. Converted to ReST by: Christian Müller
-.. Updated for 1.0 beta1: NO
-.. TODOs: none
-.. ============================================
+.. sectionauthor:: Patrick Lobacher
 
 Object-oriented programming is a Programming Paradigm, versatilely applied in
 FLOW3 and the Packages built on it. In this section we will give an overview
@@ -43,23 +36,23 @@ a bit faster.
 Why Object Orientation after all?
 =================================
 
-Surely some users will ask themselves why they should develop object orientated
+Surely some users will ask themselves why they should develop object oriented
 in the first place. Why not (just like until now) keep on developing
 procedural, thus stringing together functions.
 
-.. If we look at the roughly 4.300 extensions available for TYPO3 at the moment, we'll see
-   that they are built with a class by default - but have been completed by
-   the extension developer in a procedural way in about 95% of all cases.
+If we look at the roughly 4.300 extensions available for TYPO3 at the moment, we'll see
+that they are built with a class by default - but have been completed by the extension
+developer in a procedural way in about 95% of all cases.
 
 Procedural programming has some severe disadvantages though:
 
-	- 	Properties and methods belonging together with regard to content can
-		not be united. This methodology, called **Encapsulation** in Object
-		Orientation, is necessary, if only because of clear arrangement.
-	-	It is rather difficult to re-use code
-	-	All properties can be altered everywhere throughout the code.
-		This leads to hard-to-find errors.
-	-	Procedural code gets confusing easily. This is called Spaghetti code.
+- Properties and methods belonging together with regard to content can not be united. This
+  methodology, called **Encapsulation** in Object Orientation, is necessary, if only
+  because of clear arrangement.
+- It is rather difficult to re-use code
+- All properties can be altered everywhere throughout the code. This leads to hard-to-find
+  errors.
+- Procedural code gets confusing easily. This is called Spaghetti code.
 
 Furthermore Object Orientation mirrors the real world: Real objects exist, and
 they all have properties and (most of them) methods. This fact is now
@@ -74,7 +67,7 @@ simulator and satellite TV.
 On the following pages, we'll try to be as graphic as possible (but still
 semantically correct) to familiarize you with object orientation. There is a
 specific reason: The more you can identify with the object and its methods, the
-more open you'll be for the Theory behind Object Orientated Programming.
+more open you'll be for the theory behind Object Oriented Programming.
 Both is necessary for successful programming – even though you'll often not be
 able to imagine the objects you'll later work with as clearly as in
 our examples.
@@ -162,13 +155,13 @@ PHP Code::
 
 	object(Ship)#1 (3) {
 
-	["name"] => NULL
+		["name"] => NULL
 
-	["coaches"] => NULL
+		["coaches"] => NULL
 
-	["engineStatus"] => NULL
+		["engineStatus"] => NULL
 
-	["speed"] => NULL
+		["speed"] => NULL
 
 	}
 
@@ -464,13 +457,13 @@ hide implementation details of a class. The meaning of a class can be
 communicated better like this, for implementation details in internal methods
 can not be accessed from outside. The following visibilities exist:
 
-	-	**public**: properties and methods with this visibility can be accessed
-		from outside the object. If no Visibility is defined, the behavior of
-		``public`` is used.
-	-	**protected**: properties and methods with visibility ``protected`` can
-		only be accessed from inside the class and it's child classes.
-	-	**private**: properties and methods set to ``private`` can only be
-		accessed from inside the class itself, not from child classes.
+- **public**: properties and methods with this visibility can be accessed
+  from outside the object. If no Visibility is defined, the behavior of
+  ``public`` is used.
+- **protected**: properties and methods with visibility ``protected`` can
+  only be accessed from inside the class and it's child classes.
+- **private**: properties and methods set to ``private`` can only be
+  accessed from inside the class itself, not from child classes.
 
 Access to Properties
 --------------------
@@ -646,7 +639,7 @@ Singleton
 
 This design pattern makes sure, that only one instance of a class  can exist
 **at a time**. In FLOW3 you can mark a class as singleton by annotating it
-with ``@scope singleton``\. An example: our luxury liners are all constructed
+with ``@scope singleton``. An example: our luxury liners are all constructed
 in the same shipyard. So there is no sense in having more than one instance of
 the shipyard object:
 
@@ -668,10 +661,10 @@ PHP Code::
 	   }
 	}
 
-	$luxuslinerShipyard = new LuxuslinerFactory();
+	$luxuslinerShipyard = new LuxuslinerShipyard();
 	$luxuslinerShipyard->buildShip();
 
-	$theSameLuxuslinerShipyard = new LuxuslinerFactory();
+	$theSameLuxuslinerShipyard = new LuxuslinerShipyard();
 	$theSameLuxuslinerShipyard->buildShip();
 
 	echo $luxuslinerShipyard->getNumberOfShipsBuilt(); // 2
