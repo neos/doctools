@@ -83,6 +83,17 @@ table.footnote td {
 	padding: 4px 0;
 }
 
+table.docutils {
+	border-collapse: collapse;
+	border-color: #ccc;
+	margin-bottom: 1em;
+}
+
+table.docutils th, table.docutils td {
+	border-color: #ccc;
+	padding: 4px;
+}
+
 div.footer-wrapper {
 	background: #444;
 }
