@@ -2,6 +2,8 @@
 Validation
 ==========
 
+.. sectionauthor:: Robert Lemke <robert@typo3.org>
+
 Hopefully the examples of the previous chapters made you shudder or at least
 raised some questions. Although it's surely nice to have one-liners for actions
 like ``create`` and ``update`` we need some more code to validate the incoming
@@ -25,33 +27,33 @@ When we're talking about validation, we usually refer to validating **models**.
 The rules defining how a model should be validated can be classified into
 three types:
 
-	-	**Base Properties** – a set of rules defining the minimum requirements
-		on the properties of a model which must be met before a model may
-		be persisted.
-	-	**Base Model** – a set of rules or custom validator enforcing the
-		minimum requirements on the combination of properties of a model which
-		must be met before a model may be persisted.
-	-	**Supplemental** – a set of rules defining additional requirements on
-		a model for a specific situation, for example for a certain
-		action method.
+-	**Base Properties** – a set of rules defining the minimum requirements
+	on the properties of a model which must be met before a model may
+	be persisted.
+-	**Base Model** – a set of rules or custom validator enforcing the
+	minimum requirements on the combination of properties of a model which
+	must be met before a model may be persisted.
+-	**Supplemental** – a set of rules defining additional requirements on
+	a model for a specific situation, for example for a certain
+	action method.
 
 .. note::
 	Base model and supplemental rules are not covered by this tutorial.
 
 Rules for the base properties are defined directly in the model in form
-of annotations:
-
-PHP Code::
+of annotations::
 
 	/**
 	 * @var string
-	 * @validate StringLength(minimum = 3, maximum = 50)
+	 * @validate StringLength(minimum = 1, maximum = 100)
 	 */
 	protected $title;
 
+	...
+
 	/**
 	 * @var string
-	 * @validate StringLength(minimum = 3, maximum = 50)
+	 * @validate StringLength(minimum = 1, maximum = 50)
 	 */
 	protected $author;
 
@@ -69,7 +71,7 @@ dedicated lines by further ``@validate`` annotations.
 	Such validators must, however, be referred to by their fully qualified
 	class name (i.e. including the namespace).
 
-Please apply the above validation rules to your ``Post`` model, click on the
+Make sure the above validation rules are set in your ``Post`` model, click on the
 plus sign above the list of posts and submit the empty form. If all went fine,
 you should end up again in the **new post** form, with the tiny difference
 that the text boxes for title and author are now framed in red:
@@ -88,18 +90,22 @@ Fluid comes with a specialized view helper which allows for iterating over
 validation errors. Just add the ``<f:form.errors>`` view helper to your
 *New.html* template as shown in this example:
 
-HTML Code::
+.. code-block:: xml
 
-	<f:layout name="master" />
+	<f:layout name="Default" />
 
 	<f:section name="mainbox">
 		<h2 class="flow3-firstHeader">Create a new post</h2>
 		<f:flashMessages class="flashmessages"/>
-		<f:form.errors for="newPost">
-			<div class="error">
-				<strong>{error.propertyName}</strong>: <f:for each="{error.errors}" as="errorDetail">{errorDetail.message}</f:for>
-			</div>
-		</f:form.errors>
+		<f:form.validationResults for="post">
+			<f:if condition="{validationResults.flattenedErrors}">
+				<div class="error">
+					<f:for each="{validationResults.flattenedErrors}" key="propertyPath" as="errors">{propertyPath}: <f:for each="{errors}" as="error">{error}</f:for></f:for>
+				</div>
+			</f:if>
+		</f:form.validationResults>
+
+	...
 
 Similar to the ``<f:for>`` view helper ``<f:form.errors>`` defines a loop
 iterating over validation errors. The attribute ``as`` is optional and if it's
@@ -121,43 +127,41 @@ Validating Updated Arguments
 Now that you know how validation errors can be displayed, you should add a
 ``<f:form.errors>`` view helper to the *Edit.html* template as well:
 
-HTML Code::
+.. code-block:: xml
 
-	<f:layout name="master" />
+	<f:layout name="Default" />
 
 	<f:section name="mainbox">
 		<h2 class="flow3-firstHeader">Edit post</h2>
 		<f:flashMessages class="flashmessages"/>
-		<f:form.errors for="post">
-			<div class="error">
-				<strong>{error.propertyName}</strong>:
-				<f:for each="{error.errors}" as="errorDetail">{errorDetail.message}</f:for>
-			</div>
-		</f:form.errors>
-
+		<f:form.validationResults for="post">
+			<f:if condition="{validationResults.flattenedErrors}">
+				<div class="error">
+					<f:for each="{validationResults.flattenedErrors}" key="propertyPath" as="errors">{propertyPath}: <f:for each="{errors}" as="error">{error}</f:for></f:for>
+				</div>
+			</f:if>
+		</f:form.validationResults>
+	
+	...
 
 Try updating a post with an empty title and you should see the following:
 
 .. image:: /Images/GettingStarted/UpdateActionInfiniteLoop.png
 
-Can you imagine what happened? Let's look at the ``editAction`` again:
-
-PHP Code::
+Can you imagine what happened? Let's look at the ``editAction`` again::
 
 	/**
-	 * Displays a form for editing an existing post
+	 * Shows a form for editing an existing post object
 	 *
-	 * @param \TYPO3\Blog\Domain\Model\Post $post An existing post object taken as a basis for the rendering
-	 * @return string An HTML form for editing a post
+	 * @param \TYPO3\Blog\Domain\Model\Post $post The post to edit
+	 * @return void
 	 */
-	public function editAction(\TYPO3\Blog\Domain\Model\Post $post) {
-		$this->view->assign('blog', $this->blog);
-			// Don't display the post we're editing in the recent posts selector:
-		$existingPosts = $this->postRepository->findByBlog($this->blog);
-		unset($existingPosts[array_search($post, $existingPosts)]);
-		$this->view->assign('existingPosts', $existingPosts);
+	public function editAction(Post $post) {
+		$blog = $this->blogRepository->findActive();
+		$this->view->assign('blog', $blog);
 		$this->view->assign('post', $post);
 	}
+
 
 When you started to edit the post, the ``editAction`` received the original
 ``Post`` object as its argument. The object was assigned to the Fluid template
@@ -184,23 +188,18 @@ valid, but we don't really care about the ``editAction`` or ``newAction`` which
 only displays the form.
 
 There's a very simple remedy to this problem: don't validate the post. With one
-additional annotation the whole mechanism works as expected:
-
-PHP Code::
+additional annotation the whole mechanism works as expected::
 
 	/**
-	 * Displays a form for editing an existing post
+	 * Shows a form for editing an existing post object
 	 *
-	 * @param \TYPO3\Blog\Domain\Model\Post $post An existing post object taken as a basis for the rendering
-	 * @dontvalidate $post
-	 * @return string An HTML form for editing a post
+	 * @param \TYPO3\Blog\Domain\Model\Post $post The post to edit
+	 * @ignorevalidation $post
+	 * @return void
 	 */
-	public function editAction(\TYPO3\Blog\Domain\Model\Post $post) {
-		$this->view->assign('blog', $this->blog);
-			// Don't display the post we're editing in the recent posts selector:
-		$existingPosts = $this->postRepository->findByBlog($this->blog);
-		unset($existingPosts[array_search($post, $existingPosts)]);
-		$this->view->assign('existingPosts', $existingPosts);
+	public function editAction(Post $post) {
+		$blog = $this->blogRepository->findActive();
+		$this->view->assign('blog', $blog);
 		$this->view->assign('post', $post);
 	}
 
@@ -209,4 +208,5 @@ error message is displayed above the edit form.
 
 -----
 
-.. [#]	See also: `Separation of Concerns (Wikipedia) <http://en.wikipedia.org/wiki/Separation_of_concerns>`_
+.. [#]	See also: `Separation of Concerns (Wikipedia)
+		<http://en.wikipedia.org/wiki/Separation_of_concerns>`_

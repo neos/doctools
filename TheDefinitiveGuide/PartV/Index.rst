@@ -10,3 +10,4 @@ Part V: Appendixes
 	Doctrine
 	ContributingToFLOW3
 	CodingGuideLines/Index
+	ChangeLogs/Index

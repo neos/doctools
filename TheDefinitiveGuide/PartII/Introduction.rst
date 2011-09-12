@@ -2,14 +2,7 @@
 Introduction
 ============
 
-.. ============================================
-.. Meta-Information for this chapter
-.. ---------------------------------
-.. Author: Robert Lemke
-.. Converted to ReST by: Christian Müller
-.. Updated for 1.0 beta1: YES
-.. TODOs: none
-.. ============================================
+.. sectionauthor:: Robert Lemke <robert@typo3.org>
 
 What's FLOW3
 ============
@@ -36,7 +29,7 @@ you'll surely get some new insights into modern programming paradigms and how
 to produce clean code in no time.
 
 .. note::
-	Please note that this tutorial refers to FLOW3 1.0.0 beta 1 which means
+	Please note that this tutorial refers to FLOW3 1.0.0 beta 2 which means
 	that changes to the API are still possible. However, we're quite
 	confident that the concepts described in this tutorial will remain the same
 	in FLOW3 1.0.0 final.
@@ -46,7 +39,8 @@ to produce clean code in no time.
 	lists, as a ticket in our issue tracker or via private email. [#]
 
 .. tip::
-	This tutorial goes best with a Caffè Latte or, if it's afternoon or late night already, with a few shots of Espresso ...
+	This tutorial goes best with a Caffè Latte or, if it's afternoon or late night
+	already, with a few shots of Espresso ...
 
 ------
 

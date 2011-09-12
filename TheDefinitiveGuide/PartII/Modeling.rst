@@ -2,6 +2,8 @@
 Modeling
 ========
 
+.. sectionauthor:: Robert Lemke <robert@typo3.org>
+
 Before we kickstart our first application, let's have a quick look in what
 FLOW3 differs from other frameworks.
 
@@ -12,8 +14,8 @@ application solving real-world problems. Most of them are infrastructure-
 related and reappear in almost every project: security, database, validation,
 persistence, logging, visualization and much more. FLOW3 preaches legible code,
 well-proven design patterns, true object orientation and provides first class
-support for Domain-Driven Design. And it takes care of most of the cross-
-cutting concerns, separating them from the business logic of the application. [#]_ [#]_
+support for Domain-Driven Design. And it takes care of most of the cross-cutting
+concerns, separating them from the business logic of the application. [#]_ [#]_
 
 Domain-Driven Design
 ====================
@@ -115,7 +117,7 @@ and the ``Blog``:
 	Blog Repository and Blog
 
 
-As you see, the Blog Repository provides methods for adding, removing and
+As you see, the ``BlogRepository`` provides methods for adding, removing and
 finding blogs. In our example application only one blog at a time is supported
 so all we need is a function to find the **active** blog – even though the
 repository can contain more than one blog.
@@ -158,7 +160,11 @@ the **Aggregate Root**:
 The concept of aggregates simplifies the overall model because all objects of
 an aggregate can be seen as a whole: on deleting a post, the framework also
 deletes all associated comments and tags because it knows that no direct
-references from outside the aggregate may exist.
+references from outside the *aggregate boundary* may exist.
+
+Something to keep in mind is the opposite behavior the framework applies, when
+a repository for an object exists: any changes to it must be registered with that
+repository, as any persistence cascading of changes stops at aggregate boundaries.
 
 Enough for the modeling part. You'll surely want some more classes later but
 first let's get our hands dirty and start with the actual implementation!

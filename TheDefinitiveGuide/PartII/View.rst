@@ -2,6 +2,8 @@
 View
 ====
 
+.. sectionauthor:: Robert Lemke <robert@typo3.org>
+
 The view's responsibility is solely the visual presentation of data provided by
 the controller. In FLOW3 views are cleanly decoupled from the rest of the MVC
 framework. This allows you to either take advantage of Fluid (FLOW3's template
@@ -16,14 +18,14 @@ Resources
 Before we design our first Fluid template we need to spend a thought on the
 resources our template is going to use (I'm talking about all the images, style
 sheets and javascript files which are referred to by your HTML code).
-You remember that only the *Web* directory is accessible from the web, right?
+You remember that only the ``Web`` directory is accessible from the web, right?
 And the resources are part of the package and thus hidden from the public.
 That's why FLOW3 comes with a powerful resource manager whose main task is to
 manage access to your package's resources.
 
 The deal is this: All files which are located in the **public resources directory**
 of your package will automatically be mirrored to the public resources
-directory below the *Web* folder. Let's take a look at the directory layout of
+directory below the ``Web`` folder. Let's take a look at the directory layout of
 the *Blog* package:
 
 .. table:: Directory structure of a FLOW3 package
@@ -40,22 +42,21 @@ the *Blog* package:
 	======================	============================================================
 
 
-No matter what files and directories you create below *Resources/Public/* - all
-of them will be symlinked to */Web/_Resources/Static/Packages/TYPO3.Blog/* on
+No matter what files and directories you create below ``Resources/Public/`` - all
+of them will be symlinked to ``Web/_Resources/Static/Packages/TYPO3.Blog/`` on
 the next hit.
 
 .. tip::
  	There are more possible directories in a package and we do have some
  	conventions for naming certain sub directories. All that is explained in
- 	fine detail in the `FLOW3 reference manual <http://flow3.typo3.org/documentation/>`_\ .
+ 	fine detail in the `FLOW3 reference manual <http://flow3.typo3.org/documentation/>`_.
 
 .. important::
 	For the blog example in this tutorial we created some style sheets
 	and icons. If you'd like to brush up the following examples a little, then
-	it's now time to copy all files from
-	*Packages/Application/GettingStarted/Resources/Private/CheatSheet/Resources/Public/**
-	to your blog's public resources folder
-	(*Packages/Application/TYPO3.Blog/Resources/Public*).
+	it's now time to copy ``Resources/Public/`` in the *CheatSheet* to your
+	blog's public resources folder
+	(``Packages/Application/TYPO3.Blog/Resources/Public/``).
 
 Layouts
 =======
@@ -76,13 +77,11 @@ tutorial - only the templates will change depending on the current controller
 and action. Elements shared by multiple templates can be extracted as a partial
 to assure consistency and avoid duplication.
 
-Let's build a simple layout for your blog. You only need to create a new folder
-*Layouts* inside the *TYPO3.Blog/Resources/Private/* directory and save the
-following code in a file called *Master.html*:
+Let's build a simple layout for your blog. You only need to adjust the file called ``Default.html`` inside the ``TYPO3.Blog/Resources/Private/Layouts`` directory to
+contain the following code:
 
-HTML Code::
+.. code-block:: xml
 
-	<?xml version="1.0" encoding="utf-8"?>
 	<!DOCTYPE html
 		 PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
 		 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -116,20 +115,24 @@ HTML Code::
 On first sight this looks like plain HTML code, but you'll surely notice the
 various ``<f: ... >`` tags. Fluid provides a range of view helpers which are
 addressed by these tags. By default they live in the ``f`` namespace resulting
-in tags like ``<f:base />`` or ``<f:if>``. You can define your own namespaces
+in tags like ``<f:base>`` or ``<f:if>``. You can define your own namespaces
 and even develop your own view helpers, but for now let's look at what you used
 in your layout:
 
-The first Fluid tag used is the ``<f:base />`` tag. This tag instructs Fluid to
+The first Fluid tag used is the ``<f:base>`` tag. This tag instructs Fluid to
 render an HTML ``<base>`` tag containing the correct absolute base URI for your
-site – in your case resulting in
+site – in your case resulting in:
 
-``<base href="http://dev.tutorial.local/"></base>``
+.. code-block:: html
+
+	<base href="http://dev.tutorial.local/"></base>
 
 The second occurrence of Fluid markup is actually no tag but a
 variable accessor:
 
-``<title>{blog.title}</title>``
+.. code-block:: html
+
+	<title>{blog.title}</title>
 
 As you will see in a minute, Fluid allows your controller to define variables
 for the template view. In order to display the blog's name, you'll need to make
@@ -142,21 +145,27 @@ object which are accessible through a getter function: to display the blog
 title, you just need to note down ``{blog.title}``.
 
 The third appearance of Fluid syntax is an alternative way to address view
-helpers, the view helper shorthand syntax.
+helpers, the view helper shorthand syntax:
 
-``<link rel="stylesheet" href="{f:uri.resource(path: 'Blog.css')}" type="text/css" />``
+.. code-block:: html
+
+	<link rel="stylesheet" href="{f:uri.resource(path: 'Blog.css')}" type="text/css" />
 
 This instructs the URI view helper to create a relative resource URL pointing
 to your style sheet. The generated HTML code will look like this:
 
-``<link rel="stylesheet" href="Resources/Packages/TYPO3.Blog/Blog.css" type="text/css" />``
+.. code-block:: html
+
+	<link rel="stylesheet" href="Resources/Packages/TYPO3.Blog/Blog.css" type="text/css" />
 
 If you look at the remaining markup of the layout you'll find more uses of view
 helpers, including conditions and link generation. There's only one more view
 helper you need to know about before proceeding with our first template,
 the **render** view helper:
 
-``<f:render section="mainbox" />``
+.. code-block:: html
+
+	<f:render section="mainbox" />
 
 This tag tells Fluid to insert the section ``mainbox`` defined in the current
 template at this place. For this to work there must be a section with the
@@ -172,12 +181,12 @@ Templates are, as already mentioned, tailored to a specific action. The action
 controller chooses the right template automatically according to the current
 package, controller and action - if you follow the naming conventions. Let's
 replace the automatically generated template for the Post controller's index
-action in *TYPO3.Blog/Resources/Private/Templates/Post/Index.html* by some more
+action in ``TYPO3.Blog/Resources/Private/Templates/Post/Index.html`` by some more
 meaningful HTML:
 
-HTML Code::
+.. code-block:: xml
 
-	<f:layout name="Master" />
+	<f:layout name="Default" />
 
 	<f:section name="mainbox">
 		<f:flashMessages class="flashmessages" />
@@ -213,10 +222,10 @@ one template and omit the ``<f:layout>`` and ``<f:section>`` tags.
 
 Take a quick look at the template. You'll note that we're using a new view
 helper right at the top – ``flashMessages`` generates an unordered list with
-all flash messages. Well, maybe you remember this line you put into the
-``createAction`` of our ``PostController``:
+all flash messages. Well, maybe you remember this line in the ``createAction``
+of our ``PostController``::
 
-``$this->flashMessageContainer->add('Your new post was created.');``
+	$this->flashMessageContainer->add('Created a new post.');
 
 Flash messages are a great way to display success or error messages to
 the user. And because they are so useful, the action controller provides the
@@ -228,15 +237,7 @@ The main job of this template is to display a list of the most recent posts.
 An ``<f:if>`` condition makes sure that the list of posts is only rendered if
 ``posts`` actually contains posts. But currently the view doesn't know anything
 about posts - you need to adapt the ``indexAction`` of the ``PostController``
-to assign blogs to the view:
-
-PHP Code::
-
-	/**
-	 * @inject
-	 * @var \TYPO3\Blog\Domain\Repository\PostRepository
-	 */
-	protected $postRepository;
+to assign blogs to the view::
 
 	/**
 	 * List action for this controller. Displays latest posts
@@ -244,28 +245,50 @@ PHP Code::
 	 * @return string
 	 */
 	public function indexAction() {
-		$posts = $this->postRepository->findByBlog($this->blog);
 		$this->view->assign('blog', $this->blog);
-		$this->view->assign('posts', $posts);
-		$this->view->assign('recentPosts', $this->postRepository->findRecentByBlog($this->blog));
+		$this->view->assign('posts', $this->blog->getPosts());
 	}
 
 To fully understand the above code you need to know two facts:
 
-	-	``$this->view`` is automatically set by the action controller and
-		points to a Fluid template view.
-	-	if an action method returns ``NULL``, the controller will automatically
-		call ``$this->view->render()`` after executing the action.
-	-	After copying the file *Classes/Domain/Repository/PostRepository.php*
-		and the folder *Resources/Private/Partials/* from the CheatSheet you
-		should now see the list of recent posts by accessing
-		http://dev.tutorial.local/typo3.blog/post:
+-	``$this->view`` is automatically set by the action controller and
+	points to a Fluid template view.
+-	if an action method returns ``NULL``, the controller will automatically
+	call ``$this->view->render()`` after executing the action.
+
+After creating the folder ``Resources/Private/Partials/`` add the following to a file named
+``PostMetaData.html``:
+
+.. code-block:: xml
+
+	<p class="metadata">
+		Published on <f:format.date format='d.m.Y'>{post.date}</f:format.date> by {post.author}
+		<f:link.action action="show" controller="Post" arguments="{post: post}" section="comments"><img src="../../Public/Icons/FamFamFam/comments.png" title="Comments"/>
+			<f:if condition="{post.numberOfComments} > 0">
+				<f:then>
+					<f:if condition="{post.numberOfComments} == 1">
+						<f:then>{post.numberOfComments} comment</f:then>
+						<f:else>{post.numberOfComments} comments</f:else>
+					</f:if>
+				</f:then>
+				<f:else>No comments</f:else>
+			</f:if>
+		</f:link.action>
+		<br />
+		<f:if condition="{post.category}">Filed under: <f:link.action action="index" controller="Post" arguments="{category: post.category.name}" format="html">{post.category}</f:link.action></f:if>
+		<f:if condition="{post.tags}">
+			| Tags: <f:for each="{post.tags}" as="tag"><f:link.action action="index" controller="Post" arguments="{tag: tag.name}" >{tag.name}</f:link.action> </f:for>
+		</f:if>
+	</p>
+
+Now you should now see the list of recent posts by accessing
+http://dev.tutorial.local/typo3.blog/post:
 
 .. image:: /Images/GettingStarted/PostIndex.png
 
-Creating a new post won't work yet because, you didn't implement a ``newAction``:
+Creating a new post won't work yet because, you even though there exists a ``newAction`` already, the template for it doesn't contain a ``mainbox`` section yet:
 
-.. image:: /Images/GettingStarted/NoNewAction.png
+.. image:: /Images/GettingStarted/NoNewActionMainbox.png
 
 Forms
 =====
@@ -275,46 +298,44 @@ Create a New Post
 
 Time to create a form which allows you to enter details for a new post.
 The first component you need is the ``newAction`` whose sole purpose is
-displaying the form:
-
-PHP Code::
+displaying the form::
 
 	/**
-	 * New action
+	 * Shows a form for creating a new post object
 	 *
 	 * @return void
 	 */
 	public function newAction() {
+		$blog = $this->blogRepository->findActive();
+		$this->view->assign('blog', $blog);
 	}
 
-No code? No code. What will happen is this: the action controller selects the
-*New.html* template and assigns it to ``$this->view`` which will automatically
+No code? Almost no code. What will happen is this: the action controller selects the
+``New.html`` template and assigns it to ``$this->view`` which will automatically
 be rendered after ``newAction`` has been called. That's enough for displaying
-the form.
+the form. The only thing we need to assign here is the ``blog``, otherwise the title
+and description in our header (defined in ``Master.html``) would be empty.
 
-The second component is the actual form. Create a new template  *New.html* in
-the *Resources/Public/Templates/Post/* folder:
+The second component is the actual form. Adjust the template  ``New.html`` in
+the ``Resources/Public/Templates/Post/`` folder:
 
-HTML Code::
+.. code-block:: xml
 
-	<f:layout name="master" />
+	<f:layout name="Default" />
 
 	<f:section name="mainbox">
 		<h2 class="flow3-firstHeader">Create a new post</h2>
 		<f:flashMessages class="flashmessages"/>
-		<f:form method="post" action="create" object="{post}" name="post" enctype="multipart/form-data">
+		<f:form method="post" action="create" object="{newPost}" name="newPost" enctype="multipart/form-data">
 			<f:form.hidden name="blog" value="{blog}" />
 			<label for="author">Author</label><br />
 			<f:form.textbox property="author" id="author" /><br />
 			<label for="title">Title</label><br />
 			<f:form.textbox property="title" id="title" /><br />
+			<label for="linkTitle">Link Title (optional)</label><br />
+			<f:form.textbox property="linkTitle" id="linkTitle" /><br />
 			<label for="content">Content</label><br />
 			<f:form.textarea property="content" rows="5" cols="40" id="content" /><br />
-			<f:if condition="{existingPosts}">
-				<label for="relatedPosts">Related Posts</label><br />
-				<f:form.select property="relatedPosts" options="{existingPosts}" optionLabelField="title" multiple="1" size="4" id="relatedPosts" /><br />
-				<br />
-			</f:if>
 			<f:form.submit value="Submit post"/>
 		</f:form>
 	</f:section>
@@ -333,19 +354,19 @@ and that the values of the form's elements become property values of
 this object. In this example the form contains (property) values for a
 post object. The form's elements are named after the class properties of the
 ``Post`` domain model: ``blog``, ``author``, ``title``, ``content`` and
-``relatedPosts``. Let's look at the ``createAction`` again:
-
-PHP Code::
+``relatedPosts``. Let's look at the ``createAction`` again::
 
 	/**
 	 * Creates a new post
 	 *
-	 * @param \TYPO3\Blog\Domain\Model\Post $post A fresh Post object which has not yet been added to the repository
+	 * @param \TYPO3\Blog\Domain\Model\Post $post
 	 * @return void
 	 */
-	public function createAction(\TYPO3\Blog\Domain\Model\Post $post) {
-		$this->blog->addPost($post);
-		$this->flashMessageContainer->add('Your new post was created.');
+	public function createAction(Post $newPost) {
+		$blog = $this->blogRepository->findActive();
+		$blog->addPost($newPost);
+		$this->postRepository->add($newPost);
+		$this->flashMessageContainer->add('Created a new post.');
 		$this->redirect('index');
 	}
 
@@ -378,7 +399,7 @@ on its part assigns the blog to the template.
 
 First you need to add the "edit" link to the post index template:
 
-HTML Code::
+.. code-block:: html
 
 	...
 			<h2>
@@ -393,12 +414,12 @@ The modified template will now render a little pencil next to each post:
 
 .. image:: /Images/GettingStarted/PostEditLink.png
 
-Create the new template *Templates/Post/Edit.html* and insert the following
+Adjust the template ``Templates/Post/Edit.html`` and insert the following
 HTML code:
 
-HTML Code::
+.. code-block:: xml
 
-	<f:layout name="Master" />
+	<f:layout name="Default" />
 
 	<f:section name="mainbox">
 		<h2 class="flow3-firstHeader">Edit post "{post.title}"</h2>
@@ -407,13 +428,10 @@ HTML Code::
 			<f:form.textbox property="author" id="author" /><br />
 			<label for="title">Title</label><br />
 			<f:form.textbox property="title" id="title" /><br />
+			<label for="linkTitle">Link Title (optional)</label><br />
+			<f:form.textbox property="linkTitle" id="linkTitle" /><br />
 			<label for="content">Content</label><br />
 			<f:form.textarea property="content" rows="5" cols="40" id="content" /><br />
-			<f:if condition="{existingPosts}">
-				<label for="relatedPosts">Related Posts</label><br />
-				<f:form.select property="relatedPosts" options="{existingPosts}" optionLabelField="title" multiple="1" size="4" id="relatedPosts" /><br />
-				<br />
-			</f:if>
 			<f:form.submit value="Update"/>
 		</f:form>
 	</f:section>
@@ -433,23 +451,17 @@ name ``"title"`` due to the ``property`` attribute you defined. The ``id``
 attribute only serves as a target for the ``label`` tag and is not required
 by Fluid.
 
-What's missing now is the PHP code displaying the edit form:
-
-PHP Code::
+What's missing now is a small adjustment to the PHP code displaying the edit form::
 
 	/**
-	 * Displays a form for editing an existing post
+	 * Shows a form for editing an existing post object
 	 *
-	 * @param \TYPO3\Blog\Domain\Model\Post $post An existing post object taken as a basis for the rendering
-	 * @return string An HTML form for editing a post
+	 * @param \TYPO3\Blog\Domain\Model\Post $post The post to edit
+	 * @return void
 	 */
-	public function editAction(\TYPO3\Blog\Domain\Model\Post $post) {
-
-			// Don't display the post we're editing in the recent posts selector:
-		$existingPosts = $this->postRepository->findByBlog($this->blog);
-		unset($existingPosts[array_search($post, $existingPosts)]);
-		$this->view->assign('existingPosts', $existingPosts);
-
+	public function editAction(Post $post) {
+		$blog = $this->blogRepository->findActive();
+		$this->view->assign('blog', $blog);
 		$this->view->assign('post', $post);
 	}
 
@@ -458,19 +470,16 @@ link of your list of posts should result in a screen similar to this:
 
 .. image:: /Images/GettingStarted/EditPost.png
 
-Before you can submit the form you need to implement the ``updateAction``:
-
-PHP Code::
+When you submit the form you call the ``updateAction``::
 
 	/**
-	 * Updates an existing post
+	 * Updates the given post object
 	 *
-	 * @param \TYPO3\Blog\Domain\Model\Post $post Post containing the modifications
-	 * @return void
+	 * @param \TYPO3\Blog\Domain\Model\Post $post The post to update
 	 */
-	public function updateAction(\TYPO3\Blog\Domain\Model\Post $post) {
+	public function updateAction(Post $post) {
 		$this->postRepository->update($post);
-		$this->flashMessageContainer->add('Your post has been updated.');
+		$this->flashMessageContainer->add('Updated the post.');
 		$this->redirect('index');
 	}
 

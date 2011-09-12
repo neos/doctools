@@ -2,6 +2,8 @@
 Routing
 =======
 
+.. sectionauthor:: Robert Lemke <robert@typo3.org>
+
 Although the basic functions like creating or updating a post work well
 already, the URIs still have a little blemish. The index of posts can only be
 reached by the cumbersome address http://dev.tutorial.local/typo3.blog/post
@@ -23,11 +25,11 @@ Please insert the following configuration at the top of the file (before the
 TYPO3CR route) and make sure that you use spaces exactly like in the example
 (remember, spaces have a meaning in YAML files and tabs are not allowed):
 
-YAML::
+.. code-block:: yaml
 
 	--
 	  name: 'Post index'
-	  uriPattern:    '(post)'
+	  uriPattern:    '(posts)'
 	  defaults:
 		'@package':    'TYPO3.Blog'
 		'@controller': 'Post'
@@ -37,14 +39,14 @@ YAML::
 This configuration adds a new route to the list of routes (``--`` creates a new
 list item). The route becomes active if a requests matches the pattern defined
 by the ``uriPattern``. In this example empty URIs
-(i.e. http://dev.tutorial.local/) and the URI http://dev.tutorial.local/post
+(i.e. http://dev.tutorial.local/) and the URI http://dev.tutorial.local/posts
 would match because the round brackets make the ``posts`` string optional.
 
 If the URI matches, the route's default values for package, controller action
 and format are set and the request dispatcher will choose the right
 controller accordingly.
 
-Try calling http://dev.tutorial.local/ and http://dev.tutorial.local/post now –
+Try calling http://dev.tutorial.local/ and http://dev.tutorial.local/posts now –
 you should in both cases see the list of posts produced by the
 ``PostController``'s ``indexAction``.
 
@@ -56,29 +58,30 @@ all routes in one file can easily become confusing. To keep the global
 *Routes.yaml* clean you may define sub routes which include - if their own URI
 pattern matches - further routes provided by your package.
 
-The *TYPO3CR* sub route configuration for example includes further routes if
+The *FLOW3* sub route configuration for example includes further routes if
 the URI path starts with the string '``TYPO3CR``'. Only the URI part contained
 in the less-than and greater-than signs will be passed to the sub routes:
 
-YAML::
+.. code-block:: yaml
 
 	##
-	# TYPO3CR subroutes
+	# FLOW3 subroutes
+	#
 
-	--
-	  name: 'TYPO3CR'
-	  uriPattern: 'typo3cr<TYPO3CRSubroutes>'
+	-
+	  name: 'FLOW3'
+	  uriPattern: '<FLOW3Subroutes>'
 	  defaults:
-		'@format': 'html'
+	    '@format': 'html'
 	  subRoutes:
-		TYPO3CRSubroutes:
-		  package: TYPO3CR
+	    FLOW3Subroutes:
+	      package: TYPO3.FLOW3
 
 Let's define a similar configuration for the *Blog* package. Please replace
 the YAML code you just inserted (the blog index route) by the following sub
 route configuration:
 
-YAML::
+.. code-block:: yaml
 
 	##
 	# Blog subroutes
@@ -86,8 +89,6 @@ YAML::
 	--
 	  name: 'Blog'
 	  uriPattern: '<BlogSubroutes>'
-	  defaults:
-		'@format': 'html'
 	  subRoutes:
 		BlogSubroutes:
 		  package: TYPO3.Blog
@@ -97,7 +98,7 @@ For this to work you need to create a new *Routes.yaml* file in the
 (*Packages/Application/TYPO3.Blog/Configuration/Routes.yaml*) and paste the
 route you already created:
 
-YAML::
+.. code-block:: yaml
 
 	#                                                                        #
 	# Routes configuration for the Blog package                              #
@@ -105,7 +106,7 @@ YAML::
 
 	--
 	  name: 'Post index'
-	  uriPattern:    '(post)'
+	  uriPattern:    '(posts)'
 	  defaults:
 		'@package':    'TYOPO3.Blog'
 		'@controller': 'Post'
@@ -115,15 +116,15 @@ YAML::
 An Action Route
 ===============
 
-The URI pointing to the ``newAction`` is still http://dev.tutorial.local/post/new
+The URI pointing to the ``newAction`` is still http://dev.tutorial.local/typo3.blog/post/new
 so let's beautify the action URIs as well by inserting a new route before the
 '``Blogs``' route:
 
-YAML::
+.. code-block:: yaml
 
 	--
 	  name: 'Post actions 1'
-	  uriPattern:    'post/{@action}'
+	  uriPattern:    'posts/{@action}'
 	  defaults:
 		'@package':    'TYPO3.Blog'
 		'@controller': 'Post'
@@ -164,9 +165,7 @@ A route part handler must be able to
 	-	convert a URI part back into a list (array) of arguments (match)
 
 Please create a new folder *TYPO3.Blog/Classes/RoutePartHandlers/* and a new
-file called *PostRoutePartHandler.php*. Then copy & paste the following code:
-
-PHP Code::
+file called *PostRoutePartHandler.php*. Then copy & paste the following code::
 
 	<?php
 	namespace TYPO3\Blog\RoutePartHandlers;
@@ -247,17 +246,13 @@ really is an advanced topic. But we want beautified URIs from the beginning,
 don't we?
 
 Now that you have created a custom route part handler we need to include it
-into our routes configuration:
+into our routes configuration by adding another route at the top of the file:
 
-YAML::
-
-	#                                                                        #
-	# Routes configuration for the Blog package                              #
-	#                                                                        #
+.. code-block:: yaml
 
 	--
 	  name: 'Post actions 2'
-	  uriPattern:    'post/{post}/{@action}'
+	  uriPattern:    'posts/{post}/{@action}'
 	  defaults:
 		'@package':    'TYPO3.Blog'
 		'@controller': 'Post'
@@ -265,23 +260,6 @@ YAML::
 	  routeParts:
 		post:
 		  handler: TYPO3\Blog\RoutePartHandlers\PostRoutePartHandler
-
-	--
-	  name: 'Post actions 1'
-	  uriPattern:    'post/{@action}'
-	  defaults:
-		'@package':    'TYPO3.Blog'
-		'@controller': 'Post'
-		'@format':     'html'
-
-	--
-	  name: 'Post index'
-	  uriPattern:    '(post)'
-	  defaults:
-		'@package':    'TYPO3.Blog'
-		'@controller': 'Post'
-		'@action':     'index'
-		'@format':     'html'
 
 The "``Post actions 2``" route now handles all actions where a post needs to
 be specified (i.e. show, edit, update and delete). In case the requested URI is
@@ -299,7 +277,7 @@ More on Routing
 The more an application grows, the more complex routing can become and
 sometimes you'll wonder which route FLOW3 eventually chose. One way to get
 this information is looking at the log file which is by default
-located in *Data/Logs/Web/*:
+located in *Data/Logs/System_Development.log*:
 
 .. image:: /Images/GettingStarted/RoutingLogTail.png
 

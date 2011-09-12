@@ -2,18 +2,17 @@
 Kickstart
 =========
 
+.. sectionauthor:: Robert Lemke <robert@typo3.org>
+
 FLOW3 makes it easy to start with a new application. The ``Kickstart`` package provides
 template based scaffolding for generating an initial layout of packages, controllers,
 models and views.
 
 .. note::
 
-	At the time of this writing these functions are only available through
-	FLOW3's command line interface. Please note that this might change in the
-	future because the philosophy of FLOW3 is using
-
-	- the command line for **automatization** and **system administrative tasks and**
-	- a clear web interface for **modeling** and **development**
+	At the time of this writing these functions are only available through FLOW3's command
+	line interface. This might change in the future as a graphical interface to the
+	kickstarter is developed.
 
 Command Line Tool
 =================
@@ -21,10 +20,20 @@ Command Line Tool
 The script *flow3* resides in the main directory of the FLOW3 distribution.
 From a shell you should be able to run the script by entering ``./flow3``:
 
-console::
+.. code-block:: none
 
 	myhost:tutorial johndoe$ ./flow3
-	FLOW3 1.0.0-beta1 (Development)
+	FLOW3 1.0.0-beta2 ("Development" context)
+	usage: ./flow3 <command identifier>
+
+	See './flow3 help' for a list of all available commands.
+
+To get an overview of all available commands, enter ``./flow3 help``:
+
+.. code-block:: none
+
+	myhost:tutorial johndoe$ ./flow3 help
+	FLOW3 1.0.0-beta2 ("Development" context)
 	usage: ./flow3 <command identifier>
 
 	The following commands are currently available:
@@ -39,11 +48,8 @@ console::
 	* flow3:core:shell                         Run the interactive Shell
 
 	  doctrine:validate                        Validate the class/table mappings
-	  doctrine:create                          Create the database schema based on
-	                                           current mapping information
-	  doctrine:update                          Update the database schema, not
-	                                           using migrations
-	  doctrine:compileproxies                  Compile the Doctrine proxy classes
+	  doctrine:create                          Create the database schema
+	  doctrine:update                          Update the database schema
 	  doctrine:entitystatus                    Show the current status of entities
 	                                           and mappings
 	  doctrine:dql                             Run arbitrary DQL and display
@@ -61,6 +67,8 @@ console::
 	  package:activate                         Activate an available package
 	  package:deactivate                       Deactivate a package
 	  package:list                             List available packages
+	  package:import                           Import a package from a remote
+	                                           location
 
 	  routing:list                             List the known routes
 
@@ -89,46 +97,46 @@ Kickstart the package
 
 Let's create a new package **Blog** inside the Vendor namespace **TYPO3**:
 
-console::
+.. code-block:: none
 
 	myhost:tutorial johndoe$ ./flow3 kickstart:package TYPO3.Blog
 
-The kickstarter will create two files
+The kickstarter will create two files:
 
-console::
+.. code-block:: none
 
-	+ .../Packages/Application/TYPO3.Blog/Classes/Controller/StandardController.php
-	+ ...tandard/Index.html
+	Created .../TYPO3.Blog/Classes/Controller/StandardController.php
+	Created .../TYPO3.Blog/Resources/Private/Templates/Standard/Index.html
 
 and the directory *Packages/Application/TYPO3.Blog/* should now contain the
 skeleton of the future ``Blog`` package:
 
-console::
+.. code-block:: none
 
-	myhost:tutorial johndoe$ ``cd Packages/Application/``
-	myhost:Application johndoe$ ``find TYPO3.Blog``
+	myhost:tutorial johndoe$ cd Packages/Application/
+	myhost:Application johndoe$ find TYPO3.Blog
 	TYPO3.Blog
-	TYPO3.Blog/Configuration
-	TYPO3.Blog/Tests
-	TYPO3.Blog/Tests/Unit
-	TYPO3.Blog/Tests/Functional
-	TYPO3.Blog/Documentation
 	TYPO3.Blog/Classes
-	TYPO3.Blog/Classes/Package.php
 	TYPO3.Blog/Classes/Controller
 	TYPO3.Blog/Classes/Controller/StandardController.php
+	TYPO3.Blog/Classes/Package.php
+	TYPO3.Blog/Configuration
+	TYPO3.Blog/Documentation
+	TYPO3.Blog/Meta
+	TYPO3.Blog/Meta/Package.xml
 	TYPO3.Blog/Resources
 	TYPO3.Blog/Resources/Private
 	TYPO3.Blog/Resources/Private/Templates
 	TYPO3.Blog/Resources/Private/Templates/Standard
 	TYPO3.Blog/Resources/Private/Templates/Standard/Index.html
-	TYPO3.Blog/Meta
-	TYPO3.Blog/Meta/Package.xml
+	TYPO3.Blog/Tests
+	TYPO3.Blog/Tests/Functional
+	TYPO3.Blog/Tests/Unit
 
+Switch to your web browser and check at http://dev.tutorial.local/typo3.blog if the
+generated controller produces some output:
 
-Switch to your web browser and check if the generated controller produces some output:
-
-.. image: /Images/GettingStarted/FreshBlogPackage.png
+.. image:: /Images/GettingStarted/FreshBlogPackage.png
 
 .. tip::
 	If you get an error at this point, like a "404 Not Found" this could be
@@ -136,47 +144,64 @@ Switch to your web browser and check if the generated controller produces some o
 	``Development`` context at this point, it is supposed to detect changes to
 	code and resource files, but this seems to sometimes fail... Before you go
 	crazy looking for an error on your side, **try clearing the cache manually**
-	by removing the contents of *Data/Temporary/*.
+	by removing the contents of ``Data/Temporary/``.
 
 Kickstart Controllers
 =====================
 
-If you look at the drawing of our overall model you'll notice that you need
-controllers for the most important domain models, being ``Post`` and ``Comment``.
-We also need a ``SetupController`` which initially sets up the blog. Create them
-with the kickstarter as well:
+If you look at the drawing of our overall model you'll notice that you need controllers
+for the most important domain model, being ``Post``. We also need a ``SetupController``
+which initially sets up the blog. Create them with the kickstarter as well:
 
-console::
+.. code-block:: none
 
-	myhost:tutorial johndoe$ ./flow3 kickstart:actioncontroller TYPO3.Blog Setup,Post,Comment
+	myhost:tutorial johndoe$ ./flow3 kickstart:actioncontroller TYPO3.Blog Setup
 
 resulting in:
 
-console::
+.. code-block:: none
 
-	+ .../Packages/Application/Blog/Classes/Controller/SetupController.php
-	+ ...etup/Index.html
-	+ .../Packages/Application/Blog/Classes/Controller/PostController.php
-	+ ...ost/Index.html
-	+ .../Packages/Application/Blog/Classes/Controller/CommentController.php
-	+ ...omment/Index.html
+	Created .../TYPO3.Blog/Classes/Controller/SetupController.php
+	Created .../TYPO3.Blog/Resources/Private/Templates/Setup/Index.html
+
+For the ``PostController`` we know that we'll need some standard actions, so let's
+have them created as well:
+
+.. code-block:: none
+
+	myhost:tutorial johndoe$ ./flow3 kickstart:actioncontroller --generate-actions --generate-related TYPO3.Blog Post
+
+resulting in:
+
+.. code-block:: none
+
+	Created .../TYPO3.Blog/Classes/Domain/Model/Post.php
+	Created .../TYPO3.Blog/Classes/Domain/Repository/PostRepository.php
+	Created .../TYPO3.Blog/Classes/Controller/PostController.php
+	Created .../TYPO3.Blog/Resources/Private/Layouts/Default.html
+	Created .../TYPO3.Blog/Resources/Private/Templates/Post/Index.html
+	Created .../TYPO3.Blog/Resources/Private/Templates/Post/New.html
+	Created .../TYPO3.Blog/Resources/Private/Templates/Post/Edit.html
+	Created .../TYPO3.Blog/Resources/Private/Templates/Post/Show.html
 
 These new controllers can now be accessed via
 
-	- http://dev.tutorial.local/typo3.blog/setup,
-	- http://dev.tutorial.local/typo3.blog/post and
-	- http://dev.tutorial.local/typo3.blog/comment
+* http://dev.tutorial.local/typo3.blog/setup and
+* http://dev.tutorial.local/typo3.blog/post
 
 respectively.
 
-Please delete the file *StandardController.php* and its corresponding template
-directory as you won't need them for our sample application.
+Please delete the file ``StandardController.php`` and its corresponding template
+directory as you won't need them for our sample application [#]_.
 
 Kickstart Models and Repositories
 =================================
 
-The kickstarter can also generate models and repositories::
-	``./flow3 kickstart:model PackageKey ModelName propertyName:type propertyName:type``
+The kickstarter can also generate models and repositories, as you have seen above
+when using the ``--generate-related`` option while kickstarting the ``PostController``.
+Of course that can also be done specifically with the ``kickstart:model`` command.
 
-However, at this point you will stop using the kickstarter because writing models and
-repositories by hand is really easy.
+Before we do this, you should have a look at the next section on models and repositories.
+
+.. [#]	If you know you won't be using the StandardController, you can create a
+		completely empty package with the ``package:create`` command.

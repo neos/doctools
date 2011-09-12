@@ -2,20 +2,11 @@
 Part II: Getting Started
 ========================
 
-.. ============================================
-.. Meta-Information for this chapter
-.. ---------------------------------
-.. Author: Robert Lemke
-.. Converted to ReST by: Christian Müller
-.. Updated for 1.0 beta1: NO
-.. TODOs: none
-.. ============================================
+.. sectionauthor:: Robert Lemke <robert@typo3.org>
 
 This tutorial gets you started with FLOW3. The most important concepts such as
 the MVC framework, object management, persistence and templating are explained
 on the basis of a sample application.
-
-.. warning:: |documentationNotReady|
 
 .. toctree::
 	:maxdepth: 1

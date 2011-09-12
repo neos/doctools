@@ -2,18 +2,11 @@
 Requirements
 ============
 
-.. ============================================
-.. Meta-Information for this chapter
-.. ---------------------------------
-.. Author: Robert Lemke
-.. Converted to ReST by: Christian Müller
-.. Updated for 1.0 beta1: YES
-.. TODOs: none
-.. ============================================
+.. sectionauthor:: Robert Lemke <robert@typo3.org>
 
 FLOW3 is being developed and tested on multiple platforms and pretty easy to set
 up. Nevertheless we recommend that you go through the following list before installing
-FLOW3, because a server with exotic php.ini settings or wrong file permissions can
+FLOW3, because a server with exotic *php.ini* settings or wrong file permissions can
 easily spoil your day.
 
 Server Environment
@@ -21,12 +14,12 @@ Server Environment
 
 Not surprisingly, you'll need a web server for running your FLOW3-based web
 application. We recommend Apache (though IIS and others work too – we just
-haven't really tested them). Please make sure that the `mod_rewrite module <http://httpd.apache.org/docs/2.3/mod/mod_rewrite.html>`_
-is enabled.
+haven't really tested them). Please make sure that the
+`mod_rewrite <http://httpd.apache.org/docs/2.3/mod/mod_rewrite.html>`_ module is
+enabled.
 
-.. warning::
-	FLOW3's persistence mechanism requires a `PDO compatible database <http://php.net/manual/pdo.drivers.php>`_ .
-	By default we use MySQL, but you can also use PostgreSQL, Sqlite or the like.
+FLOW3's persistence mechanism requires a `PDO compatible database <http://php.net/manual/pdo.drivers.php>`_.
+By default we use MySQL.
 
 PHP
 ===
@@ -47,4 +40,4 @@ in your *php.ini* file.
 
 In case you get a fatal error message saying something like ``Maximum function nesting
 level of '100' reached, aborting!``, check your *php.ini* file for settings regarding
-xdebug and modify/add a line ``xdebug.max_nesting_level = 500`` (suggested value).
+Xdebug and modify/add a line ``xdebug.max_nesting_level = 500`` (suggested value).
