@@ -149,7 +149,7 @@ and further parts you choose for naming the package.
 
 Let's create a *Demo* package for our fictive company *Acme*:
 
-.. code-block:: bash
+.. code-block:: none
 
 	$ ./flow3 kickstart:package Acme.Demo
 	Created .../Acme.Demo/Classes/Controller/StandardController.php
