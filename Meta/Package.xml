@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<package xmlns="http://typo3.org/ns/2008/flow3/package">
+	<key>TYPO3.TheDefinitveGuideToFLOW3</key>
+	<title>The Definitive Guide to FLOW3</title>
+	<description>FLOW3 is an enterprise PHP application framework. This guide is the reference documentation for it.</description>
+	<version>1.0.0-beta2</version>
+	<categories/>
+	<parties>
+		<person role="LeadDeveloper">
+			<name>Robert Lemke</name>
+			<email>robert@typo3.org</email>
+			<website>typo3.org</website>
+			<organisation>TYPO3 Association</organisation>
+			<repositoryUserName>robert</repositoryUserName>
+		</person>
+	</parties>
+	<constraints/>
+</package>

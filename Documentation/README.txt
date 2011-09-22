@@ -9,13 +9,15 @@ If you have python easy_install available, use the following command:
 If you have "make" installed (you probably have on Linux / Mac),
 just run:
 
+  cd Documentation
   make html
 
 Otherwise, you can run:
 
+  cd Documentation
   sphinx-build -b html . _build/html
 
-Then, browswe to _build/html and enjoy :-)
+Then, browse to _build/html and enjoy :-)
 
 After every change to the documentation, run the above command again.
 
