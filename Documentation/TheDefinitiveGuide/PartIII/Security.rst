@@ -62,7 +62,7 @@ controller in the security package: the ``AuthenticationController``. This contr
 two actions, namely ``authenticateAction()`` and ``logoutAction()``, an appropriate route
 is configured. If you call ``http://localhost/flow3/authenticate`` in your Browser, the
 default authentication mechanism will be triggered. This mechanism, implemented in a so
-called authentication provider, authenticates an user account by checking an username and
+called authentication provider, authenticates a user account by checking a username and
 password against accounts stored in the content repository. [#]_
 
 The configuration for this default provider, which is shipped with FLOW3's default
@@ -133,7 +133,7 @@ Authentication tokens
 ~~~~~~~~~~~~~~~~~~~~~
 
 An authentication token holds the status of a specific authentication mechanism, for
-example it receives the credentials (e.g. an username and password) needed for
+example it receives the credentials (e.g. a username and password) needed for
 authentication and stores one of the following authentication states in the session. [#]_
 
 These constants are defined in the authentication token interface
@@ -191,10 +191,10 @@ In the previous section you have seen, how accounts can be authenticated in FLOW
 was concealed so far is, how these accounts are created or what is exactly meant by the
 word "account". First of all let's define what accounts are in FLOW3 and how they are used
 for authentication. Following the OASIS CIQ V3.0 [#]_ specification, an account used for
-authentication is separated from an user or more
+authentication is separated from a user or more
 general a party. The advantage of this separation is the possibility of one user having
-more than one account. E.g. an user could have an account for the ``UsernamePassword``
-provider and one account connected to a LDAP authentication provider. Another scenario
+more than one account. E.g. a user could have an account for the ``UsernamePassword``
+provider and one account connected to an LDAP authentication provider. Another scenario
 would be to have different accounts for different parts of your FLOW3 application. Read
 the next section :ref:`Advanced authentication configuration` to see how this can be
 accomplished.
@@ -207,7 +207,7 @@ getters and setters are provided. The provider name is configured in the *Settin
 file. If you look back to the default configuration, you'll find the name of the default
 authentication provider: ``DefaultProvider``. Besides that, each account has another
 property called ``credentialsSource``, which points to the place or describes the
-credentials needed for this account. This could be a LDAP query string, or in case of the
+credentials needed for this account. This could be an LDAP query string, or in case of the
 ``PersistedUsernamePasswordProvider`` provider, the username, password hash and salt are
 stored directly in this member variable.
 
@@ -338,8 +338,8 @@ which can be specified in the provider settings. By this option you can specify 
 token should be used for a provider. Remember the token is responsible for the credentials
 retrieval, i.e. if you want to authenticate let's say via username and password this setting
 enables to to specify where these credentials come from. So e.g. you could reuse the one
-username/password provider class and specify, wether authentication credentials are sent
-in a POST request or set in a HTTP Basic authentication header.
+username/password provider class and specify, whether authentication credentials are sent
+in a POST request or set in an HTTP Basic authentication header.
 
 *Example: Specifying a specific token type for an authentication provider*
 
@@ -433,7 +433,7 @@ process fails? In this case the authentication manager will throw an
 settle its way up to the browser, right? Therefore we introduced a concept called
 authentication entry points. These entry points catch the mentioned exception and should
 redirect the user to a place where she can provide proper credentials. This could be a
-login page for the username/password provider or a HTTP header for HTTP authentication. An
+login page for the username/password provider or an HTTP header for HTTP authentication. An
 entry point can be configured for each authentication provider. Look at the following
 example, that redirects to a login page (Using the ``WebRedirect`` entry point).
 
@@ -469,7 +469,7 @@ example, that redirects to a login page (Using the ``WebRedirect`` entry point).
 +--------------+---------------------------+---------------------------------------------+
 + Entry Point  + Description               + Configuration options                       +
 +==============+===========================+=============================================+
-+ WebRedirect  + Triggers a HTTP redirect  + Expects an associtative array with          +
++ WebRedirect  + Triggers an HTTP redirect + Expects an associtative array with          +
 +              + to a given uri.           + one entry.                                  +
 +              + that has been resolved    +                                             +
 +              + by the MVC dispatcher     + For example.:                               +
@@ -664,7 +664,7 @@ following voting process to meet its decision:
 2. Ask every voter, to vote for the given method call (or join point in AOP nomenclature).
 
 3. Count the votes and grant access, if there is at least one ``VOTE_GRANT`` vote and no
-``VOTE_DENY``" vote. In all other cases an access denied exception will be thrown.
+``VOTE_DENY`` vote. In all other cases an access denied exception will be thrown.
 
 *On access decision voters*
 
@@ -801,7 +801,7 @@ policy definitions are configured in the ``Policy.yaml`` files.
 *Roles*
 
 In the section about authentication so called roles were introduced. A role can be
-attached to an users security context, to determine which privileges should be granted to
+attached to a users security context, to determine which privileges should be granted to
 her. I.e. the access rights of a user are decoupled from the user object itself, making it
 a lot more flexible, if you want to change them. In FLOW3 a role is mainly just a string,
 which must be unique in the whole FLOW3 instance. Following there is an example
