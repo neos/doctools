@@ -54,18 +54,8 @@ General considerations
   * This script belongs to the FLOW3 package "Package".                    *
   *                                                                        *
   * It is free software; you can redistribute it and/or modify it under    *
-  * the terms of the GNU Lesser General Public License as published by the *
-  * Free Software Foundation, either version 3 of the License, or (at your *
-  * option) any later version.                                             *
-  *                                                                        *
-  * This script is distributed in the hope that it will be useful, but     *
-  * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHAN-    *
-  * TABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser       *
-  * General Public License for more details.                               *
-  *                                                                        *
-  * You should have received a copy of the GNU Lesser General Public       *
-  * License along with the script.                                         *
-  * If not, see http://www.gnu.org/licenses/lgpl.html                      *
+  * the terms of the GNU Lesser General Public License, either version 3   *
+  * of the License, or (at your option) any later version.                 *
   *                                                                        *
   * The TYPO3 project - inspiring people to share!                         *
   *                                                                        */
@@ -129,13 +119,33 @@ all-uppercase stuff. Admittedly there are a few places where we violate that rul
 willingly (FLOW3, TYPO3 – will not change) and historically (e.g. AOP – might change).
 
 
+Vendor namespaces
+-----------------
+
+The base for namespaces as well as package keys is the vendor namespace. Since FLOW3 is
+part of the TYPO3 project, the core team decided to choose "TYPO3" as our vendor
+namespace. The Object Manager for example is known under the class name
+``TYPO3\FLOW3\Object\ObjectManager``. In our examples you will find the ``Acme`` vendor
+namespace.
+
+Why do we use vendor namespaces? This has two great benefits: first of all we don't need a
+central package key registry (like the one we have for TYPO3 4.x extensions) and secondly,
+it allows anyone to seamlessly integrate third-party packages, such as Symfony2 components
+and Zend Framework components or virtually any other PHP 5.3 based library.
+
+Think about your own vendor namespace for a few minutes. It will stay with you for a long
+time.
+
 Package names
 -------------
 
-All package names are start with an uppercase character and usually are written in
+All package names start with an uppercase character and usually are written in
 ``UpperCamelCase``. In order to avoid problems with different filesystems,
 only the characters a-z, A-Z, 0-9 and the dash sign "-" are allowed for package names –
 don't use special characters.
+
+The full package key is then built by combining the vendor namespace and the package,
+like ``TYPO3.Fluid`` or ``Acme.Demo``.
 
 Namespace and Class names
 -------------------------
@@ -515,13 +525,9 @@ members of the class. A documentation block is always used for the entity it pre
 Class documentation
 -------------------
 
-Classes have their own documentation block describing the classes purpose, assigning a
-package and subpackage. Very often the code within a class is expanded and modified by a
-number of authors. We therefore recommend to add the names of the developers to the method
-documentation. An exception should be the documentation for interfaces where you list all
-authors in the interface documentation. Exceptions itself never have an author annotation.
+Classes have their own documentation block describing the classes purpose.
 
-*Standard class documentation block*::
+*Standard documentation block*::
 
  /**
   * First sentence is short description. Then you can write more, just as you like
@@ -529,45 +535,12 @@ authors in the interface documentation. Exceptions itself never have an author a
   * Here may follow some detailed description about what the class is for.
   *
   * Paragraphs are seperated by a empty line.
-  *
-  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
   */
  class SomeClass {
   ...
  }
 
-*Standard interface documentation block*::
-
- /**
-  * First sentence is short description. Then you can write more, just as you like
-  *
-  * Here may follow some detailed description about what the interface is for.
-  *
-  * Paragraphs are seperated by a empty line.
-  *
-  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
-  * @author Your Name <your@email.here>
-  */
- interface SomeInterface {
-  ...
- }
-
-*Standard exception documentation block*::
-
- /**
-  * First sentence is short description. Then you can write more, just as you like
-  *
-  * Here may follow some detailed description about what the exception is for.
-  *
-  * Paragraphs are seperated by a empty line.
-  *
-  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
-  */
- class SomeException extends \Exception {
-  ...
- }
-
-Additional tags or annotations, such as ``@see`` or ``@aspect``, can be added as needed.
+Additional tags or annotations, such as ``@see`` or ``@FLOW3\Aspect``, can be added as needed.
 
 Documenting variables, constants, includes
 ------------------------------------------
@@ -586,9 +559,9 @@ documenting them.
 Method documentation
 --------------------
 
-For a method, at least all parameters and the return value must be documented. Please also
-add your name by using the ``@author`` tag. The ``@access`` tag must not be used as it makes no
-sense (we're using PHP 5 for a reason, don't we?)
+For a method, at least all parameters and the return value must be documented. The
+``@access`` tag must not be used as it makes no sense (we're using PHP 5 for a reason,
+don't we?)
 
 *Standard method documentation block*::
 
@@ -600,7 +573,6 @@ sense (we're using PHP 5 for a reason, don't we?)
   * @param \TYPO3\Blog\Domain\Model\Post $post A post
   * @param string $someString This parameter should contain some string
   * @return void
-  * @author Your Name <your@email.here>
   */
  public function addStringToPost(\TYPO3\Blog\Domain\Model\Post $post, $someString) {
   ...
@@ -620,7 +592,6 @@ Testcases need to be marked as being a test and can have some more annotations.
 
  /**
   * @test
-  * @author Your Name <your@email.here>
   */
  public function fooReturnsBarForQuux() {
   ...
@@ -643,7 +614,6 @@ docblock.
   * This method is part of the public API.
   *
   * @return void
-  * @author Your Name <your@email.here>
   * @api
   */
  public function fooBar() {
@@ -669,31 +639,27 @@ the order given here should be kept for the sake of consistency.
 
 *Interface Documentation*
 
-* @license
-* @author
 * @api
 * @since
 * @deprecated
 
 *Class Documentation*
 
-* @license
 * @api
 * @since
 * @deprecated
-* @entity
-* @valueobject
-* @scope
-* @aspect
+* @FLOW3\Entity
+* @FLOW3\ValueObject
+* @FLOW3\Scope
+* @FLOW3\Aspect
 
 *Property Documentation*
 
 * @var
-* @introduce
-* @uuid
-* @identity
-* @transient
-* @lazy
+* @FLOW3\Introduce
+* @FLOW3\Identity
+* @FLOW3\Transient
+* @FLOW3\Lazy
 * @api
 * @since
 * @deprecated
@@ -702,7 +668,6 @@ the order given here should be kept for the sake of consistency.
 
 * @param
 * @throws
-* @author
 * @api
 * @since
 * @deprecated
@@ -712,25 +677,23 @@ the order given here should be kept for the sake of consistency.
 * @param
 * @return
 * @throws
-* @validate
-* @dontvalidate
-* @author
-* @signal
+* @FLOW3\Validate
+* @FLOW3\IgnoreValidation
+* @FLOW3\Signal
 * @api
 * @since
 * @deprecated
-* @pointcut
-* @afterreturning
-* @afterthrowing
-* @around
-* @before
+* @FLOW3\Pointcut
+* @FLOW3\AfterReturning
+* @FLOW3\AfterThrowing
+* @FLOW3\Around
+* @FLOW3\Before
 
 *Testcase Documentation*
 
 * @test
 * @dataProvider
 * @expectedException
-* @author
 
 .. tip::
 
@@ -835,7 +798,7 @@ PHP in General
 
   * constructor
   * injection methods
-  * initialization methods (including initializeObject())
+  * initialization methods (including ``initializeObject()``)
   * public methods
   * protected methods
   * private methods
