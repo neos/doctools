@@ -77,8 +77,9 @@ tutorial - only the templates will change depending on the current controller
 and action. Elements shared by multiple templates can be extracted as a partial
 to assure consistency and avoid duplication.
 
-Let's build a simple layout for your blog. You only need to adjust the file called ``Default.html`` inside the ``TYPO3.Blog/Resources/Private/Layouts`` directory to
-contain the following code:
+Let's build a simple layout for your blog. You only need to adjust the file called
+``Default.html`` inside the ``TYPO3.Blog/Resources/Private/Layouts`` directory to contain
+the following code:
 
 .. code-block:: xml
 
@@ -225,7 +226,7 @@ helper right at the top – ``flashMessages`` generates an unordered list with
 all flash messages. Well, maybe you remember this line in the ``createAction``
 of our ``PostController``::
 
-	$this->flashMessageContainer->add('Created a new post.');
+	$this->addFlashMessage('Created a new post.');
 
 Flash messages are a great way to display success or error messages to
 the user. And because they are so useful, the action controller provides the
@@ -242,7 +243,7 @@ to assign blogs to the view::
 	/**
 	 * List action for this controller. Displays latest posts
 	 *
-	 * @return string
+	 * @return void
 	 */
 	public function indexAction() {
 		$this->view->assign('blog', $this->blog);
@@ -479,7 +480,7 @@ When you submit the form you call the ``updateAction``::
 	 */
 	public function updateAction(Post $post) {
 		$this->postRepository->update($post);
-		$this->flashMessageContainer->add('Updated the post.');
+		$this->addFlashMessage('Updated the post.');
 		$this->redirect('index');
 	}
 

@@ -23,7 +23,7 @@ From a shell you should be able to run the script by entering ``./flow3``:
 .. code-block:: none
 
 	myhost:tutorial johndoe$ ./flow3
-	FLOW3 1.0.0-beta2 ("Development" context)
+	FLOW3 1.0.0 ("Development" context)
 	usage: ./flow3 <command identifier>
 
 	See './flow3 help' for a list of all available commands.
@@ -33,7 +33,7 @@ To get an overview of all available commands, enter ``./flow3 help``:
 .. code-block:: none
 
 	myhost:tutorial johndoe$ ./flow3 help
-	FLOW3 1.0.0-beta2 ("Development" context)
+	FLOW3 1.0.0 ("Development" context)
 	usage: ./flow3 <command identifier>
 
 	The following commands are currently available:

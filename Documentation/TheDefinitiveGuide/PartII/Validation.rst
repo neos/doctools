@@ -45,7 +45,7 @@ of annotations::
 
 	/**
 	 * @var string
-	 * @validate StringLength(minimum = 1, maximum = 100)
+	 * @FLOW3\Validate(type="StringLength", options={ "minimum"=1, "maximum"=100 })
 	 */
 	protected $title;
 
@@ -53,18 +53,18 @@ of annotations::
 
 	/**
 	 * @var string
-	 * @validate StringLength(minimum = 1, maximum = 50)
+	 * @FLOW3\Validate(type="StringLength", options={ "minimum"=1, "maximum"=50 })
 	 */
 	protected $author;
 
-The ``@validate`` annotations define one or more validation rules which should
-apply to a property. Rules are either separated by a comma or can be defined in
-dedicated lines by further ``@validate`` annotations.
+The ``Validate`` annotations define one or more validation rules which should apply to a
+property. Multiple rules can be defined in dedicated lines by further ``Validate``
+annotations.
 
 .. tip::
 	FLOW3 provides a range of built-in validators which can be found in the
 	*FLOW3\Validation\Validator* sub package. The names used in the
-	``@validate`` declarations are just the  class names of these validators.
+	``type`` dattributes are just the unqualified class names of these validators.
 
 	It is possible and very simple to program custom validators by implementing
 	the ``TYPO3\FLOW3\Validation\Validator\ValidatorInterface``.
@@ -194,7 +194,7 @@ additional annotation the whole mechanism works as expected::
 	 * Shows a form for editing an existing post object
 	 *
 	 * @param \TYPO3\Blog\Domain\Model\Post $post The post to edit
-	 * @ignorevalidation $post
+	 * @FLOW3\IgnoreValidation("$post")
 	 * @return void
 	 */
 	public function editAction(Post $post) {

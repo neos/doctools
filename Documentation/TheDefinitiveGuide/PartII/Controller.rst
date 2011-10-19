@@ -18,18 +18,20 @@ store a new blog once the index action is called::
 	<?php
 	namespace TYPO3\Blog\Controller;
 
+	use TYPO3\FLOW3\Annotations as FLOW3;
+
 	// ...
 
 	class SetupController extends \TYPO3\FLOW3\MVC\Controller\ActionController {
 
 		/**
-		 * @inject
+		 * @FLOW3\Inject
 		 * @var \TYPO3\Blog\Domain\Repository\BlogRepository
 		 */
 		protected $blogRepository;
 
 		/**
-		 * @inject
+		 * @FLOW3\Inject
 		 * @var \TYPO3\Blog\Domain\Repository\PostRepository
 		 */
 		protected $postRepository;
@@ -82,13 +84,13 @@ repositories from?
 ::
 
 	/**
+	 * @FLOW3\Inject
 	 * @var \TYPO3\Blog\Domain\Repository\BlogRepository
-	 * @inject
 	 */
 	protected $blogRepository;
 
 The property declarations for ``$blogRepository`` (and ``$postRepository``) is marked with
-an ``@inject`` annotation. This signals to the object framework: I need the blog
+an ``Inject`` annotation. This signals to the object framework: I need the blog
 repository here, please make sure it's stored in this member variable. In effect FLOW3
 will inject the blog repository into the ``$blogRepository`` property right after your
 controller has been instantiated. And because the blog repository's scope is *singleton*
@@ -140,7 +142,7 @@ Now let us add some more code to *.../Classes/Controller/PostController.php*::
 
 		/**
 		 * @var \TYPO3\Blog\Domain\Repository\BlogRepository
-		 * @inject
+		 * @FLOW3\Inject
 		 */
 		protected $blogRepository;
 
@@ -195,7 +197,7 @@ the new post as an argument to a ``createAction`` in the ``PostController``::
 		$blog = $this->blogRepository->findActive();
 		$blog->addPost($newPost);
 		$this->postRepository->add($newPost);
-		$this->flashMessageContainer->add('Created a new post.');
+		$this->addFlashMessage('Created a new post.');
 		$this->redirect('index');
 	}
 
@@ -219,9 +221,9 @@ form – this is clearly a task for the view!
 
 -----
 
-.. [#]	Remember, *singleton* is the default object scope and because the
-		``BlogRepository`` does not contain a ``@scope`` annotation, it has the
-		default scope.
+.. [#]	Remember, *prototype* is the default object scope and because the
+		``BlogRepository`` does contain a ``Scope`` annotation, it has the
+		singleton scope instead.
 .. [#]	Don't worry, the action won't stay like this – of course later we'll
 		move all HTML rendering code to a dedicated view.
 .. [#]	The *typo3.blog* stands for the package *TYPO3.Blog* and *post* specifies the

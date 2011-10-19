@@ -23,8 +23,8 @@ databases and think only in terms of objects.
     copy the needed files from there to "your" sandbox project.
 
     To see the full-scale code of the Blog as used by some of us, take a look at
-    the `Blog package <http://git.typo3.org/FLOW3/Packages/Blog.git>`_ in our Git
-    repository.
+    the `Blog package <http://git.typo3.org/FLOW3/Packages/TYPO3.Blog.git>`_ in 
+    our Git repository.
 
 Domain models are really the heart of your application and therefore it is
 vital that this layer stays clean and legible. In a FLOW3 application a model
@@ -60,8 +60,9 @@ Open the generated file and complete it to look like the following::
 		 * The blog's title.
 		 *
 		 * @var string
-		 * @validate Text, StringLength(minimum = 1, maximum = 80)
-		 * @Column(length="80")
+		 * @FLOW3\Validate(type="Text")
+		 * @FLOW3\Validate(type="StringLength", options={ "minimum"=1, "maximum"=80 })
+		 * @ORM\Column(length="80")
 		 */
 		protected $title = '';
 
@@ -69,8 +70,9 @@ Open the generated file and complete it to look like the following::
 		 * A short description of the blog
 		 *
 		 * @var string
-		 * @validate Text, StringLength(maximum = 150)
-		 * @Column(length="150")
+		 * @FLOW3\Validate(type="Text")
+		 * @FLOW3\Validate(type="StringLength", options={ "maximum"=150 })
+		 * @ORM\Column(length="150")
 		 */
 		protected $description = '';
 
@@ -78,8 +80,8 @@ Open the generated file and complete it to look like the following::
 		 * The posts contained in this blog
 		 *
 		 * @var \Doctrine\Common\Collections\Collection<\TYPO3\Blog\Domain\Model\Post>
-		 * @OneToMany(mappedBy="blog")
-		 * @OrderBy({"date" = "DESC"})
+		 * @ORM\OneToMany(mappedBy="blog")
+		 * @ORM\OrderBy({"date" = "DESC"})
 		 */
 		protected $posts;
 
@@ -137,24 +139,16 @@ PHP Code::
 	/**
 	 * A blog
 	 *
-	 * @scope prototype
-	 * @entity
+	 * @FLOW3\Entity
 	 */
 	class Blog {
 
 On the first glance this looks like a regular comment block, but it's not. This
-comment contains two **annotations** which are an important building block in
+comment contains **annotations** which are an important building block in
 FLOW3's configuration mechanism.
 
-The ``@scope`` annotation defines the object scope. By default only one global
-instance exists of each class – this is called the **singleton scope**. If we
-want to allow multiple instances at a time (and potentially there are multiple
-``Blog`` objects) we need to annotate the class with ``@scope prototype``.
-Don't worry about this now, you'll soon learn more about scopes and object
-management in general.
-
-The second annotation marks this class as an ``@entity``. This is an important
-piece of information for the persistence framework because it declares that
+The annotation marks this class as an entity. This is an important piece
+of information for the persistence framework because it declares that
 
 	- this model is an **entity** according to the concepts of Domain-Driven
 	  Design
@@ -168,8 +162,9 @@ The model's properties are implemented as regular class properties::
 	 * The blog's title.
 	 *
 	 * @var string
-	 * @validate Text, StringLength(minimum = 1, maximum = 80)
-	 * @Column(length="80")
+	 * @FLOW3\Validate(type="Text")
+	 * @FLOW3\Validate(type="StringLength", options={ "minimum"=1, "maximum"=80 })
+	 * @ORM\Column(length="80")
 	 */
 	protected $title = '';
 
@@ -177,8 +172,9 @@ The model's properties are implemented as regular class properties::
 	 * A short description of the blog
 	 *
 	 * @var string
-	 * @validate Text, StringLength(maximum = 150)
-	 * @Column(length="150")
+	 * @FLOW3\Validate(type="Text")
+	 * @FLOW3\Validate(type="StringLength", options={ "maximum"=150 })
+	 * @ORM\Column(length="150")
 	 */
 	protected $description = '';
 
@@ -186,8 +182,8 @@ The model's properties are implemented as regular class properties::
 	 * The posts contained in this blog
 	 *
 	 * @var \Doctrine\Common\Collections\Collection<\TYPO3\Blog\Domain\Model\Post>
-	 * @OneToMany(mappedBy="blog")
-	 * @OrderBy({"date" = "DESC"})
+	 * @ORM\OneToMany(mappedBy="blog")
+	 * @ORM\OrderBy({"date" = "DESC"})
 	 */
 	protected $posts;
 
@@ -204,14 +200,14 @@ does not allow the collection to be persisted by Doctrine 2 properly. We therefo
 less-than and greater-than signs gives an important hint on the content of the collection
 (or array). There are a few situations in which FLOW3 relies on this information.
 
-The ``@OneToMany`` annotation is Doctrine 2 specific and provides more detail on the type
-association a property represents. In this case it tells Doctrine that a ``Blog`` may be
-associated with many ``Post`` instances, but those in turn may only belong to one
+The ``OneToMany`` annotation is Doctrine 2 specific and provides more detail on the
+type association a property represents. In this case it tells Doctrine that a ``Blog`` may
+be associated with many ``Post`` instances, but those in turn may only belong to one
 ``Blog``. Furthermore the ``mappedBy`` attribute says the association is bidirectional and
 refers to the property ``$blog`` in the ``Post`` class.
 
-The ``@OrderBy`` annotation is regular Doctrine 2 functionality and makes sure the posts
-are always ordered by their date property when the collection is loaded.
+The ``OrderBy`` annotation is regular Doctrine 2 functionality and makes sure the
+posts are always ordered by their date property when the collection is loaded.
 
 The remaining code shouldn't hold any surprises - it only serves for setting and
 retrieving the blog's properties. This again, is no requirement by FLOW3 - if you don't
@@ -240,7 +236,7 @@ Adjust the generated code as follows::
 	/**
 	 * The blog
 	 * @var \TYPO3\Blog\Domain\Model\Blog
-	 * @ManyToOne(inversedBy="posts")
+	 * @ORM\ManyToOne(inversedBy="posts")
 	 */
 	protected $blog;
 
@@ -249,7 +245,7 @@ Adjust the generated code as follows::
 	/**
 	 * The content
 	 * @var string
-	 * @Column(type="text")
+	 * @ORM\Column(type="text")
 	 */
 	protected $content;
 
@@ -324,7 +320,7 @@ This will generate a vanilla repository for blogs containing this code::
 	/**
 	 * A repository for Blogs
 	 *
-	 * @scope singleton
+	 * @FLOW3\Scope("singleton")
 	 */
 	class BlogRepository extends \TYPO3\FLOW3\Persistence\Repository {
 

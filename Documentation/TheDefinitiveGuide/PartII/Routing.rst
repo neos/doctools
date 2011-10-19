@@ -27,7 +27,7 @@ TYPO3CR route) and make sure that you use spaces exactly like in the example
 
 .. code-block:: yaml
 
-	--
+	-
 	  name: 'Post index'
 	  uriPattern:    '(posts)'
 	  defaults:
@@ -86,7 +86,7 @@ route configuration:
 	##
 	# Blog subroutes
 
-	--
+	-
 	  name: 'Blog'
 	  uriPattern: '<BlogSubroutes>'
 	  subRoutes:
@@ -104,7 +104,7 @@ route you already created:
 	# Routes configuration for the Blog package                              #
 	#                                                                        #
 
-	--
+	-
 	  name: 'Post index'
 	  uriPattern:    '(posts)'
 	  defaults:
@@ -122,7 +122,7 @@ so let's beautify the action URIs as well by inserting a new route before the
 
 .. code-block:: yaml
 
-	--
+	-
 	  name: 'Post actions 1'
 	  uriPattern:    'posts/{@action}'
 	  defaults:
@@ -171,9 +171,7 @@ file called *PostRoutePartHandler.php*. Then copy & paste the following code::
 	namespace TYPO3\Blog\RoutePartHandlers;
 
 	/**
-	 * post route part handler
-	 *
-	 * @scope prototype
+	 * Post route part handler
 	 */
 	class PostRoutePartHandler extends \TYPO3\FLOW3\MVC\Web\Routing\DynamicRoutePart {
 
@@ -250,7 +248,7 @@ into our routes configuration by adding another route at the top of the file:
 
 .. code-block:: yaml
 
-	--
+	-
 	  name: 'Post actions 2'
 	  uriPattern:    'posts/{post}/{@action}'
 	  defaults:

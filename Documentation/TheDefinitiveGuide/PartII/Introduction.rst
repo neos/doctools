@@ -29,11 +29,6 @@ you'll surely get some new insights into modern programming paradigms and how
 to produce clean code in no time.
 
 .. note::
-	Please note that this tutorial refers to FLOW3 1.0.0 beta 2 which means
-	that changes to the API are still possible. However, we're quite
-	confident that the concepts described in this tutorial will remain the same
-	in FLOW3 1.0.0 final.
-
 	If you're stuck at some point or stumble over some weirdnesses during the
 	tutorial, please let us know! We appreciate any feedback in our mailing
 	lists, as a ticket in our issue tracker or via private email. [#]
