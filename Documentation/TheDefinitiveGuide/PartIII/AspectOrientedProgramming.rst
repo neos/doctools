@@ -2,14 +2,7 @@
 Aspect-Oriented Programming
 ===========================
 
-.. ============================================
-.. Meta-Information for this chapter
-.. ---------------------------------
-.. Author: Robert Lemke
-.. Converted to ReST by: Christian Müller
-.. Updated for 1.0 beta1: YES, by Christopher Hlubek
-.. TODOs: none
-.. ============================================
+.. sectionauthor:: Robert Lemke <robert@typo3.org>
 
 Introduction
 ============
@@ -58,7 +51,7 @@ Let's imagine you want to log a message inside methods of your domain model:
 	class Forum {
 
 		/**
-		 * @inject
+		 * @FLOW3\Inject
 		 * @var \Examples\Forum\Logger\ApplicationLoggerInterface
 		 */
 		protected $applicationLogger;
@@ -113,12 +106,12 @@ and has many possibilities, even for complex scenarios.
 	namespace Examples\Forum\Logging;
 
 	/**
-	 * @aspect
+	 * @FLOW3\Aspect
 	 */
 	class LoggingAspect {
 
 		/**
-		 * @inject
+		 * @FLOW3\Inject
 		 * @var \Examples\Forum\Logger\ApplicationLoggerInterface
 		 */
 		protected $applicationLogger;
@@ -127,7 +120,7 @@ and has many possibilities, even for complex scenarios.
 		 * Log a message if a post is deleted
 		 *
 		 * @param \TYPO3\FLOW3\AOP\JoinPointInterface $joinPoint
-		 * @before method(Examples\Forum\Domain\Model\Forum->deletePost())
+		 * @FLOW3\Before("method(Examples\Forum\Domain\Model\Forum->deletePost())")
 		 * @return void
 		 */
 		public function logDeletePost(\TYPO3\FLOW3\AOP\JoinPointInterface $joinPoint) {
@@ -291,7 +284,7 @@ shows the definition of a hypothetical ``FooSecurity`` aspect:
 	/**
 	 * An aspect implementing security for Foo
 	 *
-	 * @aspect
+	 * @FLOW3\Aspect
 	 */
 	class FooSecurityAspect {
 
@@ -299,7 +292,7 @@ shows the definition of a hypothetical ``FooSecurity`` aspect:
 
 As you can see, ``\Example\MySecurityPackage\FooSecurityAspect`` is just a regular
 PHP class which may (actually must) contain methods and properties. What
-makes it an aspect is solely the ``@aspect`` annotation mentioned in the class
+makes it an aspect is solely the ``Aspect`` annotation mentioned in the class
 comment. The AOP framework recognizes this tag and registers the class as an
 aspect.
 
@@ -330,7 +323,7 @@ in which class they are defined:
 	/**
 	 * A pointcut which matches all methods whose name starts with "delete".
 	 *
-	 * @pointcut method(.*->delete.*())
+	 * @FLOW3\Pointcut("method(.*->delete.*())")
 	 */
 	public function deleteMethods() {}
 
@@ -468,47 +461,47 @@ Matches all methods in classes which are part of the Foo layer:
 	even when the name might imply this. It's just a more generic class
 	designator matching whole type hierarchies.
 
-classTaggedWith()
-*****************
+classAnnotatedWith()
+********************
 
-The ``classTaggedWith()`` designator matches on classes which are tagged with a
+The ``classAnnotatedWith()`` designator matches on classes which are tagged with a
 certain annotation. As with class and method names, a regular expression can be
 used to describe the matching tags. The syntax of this designator is as
 follows:
 
-``classTaggedWith(tag)``
+``classAnnotatedWith(annotation)``
 
-*Example: classTaggedWith() pointcut designator*
-
------
-
-Matches all classes which are tagged with an ``@entity`` annotation:
-
-``classTaggedWith(entity)``
-
-Matches all classes which are tagged with an annotation starting with ``@cool``:
-
-``classTaggedWith(cool.*)``
+*Example: classAnnotatedWith() pointcut designator*
 
 -----
 
-methodTaggedWith()
-******************
+Matches all classes which are tagged with FLOW3's ``Entity`` annotation:
 
-The ``methodTaggedWith()`` designator matches on methods which are tagged with a
+``classAnnotatedWith(TYPO3\FLOW3\Annotations\Entity)``
+
+Matches all classes which are tagged with an annotation starting with ``Cool``:
+
+``classAnnotatedWith(Cool.*)``
+
+-----
+
+methodAnnotatededWith()
+***********************
+
+The ``methodAnnotatededWith()`` designator matches on methods which are annotated with a
 certain annotation. As with other pointcut designators, a regular expression
-can be used to describe the matching tags. The syntax of this designator is as
+can be used to describe the matching annotations. The syntax of this designator is as
 follows:
 
-``methodTaggedWith(tag)``
+``methodAnnotatededWith(annotation)``
 
-*Example: methodTaggedWith() pointcut designator*
+*Example: methodAnnotatededWith() pointcut designator*
 
 -----
 
-Matches all method which are tagged with a ``@special`` annotation:
+Matches all method which are annotated with a ``Special`` annotation:
 
-``methodTaggedWith(special)``
+``methodAnnotatededWith(Special)``
 
 -----
 
@@ -631,17 +624,17 @@ conveniently in advice declarations:
 	/**
 	 * Fixture class for testing poincut definitions
 	 *
-	 * @aspect
+	 * @FLOW3\Aspect
 	 */
 	class PointcutTestingAspect {
 
 		/**
 		 * Pointcut which includes all method executions in
-		 * pointcutTestingTargetClasses except those from Target
+		 * PointcutTestingTargetClasses except those from Target
 		 * Class number 3.
 		 *
-		 * @pointcut method(Example\TestPackage\PointcutTestingTargetClass.*->.*()) && ⏎
-		  !method(Example\TestPackage\PointcutTestingTargetClass3->.*())
+		 * @FLOW3\Pointcut("method(Example\TestPackage\PointcutTestingTargetClass.*->.*()) && ⏎
+		  !method(Example\TestPackage\PointcutTestingTargetClass3->.*())")
 		 */
 		public function pointcutTestingTargetClasses() {}
 
@@ -649,22 +642,22 @@ conveniently in advice declarations:
 		 * Pointcut which consists of only the
 		 * Example\TestPackage\OtherPointcutTestingTargetClass.
 		 *
-		 * @pointcut method(Example\TestPackage\OtherPointcutTestingTargetClass->.*())
+		 * @FLOW3\Pointcut("method(Example\TestPackage\OtherPointcutTestingTargetClass->.*())")
 		 */
 		public function otherPointcutTestingTargetClass() {}
 
 		/**
 		 * A combination of both above pointcuts
 		 *
-		 * @pointcut Example\TestPackage\PointcutTestingAspect->pointcutTestingTargetClasses ⏎
-		  || Example\TestPackage\PointcutTestingAspect->otherPointcutTestingTargetClass
+		 * @FLOW3\Pointcut("Example\TestPackage\PointcutTestingAspect->pointcutTestingTargetClasses ⏎
+		  || Example\TestPackage\PointcutTestingAspect->otherPointcutTestingTargetClass")
 		 */
 		public function bothPointcuts() {}
 
 		/**
 		 * A pointcut which matches all classes from the service layer
 		 *
-		 * @pointcut within(Example\FLOW3\ServiceLayerInterface)
+		 * @FLOW3\Pointcut("within(Example\FLOW3\ServiceLayerInterface)")
 		 */
 		public function serviceLayerClasses() {}
 
@@ -672,7 +665,7 @@ conveniently in advice declarations:
 		 * A pointcut which matches any method from the BasicClass and all classes
 		 * from the service layer
 		 *
-		 * @pointcut method(Example\TestPackage\Basic.*->.*()) || within(TYPO3\FLOW3\Service.*)
+		 * @FLOW3\Pointcut("method(Example\TestPackage\Basic.*->.*()) || within(TYPO3\FLOW3\Service.*)")
 		 */
 		public function basicClassOrServiceLayerClasses() {}
 	}
@@ -705,7 +698,7 @@ can it take influence on other before advices at the same join point.
 	 * Before advice which is invoked before any method call within the News
 	 * package
 	 *
-	 * @before class(Example\News\.*->.*())
+	 * @FLOW3\Before("class(Example\News\.*->.*())")
 	 */
 	public function myBeforeAdvice(\TYPO3\FLOW3\AOP\JoinPointInterface ⏎
 		$joinPoint) {
@@ -724,8 +717,8 @@ advices may read the result of the target method, but can't modify it.
 	/**
 	 * After returning advice
 	 *
-	 * @afterreturning method(public Example\News\FeedAgregator->[import|update].*()) ⏎
-		  || Example\MyPackage\MyAspect->someOtherPointcut
+	 * @FLOW3\AfterReturning("method(public Example\News\FeedAgregator->[import|update].*()) ⏎
+		  || Example\MyPackage\MyAspect->someOtherPointcut")
 	 */
 	public function myAfterReturningAdvice(\TYPO3\FLOW3\AOP\JoinPointInterface ⏎
 		$joinPoint) {
@@ -743,7 +736,7 @@ after method execution, but only if an exception was thrown.
 	/**
 	 * After throwing advice
 	 *
-	 * @afterthrowing within(Example\News\ImportantLayer)
+	 * @FLOW3\AfterThrowing("within(Example\News\ImportantLayer)")
 	 */
 	public function myAfterThrowingAdvice(\TYPO3\FLOW3\AOP\JoinPointInterface ⏎
 		$joinPoint) {
@@ -762,7 +755,7 @@ was thrown or not.
 	/**
 	 * After advice
 	 *
-	 * @after Example\MyPackage\MyAspect->justAPointcut
+	 * @FLOW3\After("Example\MyPackage\MyAspect->justAPointcut")
 	 */
 	public function myAfterAdvice(\TYPO3\FLOW3\AOP\JoinPointInterface $joinPoint) {
 	}
@@ -783,7 +776,7 @@ You might already guess how an around advice is declared:
 	/**
 	 * Around advice
 	 *
-	 * @around Example\MyPackage\MyAspect->justAPointcut
+	 * @FLOW3\Around("Example\MyPackage\MyAspect->justAPointcut")
 	 */
 	public function myAroundAdvice(\TYPO3\FLOW3\AOP\JoinPointInterface $joinPoint) {
 	}
@@ -836,7 +829,7 @@ code will just do that:
 	/**
 	 * A logging aspect
 	 *
-	 * @aspect
+	 * @FLOW3\Aspect
 	 */
 	class LoggingAspect {
 
@@ -849,7 +842,7 @@ code will just do that:
 		 * For logging we need a logger, which we will get injected automatically by
 		 * the Object Manager
 		 *
-		 * @param  \TYPO3\FLOW3\Log\SystemLoggerInterface $logger The System Logger
+		 * @param \TYPO3\FLOW3\Log\SystemLoggerInterface $logger The System Logger
 		 * @return void
 		 */
 		public function injectSystemLogger(\TYPO3\FLOW3\Log\SystemLoggerInterface ⏎
@@ -862,7 +855,7 @@ code will just do that:
 		 *
 		 * @param  \TYPO3\FLOW3\AOP\JoinPointInterface $joinPoint: The current join point
 		 * @return void
-		 * @before method(public Example\MyPackage\.*->.*())
+		 * @FLOW3\Before("method(public Example\MyPackage\.*->.*())")
 		 */
 		public function logMethodExecution(\TYPO3\FLOW3\AOP\JoinPointInterface $joinPoint) {
 			$logMessage = 'The method ' . $joinPoint->getMethodName() . ' in class ' . ⏎
@@ -890,14 +883,14 @@ place but refer to a named pointcut.
 	/**
 	 * A lastname rejection aspect
 	 *
-	 * @aspect
+	 * @FLOW3\Aspect
 	 */
 	class LastNameRejectionAspect {
 
 		/**
 		 * A pointcut which matches all guestbook submission method invocations
 		 *
-		 * @pointcut method(Example\Guestbook\SubmissionHandlingThingy->submit())
+		 * @FLOW3\Pointcut("method(Example\Guestbook\SubmissionHandlingThingy->submit())")
 		 */
 		public function guestbookSubmissionPointcut() {}
 
@@ -906,7 +899,7 @@ place but refer to a named pointcut.
 		 *
 		 * @param  \TYPO3\FLOW3\AOP\JoinPointInterface $joinPoint The current join point
 		 * @return mixed Result of the target method
-		 * @around Example\Guestbook\LastNameRejectionAspect->guestbookSubmissionPointcut
+		 * @FLOW3\Around("Example\Guestbook\LastNameRejectionAspect->guestbookSubmissionPointcut")
 		 */
 		public function rejectLastName(\TYPO3\FLOW3\AOP\JoinPointInterface $joinPoint) {
 			if ($joinPoint->getMethodArgument('lastName') === 'Sarkosh') {
@@ -940,7 +933,7 @@ Like advices, introductions are declared by annotations. But in contrast to
 advices, the anchor for an introduction declaration is the class declaration of
 the aspect class. The annotation tag follows this syntax:
 
-``@introduce NewInterfaceName, PointcutExpression``
+``@FLOW3\Introduce("PointcutExpression", interfaceName="NewInterfaceName")``
 
 Although the PoincutExpression is just a normal pointcut expression, which may
 also refer to named pointcuts, be aware that only expressions filtering for
@@ -959,8 +952,8 @@ The following example introduces a new interface ``NewInterface`` to the class
 	 *
 	 * Introduces Example\MyPackage\NewInterface to the class Example\MyPackage\OldClass:
 	 *
-	 * @introduce Example\MyPackage\NewInterface, class(Example\MyPackage\OldClass)
-	 * @aspect
+	 * @FLOW3\Introduce("class(Example\MyPackage\OldClass)", interfaceName="Example\MyPackage\NewInterface")
+	 * @FLOW3\Aspect
 	 */
 	class IntroductionAspect {
 
@@ -970,7 +963,7 @@ The following example introduces a new interface ``NewInterface`` to the class
 		 *
 		 * @param  \TYPO3\FLOW3\AOP\JoinPointInterface $joinPoint The current join point
 		 * @return void
-		 * @around method(Example\MyPackage\OldClass->newMethod())
+		 * @FLOW3\Around("method(Example\MyPackage\OldClass->newMethod())")
 		 */
 		public function newMethodImplementation(\TYPO3\FLOW3\AOP\JoinPointInterface $joinPoint) {
 				// We call the advice chain, in case any other advice is declared for
@@ -992,7 +985,7 @@ Form of the declaration::
 
 	/**
 	 * @var type
-	 * @introduce PointcutExpression
+	 * @FLOW3\Introduce("PointcutExpression")
 	 */
 	protected $propertyName;
 
@@ -1008,14 +1001,14 @@ The following example introduces a new property "subtitle" to the class
 	/**
 	 * An aspect for demonstrating property introductions
 	 *
-	 * @aspect
+	 * @FLOW3\Aspect
 	 */
 	class PropertyIntroductionAspect {
 
 		/**
 		 * @var string
-		 * @Column(length="40")
-		 * @introduce class(Example\Blog\Domain\Model\Post)
+		 * @Column(length=40)
+		 * @FLOW3\Introduce("class(Example\Blog\Domain\Model\Post)")
 		 */
 		protected $subtitle;
 

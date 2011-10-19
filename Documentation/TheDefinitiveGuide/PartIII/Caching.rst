@@ -4,14 +4,7 @@
 Cache Framework
 ===============
 
-.. ============================================
-.. Meta-Information for this chapter
-.. ---------------------------------
-.. Author: Robert Lemke
-.. Converted to ReST by: Rens Admiraal
-.. Updated for 1.0 beta1: NO
-.. TODOs: none
-.. ============================================
+.. sectionauthor:: Robert Lemke <robert@typo3.org>
 
 FLOW3 offers a caching framework to cache data. The system offers a wide variety of
 options and storage solutions for different caching needs. Each cache can be configured
@@ -612,12 +605,12 @@ This configures what will be injected into the following setter:::
 	 * @return void
 	 */
 	public function setFooCache(\TYPO3\FLOW3\Cache\Frontend\StringFrontend $cache) {
-		$this-&gt;fooCache = $cache;
+		$this->fooCache = $cache;
 	}
 
-To make it even simpler you could omit the setter method and annotate the member with
-``@inject``. The injected cache is fully initialized, all available frontend operations
-like ``get()``, ``set()`` and ``flushByTag()`` can be executed on ``$this->fooCache``.
+To make it even simpler you could omit the setter method and annotate the member with the
+``Inject`` annotations. The injected cache is fully initialized, all available frontend
+operations like ``get()``, ``set()`` and ``flushByTag()`` can be executed on ``$this->fooCache``.
 
 Using the CacheFactory
 ~~~~~~~~~~~~~~~~~~~~~~

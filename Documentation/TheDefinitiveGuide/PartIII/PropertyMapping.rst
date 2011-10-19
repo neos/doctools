@@ -2,14 +2,9 @@
 Property Mapping
 ================
 
-.. ============================================
-.. Meta-Information for this chapter
-.. ---------------------------------
-.. Author: Sebastian Kurfürst
-.. Converted to ReST by: Sebastian Kurfürst
-.. Updated for 1.0 beta1: YES
+.. sectionauthor:: Sebastian Kurfürst <sebastian@typo3.org>
+
 .. TODOs: extract TypeConverter reference from PHPDoc
-.. ============================================
 
 The Property Mappers task is to convert *simple types*, like arrays, strings, numbers,
 to objects. This is most prominently needed in the MVC framework: When a request
@@ -44,7 +39,7 @@ Our next example goes a bit further and shows how we can use the Property Mapper
 to convert an array of data into a domain model::
 
 	/**
-	 * @entity
+	 * @FLOW3\Entity
 	 */
 	class TYPO3\MyPackage\Domain\Model\Person {
 		/**

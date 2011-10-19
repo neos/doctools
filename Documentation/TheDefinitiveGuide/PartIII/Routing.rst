@@ -4,14 +4,7 @@
 Routing
 =======
 
-.. ============================================
-.. Meta-Information for this chapter
-.. ---------------------------------
-.. Author: Bastian Waidelich ?
-.. Converted to ReST by: Rens Admiraal
-.. Updated for 1.0 beta1: YES, by Sebastian Kurfürst
-.. TODOs: none
-.. ============================================
+.. sectionauthor:: Bastian Waidelich <bastian@typo3.org>
 
 As explained in the Model View Controller chapter, in FLOW3 the dispatcher passes the
 request to a controller which then calls the respective action. But how to tell, what
@@ -52,7 +45,7 @@ But let's start with an easy example:
 
 .. code-block:: yaml
 
-	--
+	-
 	  name: 'Homepage'
 	  uriPattern: ''
 	  defaults:
@@ -98,7 +91,7 @@ Let's create a route that calls the ``listAction`` of the ``CustomerController``
 
 .. code-block:: yaml
 
-	--
+	-
 	  name: 'Static demo route'
 	  uriPattern: 'my/demo'
 	  defaults:
@@ -118,7 +111,7 @@ Let's add some dynamics to the previous example:
 
 .. code-block:: yaml
 
-	--
+	-
 	  name: 'Dynamic demo route'
 	  uriPattern: 'my/demo/{@action}'
 	  defaults:
@@ -143,7 +136,7 @@ set any kind of arguments:
 
 .. code-block:: yaml
 
-	--
+	-
 	  name: 'Dynamic demo route'
 	  uriPattern: 'clients/{sortOrder}.{@format}'
 	  defaults:
@@ -205,7 +198,7 @@ The corresponding route might look like this:
 
 .. code-block:: yaml
 
-	--
+	-
 	  name: 'Blog route'
 	  uriPattern: 'blogs/{blog}/{@action}'
 	  defaults:
@@ -234,7 +227,7 @@ route matches ``http://localhost/my/demo`` and ``http://localhost/my/demo/list.h
 
 .. code-block:: yaml
 
-	--
+	-
 	  name: 'Dynamic demo route'
 	  uriPattern: 'my/demo(/{@action}.html)'
 	  defaults:
@@ -261,12 +254,12 @@ username of "Kasper" will result in ``http://localhost/Users/Kasper``
 
 .. code-block:: yaml
 
-	--
+	-
 	  uriPattern: 'Users/{username}'
 	  defaults:
-	    @package:    'Demo'
-	    @controller: 'Customer'
-	    @action:     'show'
+	    '@package':    'Demo'
+	    '@controller': 'Customer'
+	    '@action':     'show'
 
 You can change this behavior for routes and/or dynamic route parts:
 
@@ -274,12 +267,12 @@ You can change this behavior for routes and/or dynamic route parts:
 
 .. code-block:: yaml
 
-	--
+	-
 	  uriPattern: 'Users/{username}'
 	  defaults:
-	    @package:    'Demo'
-	    @controller: 'Customer'
-	    @action:     'show'
+	    '@package':    'Demo'
+	    '@controller': 'Customer'
+	    '@action':     'show'
 	  toLowerCase: true
 	  routeParts:
 	    username:
@@ -313,13 +306,13 @@ Imagine following routes in the ``Routes.yaml`` file inside your demo package:
 
 .. code-block:: yaml
 
-	--
+	-
 	  name: 'Customer routes'
 	  uriPattern: '/clients/{@action}'
 	  defaults:
 	    '@controller': Customer
 
-	--
+	-
 	  name: 'Standard routes'
 	  uriPattern: '/{@action}'
 	  defaults:
@@ -338,7 +331,7 @@ And in your global ``Routes.yaml``:
 
 .. code-block:: yaml
 
-	--
+	-
 	  name: 'Demo subroutes'
 	  uriPattern: 'demo<DemoSubroutes>(.{@format})'
 	  defaults:
@@ -359,7 +352,7 @@ in the following routing configuration:
 
 .. code-block:: yaml
 
-	--
+	-
 	  name: 'Demo subroutes :: Customer routes'
 	  uriPattern: 'demo/clients/{@action}(.{@format})'
 	  defaults:
@@ -367,7 +360,7 @@ in the following routing configuration:
 	    '@format':  html
 	    '@controller': Customer
 
-	--
+	-
 	  name: 'Demo subroutes :: Standard routes'
 	  uriPattern: 'demo/{@action}(.{@format})'
 	  defaults:
@@ -375,7 +368,7 @@ in the following routing configuration:
 	    '@format':  html
 	    '@controller': Standard
 
-	--
+	-
 	  name: 'Demo subroutes :: Fallback'
 	  uriPattern: 'demo(.{@format})'
 	  defaults:

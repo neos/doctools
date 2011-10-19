@@ -2,14 +2,7 @@
 Persistence
 ===========
 
-.. ============================================
-.. Meta-Information for this chapter
-.. ---------------------------------
-.. Author: Karsten Dambekalns
-.. Converted to ReST by: Rens Admiraal
-.. Updated for 1.0 beta1: YES, by Sebastian Kurfürst
-.. TODOs: none
-.. ============================================
+.. sectionauthor:: Karsten Dambekalns <karsten@typo3.org>
 
 This chapter explains how to use object persistence in FLOW3. To do this, it focuses on
 the persistence based on the *Doctrine* 2 ORM first. There is another mechanism available,
@@ -81,21 +74,22 @@ need to write tons of XML, a few annotations in your code are enough:
 	/**
 	 * A Blog object
 	 *
-	 * @Entity
+	 * @FLOW3\Entity
 	 */
 	class Blog {
 
 	    /**
 	     * @var string
-	     * @validate Text, StringLength(minimum = 1, maximum = 80)
-	     * @Column(length="80")
+	     * @FLOW3\validate(type="Text")
+	     * @FLOW3\Validate("type="StringLength", options={ "minimum"=1, "maximum"=80 })
+	     * @ORM\Column(length=80)
 	     */
 	    protected $title;
 
 	    /**
 	     * @var \Doctrine\Common\Collections\ArrayCollection<\TYPO3\Blog\Domain\Model\Post>
-	     * @OneToMany(mappedBy="blog")
-	     * @OrderBy({"date" = "DESC"})
+	     * @ORM\OneToMany(mappedBy="blog")
+	     * @ORM\OrderBy({"date" = "DESC"})
 	     */
 	    protected $posts;
 
@@ -103,13 +97,13 @@ need to write tons of XML, a few annotations in your code are enough:
 
 	}
 
-The first annotation to note is the ``@Entity`` annotation, which tells the persistence
+The first annotation to note is the ``Entity`` annotation, which tells the persistence
 framework it needs to persist ``Blog`` instances if they have been added to a Repository. In
 the ``Blog`` class we have some member variables, they are persisted as well by default. The
 persistence framework knows their types by looking at the ``@var``  annotation you use anyway
 when documenting your code (you do document your code, right?).
 
-The *@Column* annotation on ``$title`` is an optimisation since we allow only 80 chars
+The *Column* annotation on ``$title`` is an optimization since we allow only 80 chars
 anyway. In case of the ``$posts`` property the persistence framework persists the objects held
 in that ``ArrayCollection`` as independent objects in a one-to-many relationship. Apart from those
 annotations your domain object's code is completely unaware of the persistence infrastructure.
@@ -120,6 +114,8 @@ Let's conclude by taking a look at the BlogRepository code:
 
 	/**
 	 * A BlogRepository
+	 *
+	 * @FLOW3\Scope("singleton")
 	 */
 	class BlogRepository extends \TYPO3\FLOW3\Persistence\Repository {
 	}
@@ -322,24 +318,24 @@ with their name, scope and meaning:
 +------------------+----------+----------------------------------------------------------+
 + Annotation       + Scope    + Meaning                                                  +
 +==================+==========+==========================================================+
-+ ``@Entity``      + Class    + Declares a class as an Entity.                           +
++ ``Entity``       + Class    + Declares a class as an Entity.                           +
 +------------------+----------+----------------------------------------------------------+
-+ ``@valueobject`` + Class    + Declares a class as a Value Object, allowing the         +
++ ``ValueObject``  + Class    + Declares a class as a Value Object, allowing the         +
 +                  +          + persistence framework to reuse an existing object if one +
 +                  +          + exists. *Doctrine 2 does not (yet) support value         +
 +                  +          + objects, thus we handle this like an entity for the time +
 +                  +          + being.*                                                  +
 +------------------+----------+----------------------------------------------------------+
-+ ``@Column``      + Variable + Allows to take influence on the column actually          +
++ ``Column``       + Variable + Allows to take influence on the column actually          +
 +                  +          + generated for this property in the database.             +
 +                  +          + Particularly useful with string properties to limit the  +
 +                  +          + space used or to enable storage of more than 255         +
 +                  +          + characters.                                              +
 +------------------+----------+----------------------------------------------------------+
-+ ``@ManyToOne``,  + Variable + Defines the type of object associations, refer to the    +
-+ ``@OneToMany``,  +          + Doctrine 2 documentation for details. The most obvious   +
-+ ``@ManyToMany``, +          + difference to plain Doctrine 2 is that the               +
-+ ``@OneToOne``    +          + ``targetEntity`` parameter can be omitted, it is taken   +
++ ``ManyToOne``,   + Variable + Defines the type of object associations, refer to the    +
++ ``OneToMany``,   +          + Doctrine 2 documentation for details. The most obvious   +
++ ``ManyToMany``,  +          + difference to plain Doctrine 2 is that the               +
++ ``OneToOne``     +          + ``targetEntity`` parameter can be omitted, it is taken   +
 +                  +          + from the ``@var`` annotation.                            +
 +                  +          +                                                          +
 +                  +          + The ``cascade`` attribute is set to cascade all          +
@@ -349,11 +345,11 @@ with their name, scope and meaning:
 + ``@var``         + Variable + Is used to detect the type a variable has. For           +
 +                  +          + collections, the type is given in angle brackets.        +
 +------------------+----------+----------------------------------------------------------+
-+ ``@transient``   + Variable + Makes the persistence framework ignore the variable.     +
++ ``Transient``    + Variable + Makes the persistence framework ignore the variable.     +
 +                  +          + Neither will it's value be persisted, nor will it be     +
 +                  +          + touched during reconstitution.                           +
 +------------------+----------+----------------------------------------------------------+
-+ ``@identity``    + Variable + Marks the variable as being relevant for determining     +
++ ``Identity``     + Variable + Marks the variable as being relevant for determining     +
 +                  +          + the identity of an object in the domain.                 +
 +------------------+----------+----------------------------------------------------------+
 
@@ -366,24 +362,24 @@ Differences between FLOW3 and plain Doctrine
 The custom annotation driver used by FLOW3 to collect mapping information from the code
 makes a number of things easier, compared to plain Doctrine 2.
 
-* ``@Entity``
+* ``Entity``
 
 	* ``repositoryClass`` can be left out, if you follow the naming rules for your
 	  repository classes explained above.
 
-* ``@Table``
+* ``Table``
 
 	* ``name`` does not default to the unqualified entity classname, but a name is generated
 	  from classname, package key and more elements to make it unique.
 
-* ``@Id``
+* ``Id``
 
 	* Can be left out, as it is automatically generated, this means you also do not need
 	  ``@GeneratedValue``. Every entity will get a property injected that is filled with
 	  an UUID upon instantiation and used as technical identifier.
 	* If an ``@Id`` annotation is found, it is of course used as is and no magic will happen.
 
-* ``@Column``
+* ``Column``
 
 	Can usually be left out altogether, as the vital *type* information can be read from
 	the ``@var`` annotation on a class member.
@@ -394,15 +390,15 @@ makes a number of things easier, compared to plain Doctrine 2.
 		you must use ``@Column(type="text")`` if you intend to store more than 255
 		characters in a string property.
 
-* ``@OneToOne``
-* ``@OneToMany``
-* ``@ManyToOne``
-* ``@ManyToMany``
+* ``OneToOne``
+* ``OneToMany``
+* ``ManyToOne``
+* ``ManyToMany``
 
 	* ``targetEntity`` can be omitted, it is read from the ``@var`` annotation on the property
 
-* ``@JoinTable``
-* ``@JoinColumn``
+* ``JoinTable``
+* ``JoinColumn``
 
 	* Can usually be left out completely, the needed information is gathered automatically
 
@@ -410,12 +406,12 @@ makes a number of things easier, compared to plain Doctrine 2.
 	  little, so it doesn't generate a join table with only one column. Here is an
 	  example:
 
-		*Example: @JoinTable annotation for a self-referencing annotation*::
+		*Example: JoinTable annotation for a self-referencing annotation*::
 
 			/**
 			 * @var \Doctrine\Common\Collections\ArrayCollection<\TYPO3\Blog\Domain\Model\Post>
-			 * @ManyToMany
-			 * @JoinTable(inverseJoinColumns={@joinColumn(name="related_id")})
+			 * @ORM\ManyToMany
+			 * @ORM\JoinTable(inverseJoinColumns={@ORM\JoinColumn(name="related_id")})
 			 */
 			protected $relatedPosts;
 
@@ -423,8 +419,8 @@ makes a number of things easier, compared to plain Doctrine 2.
 		after the identifiers of the associated entities - which is the same in this case.
 
 
-* ``@DiscriminatorColumn``
-* ``@DiscriminatorMap``
+* ``DiscriminatorColumn``
+* ``DiscriminatorMap``
 
 	* Can be left out, as they are automatically generated.
 
@@ -446,19 +442,19 @@ FLOW3 annotation driver.
 An entity with only the annotations needed in FLOW3::
 
 	/**
-	 * @Entity
+	 * @FLOW3\Entity
 	 */
 	class Post {
 
 	  /**
 	   * @var \TYPO3\Blog\Domain\Model\Blog
-	   * @ManyToOne(inversedBy="posts")
+	   * @ORM\ManyToOne(inversedBy="posts")
 	   */
 	  protected $blog;
 
 	  /**
 	   * @var string
-	   * @Column(length="100")
+	   * @ORM\Column(length=100)
 	   */
 	  protected $title;
 
@@ -469,14 +465,14 @@ An entity with only the annotations needed in FLOW3::
 
 	  /**
 	   * @var string
-	   * @Column(type="text")
+	   * @ORM\Column(type="text")
 	   */
 	  protected $content;
 
 	  /**
 	   * @var \Doctrine\Common\Collections\ArrayCollection<\TYPO3\Blog\Domain\Model\Comment>
-	   * @OneToMany(mappedBy="post")
-	   * @OrderBy({"date" = "DESC"})
+	   * @ORM\OneToMany(mappedBy="post")
+	   * @ORM\OrderBy({"date" = "DESC"})
 	   */
 	  protected $comments;
 
@@ -484,48 +480,48 @@ The same code with all annotations needed in plain Doctrine 2 to result in the s
 metadata::
 
 	/**
-	 * @Entity(repositoryClass="TYPO3\Blog\Domain\Model\Repository\PostRepository")
-	 * @Table(name="blog_post")
+	 * @ORM\Entity(repositoryClass="TYPO3\Blog\Domain\Model\Repository\PostRepository")
+	 * @ORM\Table(name="blog_post")
 	 */
 	class Post {
 
 	  /**
 	   * @var string
-	   * @Id
-	   * @Column(name="flow3_persistence_identifier", type="string", length="40")
+	   * @ORM\Id
+	   * @ORM\Column(name="flow3_persistence_identifier", type="string", length=40)
 	   */
 	  protected $FLOW3_Persistence_Identifier;
 
 	  /**
 	   * @var \TYPO3\Blog\Domain\Model\Blog
-	   * @ManyToOne(targetEntity="TYPO3\Blog\Domain\Model\Blog", inversedBy="posts")
-	   * @JoinColumn(name="blog_blog", referencedColumnName="flow3_persistence_identifier")
+	   * @ORM\ManyToOne(targetEntity="TYPO3\Blog\Domain\Model\Blog", inversedBy="posts")
+	   * @ORM\JoinColumn(name="blog_blog", referencedColumnName="flow3_persistence_identifier")
 	   */
 	  protected $blog;
 
 	  /**
 	   * @var string
-	   * @Column(type="string", length="100")
+	   * @ORM\Column(type="string", length=100)
 	   */
 	  protected $title;
 
 	  /**
 	   * @var \DateTime
-	   * @Column(type="datetime")
+	   * @ORM\Column(type="datetime")
 	   */
 	  protected $date;
 
 	  /**
 	   * @var string
-	   * @Column(type="text")
+	   * @ORM\Column(type="text")
 	   */
 	  protected $content;
 
 	  /**
 	   * @var \Doctrine\Common\Collections\ArrayCollection<\TYPO3\Blog\Domain\Model\Comment>
-	   * @OneToMany(targetEntity="TYPO3\Blog\Domain\Model\Comment", mappedBy="post",
+	   * @ORM\OneToMany(targetEntity="TYPO3\Blog\Domain\Model\Comment", mappedBy="post",
 	    cascade={"all"}, orphanRemoval="true")
-	   * @OrderBy({"date" = "DESC"})
+	   * @ORM\OrderBy({"date" = "DESC"})
 	   */
 	  protected $comments;
 
@@ -898,31 +894,25 @@ scope and meaning:
 +------------------+----------+----------------------------------------------------------+
 + Annotation       + Scope    + Meaning                                                  +
 +==================+==========+==========================================================+
-+ ``@entity``      + Class    + Declares a class as an Entity.                           +
++ ``Entity``       + Class    + Declares a class as an Entity.                           +
 +------------------+----------+----------------------------------------------------------+
-+ ``@valueobject`` + Class    + Declares a class as a Value Object, allowing the         +
++ ``ValueObject``  + Class    + Declares a class as a Value Object, allowing the         +
 +                  +          + persistence framework to reuse an existing object if one +
 +                  +          + exists.                                                  +
 +------------------+----------+----------------------------------------------------------+
 + ``@var``         + Variable + Is used to detect the type a variable has.               +
 +------------------+----------+----------------------------------------------------------+
-+ ``@transient``   + Variable + Makes the persistence framework ignore the variable.     +
++ ``Transient``    + Variable + Makes the persistence framework ignore the variable.     +
 +                  +          + Neither will it's value be persisted, nor will it be     +
 +                  +          + touched during reconstitution.                           +
 +------------------+----------+----------------------------------------------------------+
-+ ``@uuid``        + Variable + Marks the variable as being the object uuid. This makes  +
-+                  +          + the persistence backend use the value of this variable   +
-+                  +          + as identifier for the internal representation of the     +
-+                  +          + object. *You must make sure your identifier is an        +
-+                  +          + UUID.*                                                   +
-+------------------+----------+----------------------------------------------------------+
-+ ``@identity``    + Variable + Marks the variable as being relevant for determining     +
++ ``Identity``     + Variable + Marks the variable as being relevant for determining     +
 +                  +          + the identity of an object in the domain.                 +
 +------------------+----------+----------------------------------------------------------+
-+ ``@lazy``        + Class,   + When reconstituting the value of this property will be   +
++ ``Lazy``         + Class,   + When reconstituting the value of this property will be   +
 +                  + Variable + loaded only when the property is used. Note: This is only+
 +                  +          + supported for properties of type ``\SplObjectStorage``   +
-+                  +          + and objects (marked with ``@lazy`` in their source code, +
++                  +          + and objects (marked with ``Lazy`` in their source code,  +
 +                  +          + see below).                                              +
 +------------------+----------+----------------------------------------------------------+
 
@@ -946,17 +936,17 @@ for that object and the object properties will be thawed when the object is actu
 +-----------+-----------+----------------------------------------------------------------+
 + Class     + Property  + Effect                                                         +
 +===========+===========+================================================================+
-+ ``@lazy`` + ``@lazy`` + The class' instances will be lazy loadable, and properties of  +
++ ``Lazy``  + ``Lazy``  + The class' instances will be lazy loadable, and properties of  +
 +           +           + that type will be populated with a lazy loading proxy.         +
 +-----------+-----------+----------------------------------------------------------------+
-+ ``@lazy`` + *none*    + The class' instances will be lazy loadable, but that           +
++ ``Lazy``  + *none*    + The class' instances will be lazy loadable, but that           +
 +           +           + possibility will not be used.                                  +
 +-----------+-----------+----------------------------------------------------------------+
-+ *none*    + ``@lazy`` + ``\SplObjectStorage`` will be reconstituted as a lazy loading  +
++ *none*    + ``Lazy``  + ``\SplObjectStorage`` will be reconstituted as a lazy loading  +
 +           +           + proxy, for other types nothing happens.                        +
 +           +           +                                                                +
 +           +           + Properties of type ``\SplObjectStorage`` can always be         +
-+           +           + lazy-loaded by adding the ``@lazy`` annotation on the property +
++           +           + lazy-loaded by adding the ``Lazy`` annotation on the property  +
 +           +           + only.                                                          +
 +           +           +                                                                +
 +           +           + How and if lazy-loading is handled by alternative backends is  +

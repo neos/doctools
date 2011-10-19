@@ -4,14 +4,7 @@
 Object Framework
 ================
 
-.. ============================================
-.. Meta-Information for this chapter
-.. ---------------------------------
-.. Author: Robert Lemke
-.. Converted to ReST by: Rens Admiraal
-.. Updated for 1.0 beta1: YES, by Sebastian Kurfürst
-.. TODOs: see inline TODO comments
-.. ============================================
+.. sectionauthor:: Robert Lemke <robert@typo3.org>
 
 The lifecycle of objects are managed centrally by the object framework. It offers
 convenient support for Dependency Injection and provides some additional features such as
@@ -112,7 +105,7 @@ The recommended way to specify the scope is the ``@scope`` annotation::
 	/**
 	 * A sample class
 	 *
-	 * @scope singleton
+	 * @FLOW3\Scope("singleton")
 	 */
 	class SomeClass {
 	}
@@ -426,8 +419,10 @@ specify a configuration which differs from would be done automatically.
 .. code-block:: yaml
 
 	MyCompany\MyPackage\Foo:
-	  arguments:
-	    1: { object: MyCompany\MyPackage\Bar }
+	  arguments:
+	    1:
+	      object:
+	        MyCompany\MyPackage\Bar
 
 The three lines above define that an object instance of ``\MyCompany\MyPackage\Bar`` must
 be passed to the first argument of the constructor when an instance of the object
@@ -467,8 +462,10 @@ called. The necessary configuration for the above example looks like this:
 .. code-block:: yaml
 
 	MyCompany\MyPackage\Foo:
-	  properties:
-	    bar: { object: MyCompany\MyPackage\BarInterface }
+	  properties:
+	    bar:
+	      object:
+	        MyCompany\MyPackage\BarInterface
 
 Unlike constructor injection, setter injection like in the above example does not offer
 the autowiring feature. All dependencies have to be declared explicitly in the object
@@ -549,7 +546,7 @@ For these cases FLOW3 provides support for *Property Injection*:
 		 * An instance of a BarInterface compatible object.
 		 *
 		 * @var \MyCompany\MyPackage\BarInterface
-		 * @inject
+		 * @FLOW3\Inject
 		 */
 		protected $bar;
 
@@ -559,7 +556,7 @@ For these cases FLOW3 provides support for *Property Injection*:
 	}
 
 You could say that property injection is the same like setter injection --- just without the
-setter. The ``@inject`` annotation tells the object framework that the property is
+setter. The ``Inject`` annotation tells the object framework that the property is
 supposed to be injected and the ``@var`` annotation specifies the type. Note that property
 injection even works (and should only be used) with protected properties. The *Objects.yaml*
 configuration for property injection is identical to the setter injection configuration.
@@ -608,59 +605,15 @@ the object belongs to and pass it to the ``injectSettings`` method.
 
 The ``doSomething`` method will output the settings of the ``MyPackage`` package.
 
-Required and Optional Dependencies
-----------------------------------
-
-.. warning:: |documentationNotReady|
+Required Dependencies
+---------------------
 
 All dependencies defined in a constructor are, by its nature, required. If a dependency
 can't be solved by autowiring or by configuration, FLOW3's object builder will throw an
 exception.
 
-Also *autowired setter-injected dependencies* are, by default, required. There is a way to
-declare a setter-injected dependency as optional without the need to configure the
-dependency in a *Objects* configuration file. If an optional dependency can't be solved,
-it just won't be injected and it is the developer's responsibility to test for the
-availability of the desired object. FLOW3 uses the @optional annotation for this purpose:
-
-*Example: Marking a setter-injected dependency as optional*:::
-
-	namespace MyCompany\MyPackage;
-
-	/**
-	 * A very fooish class
-	 */
-	class Foo {
-
-		/**
-		 * @var \MyCompany\MyPackage\BarInterface
-		 */
-		protected $bar;
-
-		/**
-		 * Injects a bar-ish object
-		 *
-		 * @param \MyCompany\MyPackage\BarInterface $bar a kind of Bar object
-		 * @return void
-		 * @optional
-		 */
-		public function injectBar(\MyCompany\MyPackage\BarInterface $bar) {
-			$this->bar = $bar;
-		}
-
-		/**
-		 * A method which does something
-		 *
-		 * @return void
-		 */
-		public function doSomething() {
-			$this->bar->doSomethingElse();
-		}
-	}
-
-Due to the @optional annotation, the injection of a ``Bar`` object is now no longer
-required. If the object builder can't autowire an object for this injection method, it
-will now no longer throw an exception.
+Also *autowired setter-injected dependencies* are, by default, required. If the object
+builder can't autowire an object for an injection method, it will throw an exception.
 
 Dependency Resolution
 ---------------------
@@ -713,20 +666,25 @@ stick to FLOW3's general rules for YAML-based configuration.
 
 .. code-block:: yaml
 
-	#                                                                        #
-	# Object Configuration for the MyPackage package                         #
-	#                                                                        #
+	#                                                                        #
+	# Object Configuration for the MyPackage package                         #
+	#                                                                        #
 
-	# @package MyPackage
+	# @package MyPackage
 
 	MyCompany\MyPackage\Foo:
-	  arguments:
-	    1: { object: MyCompany\MyPackage\Baz }
-	    2: { value: "some string" }
-	    3: { value: false }
-	  properties:
-	    bar: { object: MyCompany\MyPackage\BarInterface }
-	    enableCache: { setting: MyPackage.Cache.enable }
+	  arguments:
+	    1:
+	      object: MyCompany\MyPackage\Baz
+	    2:
+	      value: "some string"
+	    3:
+	      value: false
+	  properties:
+	    bar:
+	      object: MyCompany\MyPackage\BarInterface
+	    enableCache:
+	      setting: MyPackage.Cache.enable
 
 Configuring Objects Through Annotations
 ---------------------------------------
@@ -747,7 +705,7 @@ case, as the scope usually is a design decision which is very unlikely to be cha
 	/**
 	 * This is my great class.
 	 *
-	 * @scope prototype
+	 * @FLOW3\Scope("singleton")
 	 */
 	class SomeClass {
 
@@ -758,7 +716,7 @@ case, as the scope usually is a design decision which is very unlikely to be cha
 	/**
 	 * This turns off autowiring for the whole class:
 	 *
-	 * @autowiring off
+	 * @FLOW3\Autowiring(false)
 	 */
 	class SomeClass {
 
@@ -770,7 +728,7 @@ case, as the scope usually is a design decision which is very unlikely to be cha
 	 * This turns off autowiring for a single method:
 	 *
 	 * @param \TYPO3\Foo\Bar $bar
-	 * @autowiring off
+	 * @FLOW3\Autowiring(false)
 	 */
 	public function injectMySpecialDependency(\TYPO3\Foo\Bar $bar) {
 
@@ -824,7 +782,8 @@ Great, that looks all fine and dandy but what if we want to use the much better 
 
 	  // Change the name of the class which
 	  // represents the object MyCompany\MyPackage\Greeter
-	MyCompany\MyPackage\Greeter: className: TYPO3\OtherPackage\GreeterWithCompliments
+	MyCompany\MyPackage\Greeter:
+	  className: TYPO3\OtherPackage\GreeterWithCompliments
 
 Now all objects who ask for a traditional greeter will get the more polite version.
 However, there comes a sour note with the above example: We can't be sure that the
@@ -933,10 +892,13 @@ argument is identified by its position, counting starts with 1.
 .. code-block:: yaml
 
 	MyCompany\MyPackage\Foo:
-	  arguments:
-	    1: { object: MyCompany\MyPackage\Bar }
-	    2: { value: "some string" }
-	    3: { setting: "MyPackage.Cache.enable" }
+	  arguments:
+	    1:
+	      object: MyCompany\MyPackage\Bar
+	    2:
+	      value: "some string"
+	    3:
+	      setting: "MyPackage.Cache.enable"
 
 .. note::
 
@@ -983,15 +945,18 @@ definition of setter injection:
 .. code-block:: yaml
 
 	MyCompany\MyPackage\Foo:
-	  properties:
-	    bar: { object: MyCompany\MyPackage\Bar }
-	    identifier: { value: "some string" }
-	    enableCache: { setting: "MyPackage.Cache.enable" }
+	  properties:
+	    bar:
+	      object: MyCompany\MyPackage\Bar
+	    identifier:
+	      value: "some string"
+	    enableCache:
+	      setting: "MyPackage.Cache.enable"
 
 As you can see, it is important that a setter method with the same name as the property,
 preceded by ``inject`` or ``set`` exists. It doesn't matter though, if you choose ``inject`` or
 ``set``, except that ``inject`` has the advantage of being autowireable. As a rule of thumb we
-recommend using ``inject`` for required ependencies and values and ``set`` for optional
+recommend using ``inject`` for required dependencies and values and ``set`` for optional
 properties.
 
 .. TODO: is the last sentence still true? (Optional properties...)
@@ -1008,8 +973,9 @@ specifying the settings path instead of the object name:
 .. code-block:: yaml
 
 	MyCompany\MyPackage\Foo:
-	  properties:
-	    bar: { object: MyCompany.MyPackage.fooStuff.barImplementation }
+	  properties:
+	    bar:
+	      object: MyCompany.MyPackage.fooStuff.barImplementation
 
 *Example: Settings.yaml of MyPackage*:
 
@@ -1018,7 +984,7 @@ specifying the settings path instead of the object name:
 	MyCompany:
 	  MyPackage:
 	    fooStuff:
-	      barImplementation: MyCompany\MyPackage\Bars\ASpecialBar
+	      barImplementation: MyCompany\MyPackage\Bars\ASpecialBar
 
 Nested Object Configuration
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -1038,17 +1004,18 @@ structure:
 .. code-block:: yaml
 
 	MyCompany\MyPackage\Controller\StandardController:
-	  properties:
-	    cache:
-	      object:
-	        name: TYPO3\FLOW3\Cache\VariableCache
-	        arguments:
-	          1: value: MyCache
-	          2: 
-	            object:
-	              name: TYPO3\FLOW3\Cache\Backend\File 
-	              properties:
-	                cacheDirectory: value: /tmp/
+	  properties:
+	    cache:
+	      object:
+	        name: TYPO3\FLOW3\Cache\VariableCache
+	        arguments:
+	          1:
+	            value: MyCache
+	          2:
+	            object:
+	              name: TYPO3\FLOW3\Cache\Backend\File
+	              properties:
+	                cacheDirectory: value: /tmp/
 
 Disabling Autowiring
 ~~~~~~~~~~~~~~~~~~~~
@@ -1067,7 +1034,7 @@ the object configuration:
 .. code-block:: yaml
 
 	MyCompany\MyPackage\MyObject:
-	  autowiring: off
+	  autowiring: off
 
 Autowiring can also be switched off through the ``@autowiring off`` annotation - either
 in the DocComment block of a whole class or of a single method. For the latter the
@@ -1096,8 +1063,8 @@ rather than the Object Builder. Consider the following configuration:
 .. code-block:: yaml
 
 	TYPO3\FLOW3\Cache\CacheInterface:
-	  factoryObjectName: TYPO3\FLOW3\Cache\CacheFactory
-	  factoryMethodName: create
+	  factoryObjectName: TYPO3\FLOW3\Cache\CacheFactory
+	  factoryMethodName: create
 
 From now on the Cache Factory's ``create`` method will be called each time an object of
 type ``CacheInterface`` needs to be instantiated. If arguments were passed to the
@@ -1109,11 +1076,14 @@ passed through to the custom factory method:
 .. code-block:: yaml
 
 	TYPO3\FLOW3\Cache\CacheInterface:
-	  factoryObjectName: TYPO3\FLOW3\Cache\CacheFactory
-	  arguments:
-	    2: value: TYPO3\FLOW3\Cache\VariableCache
-	    3: value: TYPO3\FLOW3\Cache\Backend\File
-	    4: value: { cacheDirectory: /tmp }
+	  factoryObjectName: TYPO3\FLOW3\Cache\CacheFactory
+	  arguments:
+	    2:
+	      value: TYPO3\FLOW3\Cache\VariableCache
+	    3:
+	      value: TYPO3\FLOW3\Cache\Backend\File
+	    4:
+	      value: { cacheDirectory: /tmp }
 
 *Example: PHP code using the custom factory*::
 
@@ -1152,8 +1122,8 @@ code):
 .. code-block:: yaml
 
 	MyCompany\MyPackage\MyObject:
-	  lifecycleInitializationMethod: myInitializeMethodname
-	  lifecycleShutdownMethod: myShutdownMethodname
+	  lifecycleInitializationMethod: myInitializeMethodname
+	  lifecycleShutdownMethod: myShutdownMethodname
 
 .. _Martin Fowler's article: http://martinfowler.com/articles/injection.html
 .. _his blog:                http://tapestryjava.blogspot.com/2004/08/dependency-injection-mirror-of-garbage.html

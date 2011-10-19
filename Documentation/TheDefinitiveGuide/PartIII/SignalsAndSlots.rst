@@ -2,14 +2,7 @@
 Signals and Slots
 =================
 
-.. ============================================
-.. Meta-Information for this chapter
-.. ---------------------------------
-.. Author: Karsten??
-.. Converted to ReST by: Rens Admiraal
-.. Updated for 1.0 beta1: YES, by Sebastian Kurfürs
-.. TODOs: none
-.. ============================================
+.. sectionauthor:: Karsten Dambekalns <karsten@typo3.org>
 
 The concept of *signals* and *slots* has been introduced by the Qt toolkit and allows
 for easy implementation of the Observer pattern in software.
@@ -23,14 +16,14 @@ Defining and Using Signals
 ==========================
 
 To define a signal, simply create a method stub which starts with ``emit`` and
-annotate it with a ``@signal`` annotation:
+annotate it with a ``Signal`` annotation:
 
 *Example: Definition of a signal in PHP* ::
 
 	/**
 	 * @param Comment $comment
 	 * @return void
-	 * @signal
+	 * @FLOW3\Signal
 	 */
 	protected function emitCommentCreated(Comment $comment) {} 
 
@@ -40,7 +33,7 @@ listening to that signal.
 
 .. note::
 
-	The ``@signal`` annotation is picked up by the AOP framework and the method is filled
+	The ``Signal`` annotation is picked up by the AOP framework and the method is filled
 	with implementation code as needed.
 
 To emit a signal in your code, simply call the signal method whenever it makes sense,
@@ -71,10 +64,12 @@ non-slot method.
 
 *Example: A method that can be used as a slot* ::
 
-	/** 	 * @param Comment $comment
+	/**
+ 	 * @param Comment $comment
 	 * @return void
 	 */
-	public function sendNewCommentNotification(Comment $comment) {  		$mail = new \TYPO3\SwiftMailer\Message();
+	public function sendNewCommentNotification(Comment $comment) {
+		$mail = new \TYPO3\SwiftMailer\Message();
 		$mail->setFrom(array('john@doe.org ' => 'John Doe'))
 			->setTo(array('karsten@typo3.org ' => 'Karsten Dambekalns'))
 			->setSubject('New comment')

@@ -4,6 +4,8 @@
 Security
 ========
 
+.. sectionauthor:: Andreas Förthner
+
 Security Framework
 ==================
 
@@ -70,7 +72,7 @@ configuration looks like this:
 
 .. code-block:: yaml
 
-	--
+	-
 	  FLOW3:
 	    security:
 	      authentication:
@@ -267,7 +269,7 @@ again the configuration of the default authentication provider:
 
 .. code-block:: yaml
 
-	--
+	-
 	  security:
 	    authentication:
 	      providers:
@@ -287,7 +289,7 @@ them in "parallel".
 
 .. code-block:: yaml
 
-	--
+	-
 	  security:
 	    authentication:
 	      providers:
@@ -328,8 +330,8 @@ security only for some resources (e.g. SSL client certificates for an admin back
 	      authentication:
 	        authenticationStrategy: allTokens
 
-Reusage of tokens and providers
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Reuse of tokens and providers
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 There is another configuration option for authentication providers called ``tokenClass``,
 which can be specified in the provider settings. By this option you can specify which
@@ -343,7 +345,7 @@ in a POST request or set in a HTTP Basic authentication header.
 
 .. code-block:: yaml
 
-	--
+	-
 	  security:
 	    authentication:
 	      providers:
@@ -367,7 +369,7 @@ configuration:
 
 .. code-block:: yaml
 
-	--
+	-
 	  security:
 	    authentication:
 	      providers:
@@ -437,9 +439,9 @@ example, that redirects to a login page (Using the ``WebRedirect`` entry point).
 
 *Example: Redirect an ``AuthenticationRequired`` exception to the login page*
 
-.. code-block: yaml
+.. code-block:: yaml
 
-	--
+	-
 	  security:
 	    authentication:
 	      providers:
@@ -528,12 +530,11 @@ The username/password token is implemented in the class
 ``TYPO3\FLOW3\Security\Authentication\Token\UsernamePassword``. It fetches the credentials
 from the HTTP POST data, look at the following program listing for details: ::
 
-	$postArguments = $environment->getRawPostArguments();
-
-	$credentials['username'] =
-		\TYPO3\FLOW3\Reflection\ObjectAccess::getPropertyPath($postArguments, 'TYPO3.FLOW3.Security.Authentication.Token.UsernamePassword.username');
-	$credentials['password'] =
-		\TYPO3\FLOW3\Reflection\ObjectAccess::getPropertyPath($postArguments, 'TYPO3.FLOW3.Security.Authentication.Token.UsernamePassword.password');
+	$postArguments = $this->environment->getRawPostArguments();
+	$username = \TYPO3\FLOW3\Reflection\ObjectAccess::getPropertyPath($postArguments,
+	    '__authentication.TYPO3.FLOW3.Security.Authentication.Token.UsernamePassword.username');
+	$password = \TYPO3\FLOW3\Reflection\ObjectAccess::getPropertyPath($postArguments,
+	    '__authentication.TYPO3.FLOW3.Security.Authentication.Token.UsernamePassword.password'');
 
 .. note::
 
@@ -591,24 +592,23 @@ to the current security context. However, here is the recommended way of what sh
 be done in this method and if you don't have really good reasons, you shouldn't
 deviate from this procedure.
 
-		1. Get the credentials provided by the client from the authentication token
+	#	Get the credentials provided by the client from the authentication token
 		(``getCredentials()``)
 
-		2. Retrieve the corresponding account object from the account repository, which
+	#	Retrieve the corresponding account object from the account repository, which
 		you should inject into your provider by dependency injection. The repository
 		provides a convenient find method for this task:
 		``findActiveByAccountIdentifierAndAuthenticationProviderName()``.
 
-		3. The ``credentialsSource`` property of the account will hold the credentials
+	#	The ``credentialsSource`` property of the account will hold the credentials
 		you'll need to compare or at least the information, where these credentials lie.
 
-		4. Start the authentication process
-		(e.g. compare credentials/call directory service/...).
+	#	Start the authentication process (e.g. compare credentials/call directory service/...).
 
-		5. Depending on the authentication result, set the correct status in the
+	#	Depending on the authentication result, set the correct status in the
 		authentication token, by ``calling setAuthenticationStatus()``.
 
-		6. Set the account in the authentication token, if authentication succeeded. This
+	#	Set the account in the authentication token, if authentication succeeded. This
 		will add the roles of this token to the security context.
 
 Authorization
@@ -676,10 +676,9 @@ register your custom voter as shown below:
 
 .. code-block:: yaml
 
-	--
-	..security:
-	..  authorization:
-	..    accessDecisionVoters: [TYPO3\FLOW3\Security\Authorization\Voter\Policy, MyCompany\MyPackage\Security\MyCustomVoter]
+	security:
+	  authorization:
+	    accessDecisionVoters: [TYPO3\FLOW3\Security\Authorization\Voter\Policy, MyCompany\MyPackage\Security\MyCustomVoter]
 
 .. note::
 
@@ -700,8 +699,8 @@ following option:
 
 .. code-block:: yaml
 
-	--
-	..security:
+	-
+	security:
 	  authorization:
 	    allowAccessIfAllVotersAbstain: FALSE
 
@@ -757,25 +756,26 @@ firewall configuration will look like:
 
 .. code-block:: yaml
 
-	--
-	  FLOW3:
-	    security:
-	      firewall:
-	        rejectAll: n
+	-
+	  TYPO3
+	    FLOW3:
+	      security:
+	        firewall:
+	          rejectAll: n
 
-	        filters:
-	          -
-	            patternType:  URL
-	            patternValue: /some/url/.*
-	            interceptor:  AccessGrant
-	          -
-	            patternType:  URL
-	            patternValue: /some/url/blocked.*
-	            interceptor:  AccessDeny
-	          -
-	            patternType:  MyCompany\MyPackage\Security\MyOwnRequestPattern
-	            patternValue: some pattern value
-	            interceptor:  MyCompany\MyPackage\Security\MyOwnSecurityInterceptor
+	          filters:
+	            -
+	              patternType:  URL
+	              patternValue: /some/url/.*
+	              interceptor:  AccessGrant
+	            -
+	              patternType:  URL
+	              patternValue: /some/url/blocked.*
+	              interceptor:  AccessDeny
+	            -
+	              patternType:  MyCompany\MyPackage\Security\MyOwnRequestPattern
+	              patternValue: some pattern value
+	              interceptor:  MyCompany\MyPackage\Security\MyOwnSecurityInterceptor
 
 As you can see, you can easily use your own implementations for request patterns and
 security interceptors.
@@ -812,7 +812,7 @@ configuration, that will proclaim the roles ``Administrator``, ``Customer``, and
 
 .. code-block:: yaml
 
-	--
+	-
 	  roles:
 	    Administrator: []
 	    Customer: []
@@ -842,7 +842,7 @@ resources only.
 
 .. code-block:: yaml
 
-	--
+	-
 	  resources:
 	    methods:
 	      TYPO3_FooPackage_list: 'method(TYPO3\FooPackage\SomeClass->list.*())'
@@ -871,7 +871,7 @@ have a look at an example for such ACL entries:
 
 .. code-block:: yaml
 
-	--
+	-
 	  acls:
 	    Administrator:
 	      TYPO3_FooPackage_modify: GRANT
@@ -910,7 +910,7 @@ here is a short introduction by two simple examples on how to use it:
 
 .. code-block:: yaml
 
-	--
+	-
 	  resources:
 	    methods:
 	     TYPO3_FooPackage_firstResource: 'method(TYPO3\FooPackage\SomeClass->updateProject(title != "FLOW3"))'

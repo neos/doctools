@@ -2,14 +2,7 @@
 Configuration
 =============
 
-.. ============================================
-.. Meta-Information for this chapter
-.. ---------------------------------
-.. Author: Robert Lemke
-.. Converted to ReST by: Rens Admiraal
-.. Updated for 1.0 beta1: DONE -- Sebastian Kurfürst
-.. TODOs: none
-.. ============================================
+.. sectionauthor:: Robert Lemke <robert@typo3.org>
 
 Configuration is an important aspect of versatile applications. FLOW3 provides you with
 configuration mechanisms which have a small footprint and are convenient to use and
@@ -42,7 +35,7 @@ FLOW3 distinguishes between different types of configuration. The most important
 configuration are the settings, however other configuration types exist for special
 purposes.
 
-The preferred configuration format is YAML and the configuration options of each type are
+The configuration format is YAML and the configuration options of each type are
 defined in their own dedicated file:
 
 * *Settings.yaml*
@@ -100,8 +93,8 @@ which come with the FLOW3 distribution for getting more examples.
 	    profilingTemplatesDirectory: %FLOW3_PATH_DATA%Temporary/Viewhelpertest/Fluidtemplates/
 
 
-.. warning:: Always use *two spaces* for indentation in YAML files. The parser has problems with
-	indentation using tab.
+.. warning:: Always use *two spaces* for indentation in YAML files. The parser will not
+	accept indentation using tabs.
 
 Constants
 ---------

@@ -2,13 +2,7 @@
 Resource Management
 ===================
 
-.. ============================================
-.. Meta-Information for this chapter
-.. ---------------------------------
-.. Author: Robert Lemke
-.. Converted to ReST by: Rens Admiraal
-.. Updated for 1.0 beta1: YES, by Sebastian Kurfürst
-.. ============================================
+.. sectionauthor:: Robert Lemke <robert@typo3.org>
 
 
 Traditionally a PHP application deals directly with all kinds of files. Realizing a file
@@ -60,7 +54,7 @@ resource exists as long as the ``Resource`` object is connected to another entit
 object which is persisted. If a resource is not attached to any other persisted object,
 its data will be permanently removed by a cleanup task.
 
-.. note:: Right now, garbage collecton of unused files is not yet implemented.
+.. note:: Garbage collecton of unused files is not yet implemented.
 
 Importing Resources
 -------------------
@@ -73,7 +67,7 @@ provides a simple API method for this purpose:
 	class ImageController {
 
 		/**
-		 * @inject
+		 * @FLOW3\Inject
 		 * @var \TYPO3\FLOW3\Resource\ResourceManager
 		 */
 		protected $resourceManager;
@@ -239,25 +233,11 @@ the same, identified by the sha1 hash.
 Mirror Mode
 -----------
 
-.. warning:: The setting ``mirrorMode`` might be removed in the future.
-
 Publishing resources basically means copying files from a private location to the public
-web directory. By default, FLOW3 creates symbolic links, making the resource publishing
+web directory. FLOW3 instead creates symbolic links, making the resource publishing
 process fast.
 
-If your operating system does not support symbolic links, you need to tell FLOW3 to create
-copies instead of symlinks. This can be achieved through some
-setting in FLOW3's ``Settings.yaml``:
-
-.. code-block:: yaml
-
-	TYPO3:
-	  FLOW3:
-	    resource:
-	      publishing:
-	        fileSystem:
-	          # Strategy for mirroring files: Either "copy" or "link"
-	          mirrorMode: copy
+If your operating system does not support symbolic links, you will not be able to use FLOW3.
 
 Resource Stream Wrapper
 =======================

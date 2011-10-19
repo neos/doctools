@@ -2,14 +2,7 @@
 Templating
 ==========
 
-.. ============================================
-.. Meta-Information for this chapter
-.. ---------------------------------
-.. Author: Sebastian Kurfürst
-.. Converted to ReST by: Sebastian Kurfürst
-.. Updated for 1.0 beta1: YES
-.. TODOs: ViewHelper Reference extracted from PHPDoc
-.. ============================================
+.. sectionauthor:: Sebastian Kurfürst <sebastian@typo3.org>
 
 .. in this template, the default highlighter is XML:
 
@@ -465,6 +458,7 @@ Implementing this is fairly straightforward, as you will see right now:
 .. code-block:: php
 
 	class ForViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper {
+
 	  /**
 	   * Renders a loop
 	   *
@@ -480,6 +474,7 @@ Implementing this is fairly straightforward, as you will see right now:
 		}
 		return $out;
 	  }
+
 	}
 
 * The PHPDoc is part of the code! Fluid extracts the argument datatypes from the PHPDoc.
@@ -515,11 +510,13 @@ have without the ``AbstractTagBasedViewHelper``):
 .. code-block:: php
 
 	class ActionViewHelper extends \TYPO3\Fluid\Core\AbstractViewHelper {
+
 	  public function initializeArguments() {
 		$this->registerArgument('class', 'string', 'CSS class to add to the link');
 		$this->registerArgument('target', 'string', 'Target for the link');
 		... and more ...
 	  }
+
 	  public function render() {
 		$output = '<a href="..."';
 		if ($this->arguments['class']) {
@@ -532,6 +529,7 @@ have without the ``AbstractTagBasedViewHelper``):
 		... and more ...
 		return $output;
 	  }
+
 	}
 
 Now, the ``AbstractTagBasedViewHelper`` introduces two more methods you can use
@@ -550,6 +548,7 @@ With the above methods, the ``Link\ActionViewHelper`` from above can be condense
 .. code-block:: php
 
 	class ActionViewHelper extends \TYPO3\\F3\Fluid\Core\AbstractViewHelper {
+
 		public function initializeArguments() {
 			$this->registerUniversalTagAttributes();
 		}
@@ -575,6 +574,7 @@ With the above methods, the ``Link\ActionViewHelper`` from above can be condense
 
 			return $this->tag->render();
 		}
+
 	}
 
 Additionally, we now already have support for all universal HTML attributes.
@@ -597,7 +597,7 @@ possibilities -- thus, it should be possible to add custom HTML attributes as we
 if they are needed. Our solution looks as follows:
 
 Every view helper which inherits from ``AbstractTagBasedViewHelper`` has a special
-argument called ``additionalAttributes`` which allows you to add arbitary HTML
+argument called ``additionalAttributes`` which allows you to add arbitrary HTML
 attributes to the tag.
 
 If the link tag from above needed a new attribute called ``fadeDuration``, which
@@ -636,6 +636,7 @@ for a usage example, which should be quite self-explanatory:
 				return $this->renderElseChild();
 			}
 		}
+
 	}
 
 By basing your condition ViewHelper on the ``AbstractConditionViewHelper``,

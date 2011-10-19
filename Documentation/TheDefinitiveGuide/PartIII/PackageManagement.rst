@@ -2,13 +2,7 @@
 Package Management
 ==================
 
-.. ============================================
-.. Meta-Information for this chapter
-.. ---------------------------------
-.. Author: Robert Lemke
-.. Converted to ReST by: Rens Admiraal
-.. Updated for 1.0 beta1: YES, by Sebastian Kurfürst
-.. ============================================
+.. sectionauthor:: Robert Lemke <robert@typo3.org>
 
 
 FLOW3 is a package-based system. In fact, FLOW3 itself is just a package as well - but
@@ -78,13 +72,9 @@ expects packages with website resources in a folder named *Sites*.
 Loading Order
 -------------
 
-If multiple package locations exist, the Package Manager will assure that packages from
-the location FLOW3 itself is located will be loaded first. The loading order of all other
-package locations is undefined.
+The loading order of packages locations is undefined, except that FLOW3 itself will of
+course always be loaded first.
 
-.. warning:: The above about loading order might not anymore be correct.
-
-.. TODO: fix the above warning and remove it then.
 
 Package Directory Layout
 ========================
@@ -186,7 +176,7 @@ different purposes. They save you from conflicts between packages which were pro
 different parties.
 
 We use *vendor namespaces* for package keys, i.e. all packages which are released
-and maintained by the TYPO3 and FLOW3 core teams start with ``TYPO3.*``. In your company,
+and maintained by the TYPO3 and FLOW3 core teams start with ``TYPO3.*``. In your company
 we suggest that you use your company name as vendor namespace.
 
 Importing and Installing Packages
@@ -259,7 +249,7 @@ empty class, if no bootstrap code is needed.
 
 	namespace Acme\Demo;
 
-	use \TYPO3\FLOW3\Package\Package as BasePackage;
+	use TYPO3\FLOW3\Package\Package as BasePackage;
 
 	/**
 	 * The Acme.Demo Package
@@ -293,10 +283,6 @@ Here is an example of a valid *Package.xml* file:
 	      <category>Testing</category>
 	   </categories>
 	   <parties>
-	      <person role="LeadDeveloper">
-	         <name>David Brühlmeier</name>
-	         <email>typo3@bruehlmeier.com</email>
-	      </person>
 	      <person role="Maintainer">
 	         <name>John Smith</name>
 	         <email>john@smith.com</email>
@@ -346,5 +332,4 @@ Here is an example of a valid *Package.xml* file:
 	</package>
 
 .. _TYPO3 project:         http://typo3.org
-.. _DocBook:               http://???
 .. _http://typo3.org/ns/2008/flow3/package/Package.rng: http://typo3.org/ns/2008/flow3/package/Package.rng
