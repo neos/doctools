@@ -10,7 +10,7 @@ namespace Documentation\Command;
 use TYPO3\FLOW3\Annotations as FLOW3;
 
 /**
- * Import command controller for the Documentation package
+ * Documentation command controller for the Documentation package
  *
  * @FLOW3\Scope("singleton")
  */
@@ -40,6 +40,8 @@ class DocumentationCommandController extends \TYPO3\FLOW3\MVC\Controller\Command
 	protected $settings;
 
 	/**
+	 * Current bundle configuration
+	 *
 	 * @var array
 	 */
 	protected $bundleConfiguration = array();
@@ -53,7 +55,7 @@ class DocumentationCommandController extends \TYPO3\FLOW3\MVC\Controller\Command
 	}
 
 	/**
-	 * Renders reST to json
+	 * Renders reST files to fjson files which can be processed by the import command.
 	 *
 	 * @param string $bundle bundle to render. If not specified all configured bundles will be rendered
 	 * @return void
@@ -61,6 +63,10 @@ class DocumentationCommandController extends \TYPO3\FLOW3\MVC\Controller\Command
 	public function renderCommand($bundle = NULL) {
 		$bundles = $bundle !== NULL ? array($bundle) : array_keys($this->settings['bundles']);
 		$defaultConfiguration = isset($this->settings['defaultConfiguration']) ? $this->settings['defaultConfiguration'] : array();
+		if ($bundles === array()) {
+			$this->output('No bundles configured');
+			$this->quit(1);
+		}
 		foreach ($bundles as $bundle) {
 			if (!isset($this->settings['bundles'][$bundle])) {
 				$this->output('Bundle "%s" is not configured', array($bundle));
@@ -68,7 +74,10 @@ class DocumentationCommandController extends \TYPO3\FLOW3\MVC\Controller\Command
 			}
 			$configuration = \TYPO3\FLOW3\Utility\Arrays::arrayMergeRecursiveOverrule($defaultConfiguration, $this->settings['bundles'][$bundle]);
 			$this->outputLine('Rendering bundle "%s"', array($bundle));
-			$renderCommand = sprintf('sphinx-build -c %s -b json %s %s', $configuration['configurationRootPath'], $configuration['documentationRootPath'], $configuration['renderedDocumentationRootPath']);
+			if (is_dir($configuration['renderedDocumentationRootPath'])) {
+				\TYPO3\FLOW3\Utility\Files::removeDirectoryRecursively($configuration['renderedDocumentationRootPath']);
+			}
+			$renderCommand = sprintf('sphinx-build -c %s -b json %s %s', escapeshellarg($configuration['configurationRootPath']), escapeshellarg($configuration['documentationRootPath']), escapeshellarg($configuration['renderedDocumentationRootPath']));
 			exec($renderCommand, $output, $result);
 			if ($result !== 0) {
 				$this->output('Could not execute sphinx-build command for Bundle %s', array($bundle));
@@ -78,13 +87,13 @@ class DocumentationCommandController extends \TYPO3\FLOW3\MVC\Controller\Command
 	}
 
 	/**
-	 * Imports json to TYPO3CR nodes
+	 * Imports fjson files into TYPO3CR nodes.
+	 * See Settings.yaml for an exemplary configuration for the documentation bundles
 	 *
-	 * @param string $bundle bundle to render. If not specified all configured bundles will be rendered
-	 * @param boolean $force if set, documentation will be imported even though target node exists
+	 * @param string $bundle bundle to import. If not specified all configured bundles will be imported
 	 * @return void
 	 */
-	public function importCommand($bundle = NULL, $force = FALSE) {
+	public function importCommand($bundle = NULL) {
 		$bundles = $bundle !== NULL ? array($bundle) : array_keys($this->settings['bundles']);
 		$defaultConfiguration = isset($this->settings['defaultConfiguration']) ? $this->settings['defaultConfiguration'] : array();
 
@@ -94,18 +103,19 @@ class DocumentationCommandController extends \TYPO3\FLOW3\MVC\Controller\Command
 				$this->quit(1);
 			}
 			$this->bundleConfiguration = \TYPO3\FLOW3\Utility\Arrays::arrayMergeRecursiveOverrule($defaultConfiguration, $this->settings['bundles'][$bundle]);
-			$this->importBundle($bundle, $force);
+			$this->importBundle($bundle);
 			$this->outputLine('---');
 		}
 		$this->outputLine('Done');
 	}
 
 	/**
+	 * Imports the specified bundle into the configured "importRootNodePath".
+	 *
 	 * @param string $bundle
-	 * @param boolean $force
 	 * @return void
 	 */
-	protected function importBundle($bundle, $force) {
+	protected function importBundle($bundle) {
 		$this->outputLine('Importing bundle "%s"', array($bundle));
 		$renderedDocumentationRootPath = rtrim($this->bundleConfiguration['renderedDocumentationRootPath'], '/');
 
@@ -163,27 +173,32 @@ class DocumentationCommandController extends \TYPO3\FLOW3\MVC\Controller\Command
 	}
 
 	/**
+	 * Prepares the body text before importing it into a TYPO3CR node (fixing links, images, ...)
+	 *
 	 * @param string $bodyText
-	 * @return string
+	 * @param string $relativeNodePath
+	 * @return string the modified body text
 	 */
 	protected function prepareBodyText($bodyText, $relativeNodePath) {
-		$bodyText = $this->replaceLinks($bodyText, $relativeNodePath);
+		$bodyText = $this->replaceRelativeLinks($bodyText, $relativeNodePath);
+		$bodyText = $this->replaceAnchorLinks($bodyText, $relativeNodePath);
 		$bodyText = $this->replaceImages($bodyText);
 
 		return $bodyText;
 	}
 
 	/**
+	 * Replaces relative links (<a href="../Xyz">) by proper page links (<a href="documentation/bundle/xyz.html">)
+	 *
 	 * @param string $bodyText
-	 * @return string
+	 * @param string $relativeNodePath
+	 * @return string the text with replaced relative links
 	 */
-	protected function replaceLinks($bodyText, $relativeNodePath) {
+	protected function replaceRelativeLinks($bodyText, $relativeNodePath) {
 		$self = $this;
 		$configuration = $this->bundleConfiguration;
 		$bodyText = preg_replace_callback('/(<a .*?href=")\.\.\/([^#"]*)/', function($matches) use($self, $configuration, $relativeNodePath) {
 			$path = $self->normalizeNodePath($matches[2]);
-				echo $configuration['importRootNodePath'] . ' || ' . $relativeNodePath . ' || ' . $path . PHP_EOL . PHP_EOL;
-				//exit;
 			$path = \TYPO3\FLOW3\Utility\Files::concatenatePaths(array($configuration['importRootNodePath'], $relativeNodePath , $path));
 			$path = '/' . trim($path, '/') . '.html';
 			$path = str_replace('/index.html', '.html', $path);
@@ -193,8 +208,28 @@ class DocumentationCommandController extends \TYPO3\FLOW3\MVC\Controller\Command
 	}
 
 	/**
+	 * Replaces anchor links (<a href="#anchor">) by proper prepending the relative node path (<a href="documentation/bundle/xyz.html#anchor">)
+	 *
 	 * @param string $bodyText
-	 * @return string
+	 * @param string $relativeNodePath
+	 * @return string the text with replaced relative links
+	 */
+	protected function replaceAnchorLinks($bodyText, $relativeNodePath) {
+		$configuration = $this->bundleConfiguration;
+		$bodyText = preg_replace_callback('/(<a .*?href=")(#[^"]*)/', function($matches) use($configuration, $relativeNodePath) {
+			$path = \TYPO3\FLOW3\Utility\Files::concatenatePaths(array($configuration['importRootNodePath'], $relativeNodePath));
+			$path = '/' . trim($path, '/') . '.html';
+			$path = str_replace('/index.html', '.html', $path);
+			return $matches[1] . $path . $matches[2];
+		} , $bodyText);
+		return $bodyText;
+	}
+
+	/**
+	 * Replaces images (<img src="Foo.png">) by persistent resources (<img src="_Resources/....">)
+	 *
+	 * @param string $bodyText
+	 * @return string the text with replaced image tags
 	 */
 	protected function replaceImages($bodyText) {
 		$self = $this;
