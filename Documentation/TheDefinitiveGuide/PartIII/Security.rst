@@ -845,10 +845,10 @@ resources only.
 	-
 	  resources:
 	    methods:
-	      TYPO3_FooPackage_list: 'method(TYPO3\FooPackage\SomeClass->list.*())'
-	      TYPO3_FooPackage_update: 'method(TYPO3\FooPackage\SomeClass->update.*())'
-	      TYPO3_FooPackage_delete: 'method(TYPO3\FooPackage\.*->delete.*(force == TRUE))'
-	      TYPO3_FooPackage_modify: 'TYPO3_FooPackage_update || TYPO3_FooPackage_delete'
+	      listMethods: 'method(TYPO3\FooPackage\SomeClass->list.*())'
+	      updateMethods: 'method(TYPO3\FooPackage\SomeClass->update.*())'
+	      deleteMethods: 'method(TYPO3\FooPackage\.*->delete.*(force == TRUE))'
+	      modifyMethods: 'TYPO3_FooPackage_update || TYPO3_FooPackage_delete'
 
 Each resource is defined by a unique name [#]_ and a so called pointcut expression.
 Practically a pointcut expression is a regular expression that matches on certain methods.
@@ -874,13 +874,16 @@ have a look at an example for such ACL entries:
 	-
 	  acls:
 	    Administrator:
-	      TYPO3_FooPackage_modify: GRANT
-	      TYPO3_FooPackage_list: GRANT
+	      methods:
+	        listMethods:         GRANT
+	        modifyMethods:       GRANT
 	    Customer:
-	      TYPO3_FooPackage_list: GRANT
-	    PrivilegedCustomer:
-	      TYPO3_FooPackage_update: GRANT
-	      TYPO3_FooPackage_delete: DENY
+	      methods:
+	        listMethods:         GRANT
+	    PriviledgedCustomer:
+	      methods:
+	        updateMethods:       GRANT
+	        deleteMethods:       DENY
 
 This will end up in ``Administrators`` being able to call all ``update*`` and ``list*``
 methods in the class ``SomeClass`` and all ``delete*`` methods no matter which class in
@@ -913,8 +916,8 @@ here is a short introduction by two simple examples on how to use it:
 	-
 	  resources:
 	    methods:
-	     TYPO3_FooPackage_firstResource: 'method(TYPO3\FooPackage\SomeClass->updateProject(title != "FLOW3"))'
-	     TYPO3_FooPackage_secondResource: TYPO3_FooPackage_firstResource &amp;&amp; evaluate(current.securityContext.party.name == "Andi")
+	      TYPO3_FooPackage_firstResource: 'method(TYPO3\FooPackage\SomeClass->updateProject(title != "FLOW3"))'
+	      TYPO3_FooPackage_secondResource: TYPO3_FooPackage_firstResource &amp;&amp; evaluate(current.securityContext.party.name == "Andi")
 
 The above configuration defines a resource that matches on the ``updateProject`` method
 only if it is not called with the ``title`` arugment equal to "FLOW3". The second resource
@@ -947,7 +950,7 @@ Security for files aka secure downloads
 * add publishing configuration to resource objects
 * publishing in subfolder named like session id
 * optimization with role subdirs -> only publish once for a role
-* serer specific restriction publishing like .htaccess files for apache
+* server specific restriction publishing like .htaccess files for apache
 
 Fluid (view) integration
 ========================
