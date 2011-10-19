@@ -1,5 +1,5 @@
 <?php
-namespace TYPO3\TheDefinitiveGuideToFLOW3;
+namespace Documentation;
 
 /*                                                                        *
  * This script belongs to the FLOW3 documentation.                        *
