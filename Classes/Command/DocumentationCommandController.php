@@ -1,11 +1,10 @@
 <?php
-
 namespace Documentation\Command;
 
-/* *
- * This script belongs to the FLOW3 package "Documentation". *
+/*                                                                        *
+ * This script belongs to the FLOW3 package "Documentation".              *
  *                                                                        *
- *
+ *                                                                        *
  */
 
 use TYPO3\FLOW3\Annotations as FLOW3;
