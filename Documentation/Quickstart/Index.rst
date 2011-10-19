@@ -322,7 +322,7 @@ Whenever a model is created or modified, the database structure needs to be adju
 fit the new PHP code. This is something you should do consciously because existing data
 could be altered or removed – therefore this step isn't taken automatically by FLOW3.
 
-The Kickstarter created a new model representing a coffee bean. For promoting the new
+The kickstarter created a new model representing a coffee bean. For promoting the new
 structure to the database, just run the :command:`doctrine:update` command:
 
 .. code-block:: bash
@@ -333,7 +333,7 @@ structure to the database, just run the :command:`doctrine:update` command:
 A quick glance at the table structure (using your preferred database management tool) will
 reveal that a new table for coffee beans has been created.
 
-The controller rendered by the Kickstarter provides some very basic functionality for
+The controller rendered by the kickstarter provides some very basic functionality for
 creating, editing and deleting coffee beans. Try it out by accessing this URL:
 
 .. code-block:: text
@@ -366,7 +366,7 @@ can you imagine what they do? ::
 	class CoffeeBeanController extends ActionController {
 
 		/**
-		 * @inject
+		 * @FLOW3\Inject
 		 * @var \Acme\Demo\Domain\Repository\CoffeeBeanRepository
 		 */
 		protected $coffeeBeanRepository;
@@ -400,7 +400,7 @@ can you imagine what they do? ::
 		 */
 		public function createAction(CoffeeBean $newCoffeeBean) {
 			$this->coffeeBeanRepository->add($newCoffeeBean);
-			$this->flashMessageContainer->add('Created a new coffee bean.');
+			$this->addFlashMessage('Created a new coffee bean.');
 			$this->redirect('index');
 		}
 
@@ -420,7 +420,7 @@ can you imagine what they do? ::
 		 */
 		public function updateAction(CoffeeBean $coffeeBean) {
 			$this->coffeeBeanRepository->update($coffeeBean);
-			$this->flashMessageContainer->add('Updated the coffee bean.');
+			$this->addFlashMessage('Updated the coffee bean.');
 			$this->redirect('index');
 		}
 
@@ -431,7 +431,7 @@ can you imagine what they do? ::
 		 */
 		public function deleteAction(CoffeeBean $coffeeBean) {
 			$this->coffeeBeanRepository->remove($coffeeBean);
-			$this->flashMessageContainer->add('Deleted a coffee bean.');
+			$this->addFlashMessage('Deleted a coffee bean.');
 			$this->redirect('index');
 		}
 	}
@@ -464,25 +464,25 @@ stating that only a single instance may exist at a time::
 	/**
 	 * A repository for CoffeeBeans
 	 *
-	 * @scope singleton
+	 * @FLOW3\Scope("singleton")
 	 */
 	class CoffeeBeanRepository extends \TYPO3\FLOW3\Persistence\Repository {
 
 Because PHP doesn't support the concept of annotations natively, we are using doc
 comments which are parsed by an annotation parser in FLOW3.
 
-FLOW3's object management detects the ``@scope singleton`` annotation and takes care of
+FLOW3's object management detects the ``Scope`` annotation and takes care of
 all the details. All you need to do in order to get the right ``CoffeeBeanRepository``
 instance is telling FLOW3 to *inject* it into a class property you defined::
 
 	/**
-	 * @inject
+	 * @FLOW3\Inject
 	 * @var \Acme\Demo\Domain\Repository\CoffeeBeanRepository
 	 */
 	protected $coffeeBeanRepository;
 
-The ``@inject`` annotation tells FLOW3 to set the ``$coffeeBeanRepository`` right after
-the ``CoffeeBeanController`` class has been instantiated.
+The ``Inject`` annotation tells FLOW3 to set the ``$coffeeBeanRepository`` right
+after the ``CoffeeBeanController`` class has been instantiated.
 
 .. tip::
 
@@ -602,7 +602,7 @@ Like the ``showAction`` it expects a ``CoffeeBean`` as its argument::
 	 */
 	public function createAction(CoffeeBean $newCoffeeBean) {
 		$this->coffeeBeanRepository->add($newCoffeeBean);
-		$this->flashMessageContainer->add('Created a new coffee bean.');
+		$this->addFlashMessage('Created a new coffee bean.');
 		$this->redirect('index');
 	}
 
@@ -650,7 +650,7 @@ argument::
 	 */
 	public function updateAction(CoffeeBean $coffeeBean) {
 		$this->coffeeBeanRepository->update($coffeeBean);
-		$this->flashMessageContainer->add('Updated the coffee bean.');
+		$this->addFlashMessage('Updated the coffee bean.');
 		$this->redirect('index');
 	}
 
