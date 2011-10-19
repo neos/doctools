@@ -421,7 +421,7 @@ specify an identity property).
 A simple domain object being marked as entity, and validation::
 
 	/**
-	 * @entity
+	 * @FLOW3\Entity
 	 */
 	class Account {
 
@@ -437,7 +437,7 @@ A simple domain object being marked as entity, and validation::
 
 		/**
 		 * @var string
-		 * @validate EmailAddress
+		 * @FLOW3\Validate(type="EmailAddress")
 		 */
 		protected $email;
 

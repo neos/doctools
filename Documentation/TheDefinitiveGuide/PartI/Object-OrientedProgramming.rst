@@ -181,7 +181,7 @@ PHP Code::
 		echo 'objects are not identical!'
 	}
 
-In this example the output ist ``objects are not identical!``
+In this example the output is ``objects are not identical!``
 
 The arrow operator
 ------------------
@@ -639,14 +639,14 @@ Singleton
 
 This design pattern makes sure, that only one instance of a class  can exist
 **at a time**. In FLOW3 you can mark a class as singleton by annotating it
-with ``@scope singleton``. An example: our luxury liners are all constructed
+with ``@FLOW3\Scope("singleton")``. An example: our luxury liners are all constructed
 in the same shipyard. So there is no sense in having more than one instance of
 the shipyard object:
 
 PHP Code::
 
 	/**
-	 * @scope singleton
+	 * @FLOW3\Scope("singleton")
 	 */
 	class LuxuslinerShipyard {
 	   protected $numberOfShipsBuilt = 0;
@@ -676,7 +676,8 @@ Prototype
 Prototype is sort of the antagonist to Singleton. While for each class only one
 object is instantiated when using Singleton, it is explicitly allowed to have
 multiple instances when using Prototype. Each class annotated with
-``@scope prototype`` is of type **Prototype**.
+``@FLOW3\Scope("prototype")`` is of type **Prototype**. Since this is the default
+scope, you can safely leave this one out.
 
 .. tip::
 	Originally for the design pattern **Prototype** is specified, that a new
