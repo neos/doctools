@@ -57,19 +57,19 @@ class DocumentationCommandController extends \TYPO3\FLOW3\MVC\Controller\Command
 	/**
 	 * Renders reST files to fjson files which can be processed by the import command.
 	 *
-	 * @param string $bundle bundle to render. If not specified all configured bundles will be rendered
+	 * @param string $bundle Bundle to render. If not specified all configured bundles will be rendered
 	 * @return void
 	 */
 	public function renderCommand($bundle = NULL) {
 		$bundles = $bundle !== NULL ? array($bundle) : array_keys($this->settings['bundles']);
 		$defaultConfiguration = isset($this->settings['defaultConfiguration']) ? $this->settings['defaultConfiguration'] : array();
 		if ($bundles === array()) {
-			$this->output('No bundles configured');
+			$this->outputLine('No bundles configured.');
 			$this->quit(1);
 		}
 		foreach ($bundles as $bundle) {
 			if (!isset($this->settings['bundles'][$bundle])) {
-				$this->output('Bundle "%s" is not configured', array($bundle));
+				$this->outputLine('Bundle "%s" is not configured.', array($bundle));
 				$this->quit(1);
 			}
 			$configuration = \TYPO3\FLOW3\Utility\Arrays::arrayMergeRecursiveOverrule($defaultConfiguration, $this->settings['bundles'][$bundle]);
@@ -99,7 +99,7 @@ class DocumentationCommandController extends \TYPO3\FLOW3\MVC\Controller\Command
 
 		foreach ($bundles as $bundle) {
 			if (!isset($this->settings['bundles'][$bundle])) {
-				$this->output('Bundle "%s" is not configured', array($bundle));
+				$this->outputLine('Bundle "%s" is not configured', array($bundle));
 				$this->quit(1);
 			}
 			$this->bundleConfiguration = \TYPO3\FLOW3\Utility\Arrays::arrayMergeRecursiveOverrule($defaultConfiguration, $this->settings['bundles'][$bundle]);
@@ -130,7 +130,7 @@ class DocumentationCommandController extends \TYPO3\FLOW3\MVC\Controller\Command
 
 		$jsonFileNames = \TYPO3\FLOW3\Utility\Files::readDirectoryRecursively($renderedDocumentationRootPath, '.fjson');
 		if ($jsonFileNames === array()) {
-			$this->output('The folder "%s" contains no fjson files. Did you render the documentation?', array($renderedDocumentationRootPath));
+			$this->outputLine('The folder "%s" contains no fjson files. Did you render the documentation?', array($renderedDocumentationRootPath));
 			$this->quit(1);
 		}
 		foreach ($jsonFileNames as $jsonFileName) {
