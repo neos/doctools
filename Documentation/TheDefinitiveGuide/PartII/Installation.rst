@@ -7,7 +7,7 @@ Installation
 FLOW3 Download
 ==============
 
-The most recent FLOW3 release can be obtained from http://flow3.typo3.org/download/ as a
+The most recent FLOW3 release can be obtained from http://flow3.typo3.org/download as a
 .tgz, .zip or .bz2 archive. Once you downloaded the distribution just unpack the archive
 in a directory of your choice, e.g. like this for the gzipped tar archive:
 

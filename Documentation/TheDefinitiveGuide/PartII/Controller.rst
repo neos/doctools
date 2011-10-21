@@ -98,7 +98,7 @@ controller has been instantiated. And because the blog repository's scope is *si
 
 There's a lot more to discover about **Dependency Injection** and we recommend
 that you read the whole chapter about objects in the
-`FLOW3 Reference <http://flow3.typo3.org/documentation/manuals/>`_ once you start with
+`FLOW3 guide <http://flow3.typo3.org/documentation/guide>`_ once you start with
 your own coding.
 
 To create the required database tables we now use the command line support to generate the

@@ -29,8 +29,7 @@ Feedback
 Me and the FLOW3 core team are curious about getting your feedback! If you have any
 questions, are stuck at some point or just want to let me know how you liked the tutorial
 please write to the
-`FLOW3 mailing list <http://flow3.typo3.org/get-involved/mailing-lists-newsgroups/>`_ 
-or drop me a line via robert@typo3.org.
+`FLOW3 mailing list <http://flow3.typo3.org/support>`_ or drop me a line via robert@typo3.org.
 
 And if you love FLOW3 like we do, spread the word in your blog or through your
 favorite social network ...

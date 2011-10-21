@@ -35,7 +35,7 @@ documented PHP class containing properties.
 
 All your domain models need a place to live. The directory structure and filenames follow
 the conventions of our `Coding Guidelines
-<http://flow3.typo3.org/documentation/coding-guidelines/>`_ which basically means that the
+<http://flow3.typo3.org/documentation/codingguidelines>`_ which basically means that the
 directories reflect the classes' namespace while the filename is identical to the class
 name. The base directory for the domain models is ``Classes/Domain/Model/``.
 
