@@ -184,7 +184,7 @@ some content. You should be able to access it through the following URL:
 
 	.. code-block:: text
 
-		http://localhost/Quickstart/Web/index_php/Acme.Demo
+		http://localhost/Quickstart/Web/index.php/Acme.Demo
 
 	If this the case, keep in mind to add ``index.php`` to the following URLs in this
 	Quickstart tutorial.
