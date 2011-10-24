@@ -479,6 +479,10 @@ The syntax is as follows:
   Related: #<number>
    If the change relates to an issue but does not resolve or fix it.
 
+* Fixes may be targeted at not only the master branch (i.e. the next major/point release),
+  but also for a point release in an older branch. Thus a ``Releases`` footer must address
+  the target branches.
+
 *A commit messages following the rules...*:
 
 .. code-block:: text
@@ -506,6 +510,7 @@ The syntax is as follows:
  Resolves: #123
  Resolves: #456
  Related: #789
+ Releases: 1.0, 1.1
 
 Source Code Documentation
 -------------------------
