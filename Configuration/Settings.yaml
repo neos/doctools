@@ -4,7 +4,7 @@
 
 Documentation:
   defaultConfiguration:
-    imageMaxWidth: 1000
+    imageMaxWidth: 1500
     imageMaxHeight: 1000
     thumbnailMaxWidth: 710
     thumbnailMaxHeight: 800
