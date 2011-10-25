@@ -238,7 +238,7 @@ implement in PHP compared to Java.
 
 FLOW3 pragmatically implements a reduced subset of AOP, which satisfies most
 needs of web applications. The join point model allows for intercepting method
-executions but provides no special support for advising field access [#]_. 
+executions but provides no special support for advising field access [#]_.
 Pointcut expressions are based on well-known regular expressions instead of
 requiring the knowledge of a dedicated expression language. Pointcut filters and
 join point types are modularized and can be extended if more advanced
@@ -465,9 +465,8 @@ classAnnotatedWith()
 ********************
 
 The ``classAnnotatedWith()`` designator matches on classes which are tagged with a
-certain annotation. As with class and method names, a regular expression can be
-used to describe the matching tags. The syntax of this designator is as
-follows:
+certain annotation. Currently only the actual annotation class name can be matched,
+arguments of the annotation cannot be specified:
 
 ``classAnnotatedWith(annotation)``
 
@@ -479,19 +478,19 @@ Matches all classes which are tagged with FLOW3's ``Entity`` annotation:
 
 ``classAnnotatedWith(TYPO3\FLOW3\Annotations\Entity)``
 
-Matches all classes which are tagged with an annotation starting with ``Cool``:
+Matches all classes which are tagged with a custom annotation:
 
-``classAnnotatedWith(Cool.*)``
+``classAnnotatedWith(Acme\Demo\Annotations\Important)``
 
 -----
 
 methodAnnotatededWith()
 ***********************
 
-The ``methodAnnotatededWith()`` designator matches on methods which are annotated with a
-certain annotation. As with other pointcut designators, a regular expression
-can be used to describe the matching annotations. The syntax of this designator is as
-follows:
+The ``methodAnnotatededWith()`` designator matches on methods which are annotated
+with a certain annotation.  Currently only the actual annotation class name can be
+matched, arguments of the annotation cannot be specified. The syntax of this
+designator is as follows:
 
 ``methodAnnotatededWith(annotation)``
 
@@ -501,7 +500,7 @@ follows:
 
 Matches all method which are annotated with a ``Special`` annotation:
 
-``methodAnnotatededWith(Special)``
+``methodAnnotatededWith(Acme\Demo\Annotations\Special)``
 
 -----
 
