@@ -219,7 +219,7 @@ action method like this one::
 	 * @return string The hello
 	 */
 	public function helloAction($name) {
-		return "Hello $name!";
+		return 'Hello ' . $name . '!';
 	}
 
 .. important::
