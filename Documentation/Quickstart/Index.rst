@@ -660,7 +660,7 @@ is an already existing (that is, already *persisted*) coffee bean object with th
 modifications submitted by the user already applied.
 
 Any modifications to the ``CoffeBean`` object will be lost at the end of the request
-unless you tell FLOW3 explicitly to apply the changes:
+unless you tell FLOW3 explicitly to apply the changes::
 
 	$this->coffeeBeanRepository->update($coffeeBean);
 
