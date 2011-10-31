@@ -9,7 +9,7 @@ Routing
 As explained in the Model View Controller chapter, in FLOW3 the dispatcher passes the
 request to a controller which then calls the respective action. But how to tell, what
 controller of what package is the right one for the current request? This is were the
-routing framework comes into play.
+Routing Framework comes into play.
 
 The Router
 ==========
@@ -25,8 +25,10 @@ specified arguments.
 
 .. note::
 
-	If no matching route can be found, the ``indexAction()`` of the ``StandardController``
-	of the *FLOW3* package is called.
+	If no matching route can be found, the ``NotFoundController``
+	of the *FLOW3* package is called which returns a 404 status code
+	and - if in Development Context - some more details about the
+	error that occurred.
 
 Routes
 ======
@@ -49,7 +51,7 @@ But let's start with an easy example:
 	  name: 'Homepage'
 	  uriPattern: ''
 	  defaults:
-	    '@package': Demo
+	    '@package': 'My.Demo'
 
 .. note::
 
@@ -57,7 +59,7 @@ But let's start with an easy example:
 	easier.
 
 If you insert these lines at the beginning of the file ``Configurations/Routes.yaml``,
-the ``indexAction`` of the ``StandardController`` in your *Demo* package will be called
+the ``indexAction`` of the ``StandardController`` in your *My.Demo* package will be called
 when you open up the homepage of your FLOW3 installation (``http://localhost/``).
 
 .. note::
@@ -73,7 +75,7 @@ consists of *static route parts* and is equal to the actual URI (without protoco
 host).
 
 In order to reduce the amount of routes that have to be created, you are allowed to insert
-markers, so called *dynamic route parts*, that will be repaced by the routing framework.
+markers, so called *dynamic route parts*, that will be replaced by the Routing Framework.
 You can even mark route parts *optional*.
 
 But first things first.
@@ -84,7 +86,7 @@ Static route parts
 A static route part is really simple - it will be mapped one-to-one to the resulting URI
 without transformation.
 
-Let's create a route that calls the ``listAction`` of the ``CustomerController`` when browsing to
+Let's create a route that calls the ``listAction`` of the ``ProductController`` when browsing to
 ``http://localhost/my/demo``:
 
 * Example: Simple route with static route parts Configuration/Routes.yaml*
@@ -95,9 +97,9 @@ Let's create a route that calls the ``listAction`` of the ``CustomerController``
 	  name: 'Static demo route'
 	  uriPattern: 'my/demo'
 	  defaults:
-	    '@package':    Demo
-	    '@controller': Customer
-	    '@action':     list
+	    '@package':    'My.Demo'
+	    '@controller': 'Product'
+	    '@action':     'list'
 
 Dynamic route parts
 -------------------
@@ -115,13 +117,13 @@ Let's add some dynamics to the previous example:
 	  name: 'Dynamic demo route'
 	  uriPattern: 'my/demo/{@action}'
 	  defaults:
-	    '@package':    Demo
-	    '@controller': Customer
+	    '@package':    'My.Demo'
+	    '@controller': 'Product'
 
 Now ``http://localhost/my/demo/list`` calls the ``listAction`` just like in the previous
 example.
 
-With ``http://localhost/my/demo/index`` you'd invoke the ``indexAction`` and so on.
+With ``http://localhost/my/demo/new`` you'd invoke the ``newAction`` and so on.
 
 .. note::
 
@@ -137,20 +139,104 @@ set any kind of arguments:
 .. code-block:: yaml
 
 	-
-	  name: 'Dynamic demo route'
-	  uriPattern: 'clients/{sortOrder}.{@format}'
+	  name: 'Dynamic demo route with parameter'
+	  uriPattern: 'products/list/{sortOrder}.{@format}'
 	  defaults:
-	    '@package':    Demo
-	    '@controller': Customer
-	    '@action':     list
+	    '@package':    'My.Demo'
+	    '@controller': 'Product'
+	    '@action':     'list'
 
-Browsing to ``http://localhost/clients/descending.xml`` will then call the ``listAction`` in
-your ``Customer`` controller and the request argument ``sortOrder`` has the value of
+Browsing to ``http://localhost/products/list/descending.xml`` will then call the ``listAction`` in
+your ``Product`` controller and the request argument ``sortOrder`` has the value of
 ``descending``.
 
-By default, dynamic route parts match anything apart from empty strings. If you have more
-specialized requirements you can create your custom *route part handlers*, as described
-in the following section.
+By default, dynamic route parts match any simple type and convert it to a string that is available through
+the corresponding request argument. Read on to learn how you can use objects in your routes.
+
+Object Route Parts
+------------------
+
+If a route part refers to an object, that is *known to the Persistence Manager*, it will be converted to
+its technical identifier (usually the UUID) automatically:
+
+*Example: object parameters - Configuration/Routes.yaml*
+
+.. code-block:: yaml
+
+	-
+	  name: 'Single product route'
+	  uriPattern: 'products/{product}'
+	  defaults:
+	    '@package':    'My.Demo'
+	    '@controller': 'Product'
+	    '@action':     'show'
+
+If you add this route *above the previously generated dynamic routes*, an URI pointing to the show action of
+the ProductController will look like ``http://localhost/products/afb275ed-f4a3-49ab-9f2f-1adff12c674f``.
+
+Probably you prefer more human readable URIs and you get them by specifying the ``object type``:
+
+.. code-block:: yaml
+
+	-
+	  name: 'Single product route'
+	  uriPattern: 'products/{product}'
+	  defaults:
+	    '@package':     'My.Demo'
+	    '@controller':  'Product'
+	    '@action':      'show'
+	  routeParts:
+	    product:
+	      objectType: 'My\Demo\Domain\Model\Product'
+
+This will use the *identity* properties of the specified model to generate the URI representation of the product.
+
+.. note::
+
+	If the model contains no identity, the technical identifier is used!
+
+Try adding the ``@FLOW3\Identity`` annotation to the name property of the product model.
+The resulting URI will be ``http://localhost/products/the-product-name``
+
+.. note::
+
+	The result will be transliterated, so that it does not contain invalid characters
+
+Alternatively you can override the behavior by specifying an ``uriPattern`` for the object route part:
+
+.. code-block:: yaml
+
+	-
+	  name: 'Single product route'
+	  uriPattern: 'products/{product}'
+	  defaults:
+	    '@package':     'My.Demo'
+	    '@controller':  'Product'
+	    '@action':      'show'
+	  routeParts:
+	    product:
+	      objectType: 'My\Demo\Domain\Model\Product'
+	      uriPattern: '{category.title}/{name}'
+
+This will add the title of the product category to the resulting URI:
+``http://localhost/products/product-category/the-product-name``
+The route part URI pattern can contain all properties of the object or it's relations.
+
+.. note::
+
+	For properties of type ``\DateTime`` you can define the date format by appending a PHP
+	date format string separated by colon: ``{creationDate:m-Y}``. If no format is specified,
+	the default of ``Y-m-d`` is used.
+
+.. note::
+
+	Mappings from an object to it's URI representation are stored in the
+	``ObjectPathMappingRepository`` in order to make sure, that existing links work even
+	after a property has changed.
+
+Internally the above is handled by the so called ``IdentityRoutePart`` that gives you a lot of power and flexibility
+when working with entities. If you have more specialized requirements or want to use routing for objects that are not
+known to the Persistence Manager, you can create your custom *route part handlers*, as described below.
 
 Route Part Handlers
 ===================
@@ -160,36 +246,41 @@ Route part handlers are classes that implement
 sufficient to extend ``TYPO3\FLOW3\MVC\Web\Routing\DynamicRoutePart`` and overwrite the
 methods ``matchValue`` and ``resolveValue``.
 
-Let's have a look at the (very simple) route part handler of the blog example:
+Let's have a look at a (very simple) route part handler that allows you to match values against
+configurable regular expressions:
 
-*Example: BlogRoutePartHandler.php* ::
+*Example: RegexRoutePartHandler.php* ::
 
-	class BlogRoutePartHandler extends \TYPO3\FLOW3\MVC\Web\Routing\DynamicRoutePart {
+	class RegexRoutePartHandler extends \TYPO3\FLOW3\MVC\Web\Routing\DynamicRoutePart {
 
 		/**
-		 * While matching, converts the blog title into an identifer array
+		 * Checks whether the current URI section matches the configured RegEx pattern.
 		 *
-		 * @param string $value value to match, the blog title
+		 * @param string $requestPath value to match, the string to be checked
 		 * @return boolean TRUE if value could be matched successfully, otherwise FALSE.
 		 */
-		protected function matchValue($value) {
-			if ($value === NULL || $value === '') return FALSE;
-			$this->value = array('__identity' => array('name' => $value));
+		protected function matchValue($requestPath) {
+			if (!preg_match($this->options['pattern'], $requestPath, $matches)) {
+				return FALSE;
+			}
+			$this->value = array_shift($matches);
 			return TRUE;
 		}
 
 		/**
-		 * Resolves the name of the blog
+		 * Checks whether the route part matches the configured RegEx pattern.
 		 *
-		 * @param \TYPO3\Blog\Domain\Model\Blog $value The Blog object
-		 * @return boolean TRUE if the name of the blog could be resolved and stored in
-		 $this->value, otherwise FALSE.
+		 * @param string $value The route part (must be a string)
+		 * @return boolean TRUE if value could be resolved successfully, otherwise FALSE.
 		 */
 		protected function resolveValue($value) {
-			if (!$value instanceof \TYPO3\Blog\Domain\Model\Blog) return FALSE;
-			$this->value = $value->getName();
+			if (!is_string($value) || !preg_match($this->options['pattern'], $value, $matches)) {
+				return FALSE;
+			}
+			$this->value = array_shift($matches);
 			return TRUE;
 		}
+
 	}
 
 The corresponding route might look like this:
@@ -199,23 +290,23 @@ The corresponding route might look like this:
 .. code-block:: yaml
 
 	-
-	  name: 'Blog route'
+	  name: 'RegEx route - only matches index & list actions'
 	  uriPattern: 'blogs/{blog}/{@action}'
 	  defaults:
-	    '@package':    Blog
-	    '@controller': Blog
+	    '@package':    'My.Blog'
+	    '@controller': 'Blog'
 	  routeParts:
-	    blog:
-	      handler: TYPO3\Blog\RoutePartHandlers\BlogRoutePartHandler
+	    '@action':
+	      handler:   'My\Blog\RoutePartHandlers\RegexRoutePartHandler'
+	      options:
+	        pattern: '/index|list/'
 
 The method ``matchValue()`` is called when translating from an URL to a request argument,
-and the method ``resolveValue()`` needs to return an URL segment when being passed an object.
+and the method ``resolveValue()`` needs to return an URL segment when being passed a value.
 
 .. warning:: Some examples are missing here, which should explain the API better.
 
 .. TODO: fix above warning and then remove it.
-
-Have a look at the blog example for a working setup.
 
 Optional route parts
 ====================
@@ -231,8 +322,8 @@ route matches ``http://localhost/my/demo`` and ``http://localhost/my/demo/list.h
 	  name: 'Dynamic demo route'
 	  uriPattern: 'my/demo(/{@action}.html)'
 	  defaults:
-	    '@package':    'Demo'
-	    '@controller': 'Customer'
+	    '@package':    'My.Demo'
+	    '@controller': 'Product'
 	    '@action':     'list'
 
 .. note::
@@ -247,8 +338,8 @@ route matches ``http://localhost/my/demo`` and ``http://localhost/my/demo/list.h
 Case Sensitivity
 ================
 
-By Default the case is not changed when creating URIs. The following example with a
-username of "Kasper" will result in ``http://localhost/Users/Kasper``
+By Default URIs are lower-cased. The following example with a
+username of "Kasper" will result in ``http://localhost/users/kasper``
 
 *Example: Route with default case handling*
 
@@ -257,8 +348,8 @@ username of "Kasper" will result in ``http://localhost/Users/Kasper``
 	-
 	  uriPattern: 'Users/{username}'
 	  defaults:
-	    '@package':    'Demo'
-	    '@controller': 'Customer'
+	    '@package':    'My.Demo'
+	    '@controller': 'Product'
 	    '@action':     'show'
 
 You can change this behavior for routes and/or dynamic route parts:
@@ -270,82 +361,74 @@ You can change this behavior for routes and/or dynamic route parts:
 	-
 	  uriPattern: 'Users/{username}'
 	  defaults:
-	    '@package':    'Demo'
-	    '@controller': 'Customer'
+	    '@package':    'My.Demo'
+	    '@controller': 'Product'
 	    '@action':     'show'
-	  toLowerCase: true
+	  toLowerCase: false
 	  routeParts:
 	    username:
-	      toLowerCase: false
+	      toLowerCase: true
 
 The option ``toLowerCase`` will change the default behavior for this route
-and reset it for the username route
-part. Given the same username of "Kasper" the resulting URI will now be
-``http://localhost/users/Kasper`` (note the lower case "u" in "users").
+and reset it for the username route part.
+Given the same username of "Kasper" the resulting URI will now be
+``http://localhost/Users/kasper`` (note the lower case "k" in "kasper").
 
 .. note::
 
 	The predefined route parts ``@package``, ``@subpackage``, ``@controller``, ``@action`` and
 	``@format`` are an exception, they're always lower cased!
 
-Matching of incoming URIs is always done case insensitive. So both "Users/Kasper" and
-"users/Kasper" will match, and the value of the dynamic part will never be changed. If you
-want to handle data coming in through dynamic route parts case-insensitive, you need to
-handle that in your own code.
+Matching of incoming URIs to static route parts is always done case sensitive. So "users/kasper" won't match.
+For dynamic route parts the case is usually not defined. If you want to handle data coming in through dynamic
+route parts case-sensitive, you need to handle that in your own code.
 
 Subroutes
 =========
 
 For security reasons and to avoid confusion, only routes configured in your global
-configuration folder are active. But FLOW3 supports what we call *subroutes* enabling you to
+configuration folder are active. But FLOW3 supports what we call *SubRoutes* enabling you to
 provide custom routes with your package and reference them in the global routing setup.
 
 Imagine following routes in the ``Routes.yaml`` file inside your demo package:
 
-*Example: Demo Subroutes - Demo/Configuration/Routes.yaml*
+*Example: Demo Subroutes - My.Demo/Configuration/Routes.yaml*
 
 .. code-block:: yaml
 
 	-
-	  name: 'Customer routes'
-	  uriPattern: '/clients/{@action}'
+	  name: 'Product routes'
+	  uriPattern: 'products/{@action}'
 	  defaults:
-	    '@controller': Customer
+	    '@controller': 'Product'
 
 	-
 	  name: 'Standard routes'
-	  uriPattern: '/{@action}'
+	  uriPattern: '{@action}'
 	  defaults:
-	    '@controller': Standard
-
-	--
-	  name: 'Fallback'
-	  uriPattern: ''
-	  defaults:
-	    '@controller': Standard
-	    '@action':     index
+	    '@controller': 'Standard'
 
 And in your global ``Routes.yaml``:
 
-*Example: Referencing subroutes - Configuration/Routes.yaml*
+*Example: Referencing SubRoutes - Configuration/Routes.yaml*
 
 .. code-block:: yaml
 
 	-
-	  name: 'Demo subroutes'
-	  uriPattern: 'demo<DemoSubroutes>(.{@format})'
+	  name: 'Demo SubRoutes'
+	  uriPattern: 'demo/<DemoSubroutes>(.{@format})'
 	  defaults:
-	    '@package': Demo
-	    '@format':  html
+	    '@package': 'My.Demo'
+	    '@format':  'html'
 	  subRoutes:
 	    DemoSubroutes:
-	      package: Demo
+	      package: 'My.Demo'
 
-As you can see, you can reference subroutes by putting parts of the URI pattern in angle
+As you can see, you can reference SubRoutes by putting parts of the URI pattern in angle
 brackets (like ``<subRoutes>``). With the subRoutes setting you specify where to load the
-subroutes from.
+SubRoutes from.
 
-Internally the ConfigurationManager merges toghether the main route with its subroutes, resulting
+Internally the ConfigurationManager merges together the main route with its SubRoutes, resulting
 in the following routing configuration:
 
 *Example: Merged routing configuration*
@@ -353,31 +436,22 @@ in the following routing configuration:
 .. code-block:: yaml
 
 	-
-	  name: 'Demo subroutes :: Customer routes'
-	  uriPattern: 'demo/clients/{@action}(.{@format})'
+	  name: 'Demo SubRoutes :: Product routes'
+	  uriPattern: 'demo/products/{@action}.{@format}'
 	  defaults:
-	    '@package': Demo
-	    '@format':  html
-	    '@controller': Customer
+	    '@package':    'My.Demo'
+	    '@format':     'html'
+	    '@controller': 'Product'
 
 	-
-	  name: 'Demo subroutes :: Standard routes'
-	  uriPattern: 'demo/{@action}(.{@format})'
+	  name: 'Demo SubRoutes :: Standard routes'
+	  uriPattern: 'demo/{@action}.{@format}'
 	  defaults:
-	    '@package': Demo
-	    '@format':  html
-	    '@controller': Standard
+	    '@package':    'My.Demo'
+	    '@format':     'html'
+	    '@controller': 'Standard'
 
-	-
-	  name: 'Demo subroutes :: Fallback'
-	  uriPattern: 'demo(.{@format})'
-	  defaults:
-	    '@package': Demo
-	    '@format':  html
-	    '@controller': Standard
-	    '@action':     index
-
-You can even reference multiple subroutes from one route - that will create one route for
+You can even reference multiple SubRoutes from one route - that will create one route for
 all possible combinations.
 
 .. tip:: You can use the following command-line command to list all routes which are currently active:
