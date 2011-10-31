@@ -62,7 +62,7 @@ Open the generated file and complete it to look like the following::
 		 * @var string
 		 * @FLOW3\Validate(type="Text")
 		 * @FLOW3\Validate(type="StringLength", options={ "minimum"=1, "maximum"=80 })
-		 * @ORM\Column(length="80")
+		 * @ORM\Column(length=80)
 		 */
 		protected $title = '';
 
@@ -72,7 +72,7 @@ Open the generated file and complete it to look like the following::
 		 * @var string
 		 * @FLOW3\Validate(type="Text")
 		 * @FLOW3\Validate(type="StringLength", options={ "maximum"=150 })
-		 * @ORM\Column(length="150")
+		 * @ORM\Column(length=150)
 		 */
 		protected $description = '';
 
@@ -164,7 +164,7 @@ The model's properties are implemented as regular class properties::
 	 * @var string
 	 * @FLOW3\Validate(type="Text")
 	 * @FLOW3\Validate(type="StringLength", options={ "minimum"=1, "maximum"=80 })
-	 * @ORM\Column(length="80")
+	 * @ORM\Column(length=80)
 	 */
 	protected $title = '';
 
@@ -174,7 +174,7 @@ The model's properties are implemented as regular class properties::
 	 * @var string
 	 * @FLOW3\Validate(type="Text")
 	 * @FLOW3\Validate(type="StringLength", options={ "maximum"=150 })
-	 * @ORM\Column(length="150")
+	 * @ORM\Column(length=150)
 	 */
 	protected $description = '';
 
