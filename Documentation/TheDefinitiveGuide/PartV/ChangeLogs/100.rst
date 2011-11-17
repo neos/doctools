@@ -898,7 +898,7 @@ Will now result in the URI "posts/<UUID>"
 
 The check for argument names against @ignorevalidation annotations
 was done with the raw argument name, but the annotation is to be
-given with a leading dollar sign:
+given with a leading dollar sign::
 
  @ignorevalidation $fooBar
 
