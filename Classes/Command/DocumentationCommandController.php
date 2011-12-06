@@ -128,18 +128,36 @@ class DocumentationCommandController extends \TYPO3\FLOW3\MVC\Controller\Command
 			$this->quit(1);
 		}
 
-		$jsonFileNames = \TYPO3\FLOW3\Utility\Files::readDirectoryRecursively($renderedDocumentationRootPath, '.fjson');
-		if ($jsonFileNames === array()) {
+		$unorderedJsonFileNames = \TYPO3\FLOW3\Utility\Files::readDirectoryRecursively($renderedDocumentationRootPath, '.fjson');
+		if ($unorderedJsonFileNames === array()) {
 			$this->outputLine('The folder "%s" contains no fjson files. Did you render the documentation?', array($renderedDocumentationRootPath));
 			$this->quit(1);
 		}
-		foreach ($jsonFileNames as $jsonFileName) {
-			$data = json_decode(file_get_contents($jsonFileName));
+
+		$orderedNodePaths = array();
+		foreach ($unorderedJsonFileNames as $jsonPathAndFileName) {
+			if(basename($jsonPathAndFileName) === 'Index.fjson') {
+				$chapterRelativeNodePath = substr($jsonPathAndFileName, strlen($renderedDocumentationRootPath), -12) . '/';
+#				$orderedNodePaths[] = $this->normalizeNodePath(substr($chapterRelativeNodePath, 0, -1));
+
+				$indexArray = json_decode(file_get_contents($jsonPathAndFileName), TRUE);
+				foreach (explode(chr(10), $indexArray['body']) as $tocHtmlLine) {
+					preg_match('!^\<li class="toctree-l1"\>\<a class="reference internal" href="\.\./([a-zA-Z0-9]+)/.*$!', $tocHtmlLine, $matches);
+					if ($matches !== array()) {
+						$orderedNodePaths[] = $this->normalizeNodePath($chapterRelativeNodePath . $matches[1]);
+					}
+				}
+			}
+		}
+
+		foreach ($unorderedJsonFileNames as $jsonPathAndFileName) {
+			$data = json_decode(file_get_contents($jsonPathAndFileName));
 			if (!isset($data->body)) {
 				continue;
 			}
-			$relativeNodePath = substr($jsonFileName, strlen($renderedDocumentationRootPath) + 1, -6);
+			$relativeNodePath = substr($jsonPathAndFileName, strlen($renderedDocumentationRootPath) + 1, -6);
 			$relativeNodePath = $this->normalizeNodePath($relativeNodePath);
+
 			$segments = explode('/', $relativeNodePath);
 			$pageNode = $importRootNode;
 			while ($segment = array_shift($segments)) {
@@ -169,6 +187,30 @@ class DocumentationCommandController extends \TYPO3\FLOW3\MVC\Controller\Command
 			$bodyText = $this->prepareBodyText($data->body, $relativeNodePath);
 			$textNode->setProperty('text', $bodyText);
 		}
+
+		$importRootNodePath = $importRootNode->getPath();
+		$currentParentNodePath = '';
+
+		foreach ($orderedNodePaths as $nodePath) {
+			$node = $importRootNode->getNode($importRootNodePath . $nodePath);
+			if ($node !== NULL) {
+				if ($node->getParent()->getPath() !== $currentParentNodePath) {
+					$currentParentNodePath = $node->getParent()->getPath();
+					$previousNode = NULL;
+				}
+				if ($previousNode !== NULL) {
+					$this->outputLine('Moved node %s', array($node->getPath()));
+					$this->outputLine('after node %s', array($previousNode->getPath()));
+					$node->moveAfter($previousNode);
+				} else {
+					// FIXME: Node->isFirst() or Node->moveFirst() would be needed here
+				}
+				$previousNode = $node;
+			} else {
+				$this->outputLine('Node %s does not exist.' , array($importRootNodePath . $nodePath));
+			}
+		}
+
 		$this->siteRepository->update($contentContext->getCurrentSite());
 	}
 
