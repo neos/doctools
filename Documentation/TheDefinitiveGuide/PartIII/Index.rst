@@ -5,6 +5,7 @@ Part III: Manual
 	:maxdepth: 1
 
 	ArchitecturalOverview
+	Bootstrapping
 	PackageManagement
 	Configuration
 	ObjectManagement
