@@ -322,3 +322,87 @@ pattern is only a "base". Everything that can be ignored will be ignored, some
 simplifications in the pattern are done. The parser tries to do it's best to read the
 value.
 
+XLIFF message catalogs
+======================
+
+The primary source of translations in FLOW3 are XLIFF message catalogs. `XLIFF
+<http://en.wikipedia.org/wiki/XLIFF>`_, the *XML Localisation Interchange File Format* is
+an `OASIS-blessed <http://www.oasis-open.org/committees/xliff>`_ standard format for
+translations.
+
+.. note::
+
+  In a nutshell an XLIFF document contains one or more ``<file>`` elements. Each file
+  element usually corresponds to a source (file or database table) and contains the source
+  of the localizable data. Once translated, the corresponding localized data for one, and
+  only one, locale is added.
+
+  Localizable data are stored in ``<trans-unit>`` elements. The ``<trans-unit>`` contains
+  a ``<source>`` element to store the source text and a (non-mandatory) ``<target>``
+  element to store the latest translated text.
+
+File locations and naming
+-------------------------
+
+Each FLOW3 package may contain any number of XLIFF files. The location for these files is
+the *Resources/Private/Locale/Translations* folder. The files there can be named at will,
+but keep in mind that *Main* is the default catalog name. The target locale is then added
+to the filename as described in the Resources_ section earlier. The minimum needed to
+provide message catalogs for the *en* and *de* locales thus would be:
+
+.. code-block:: text
+
+  Resources/
+    Private/
+      Locale/
+        Translations/
+          Main.en.xlf
+          Main.de.xlf
+
+..tip::
+
+  There is never a file *Main.xlf* as there is no such thing as a global default language.
+
+XLIFF file creation
+-------------------
+
+For now there are no FLWO3 tools to aid in creation of the initial XLIFF files. So you
+need to write them yourself. A minimal XLIFF file looks like this:
+
+.. code-block:: xml
+
+	<?xml version="1.0"?>
+	<xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
+		<file original="" source-language="en" datatype="plaintext">
+			<body>
+				<trans-unit id="danish.celebrity">
+					<source>Skarhøj</source>
+					<target>Sarkosh</target>
+				</trans-unit>
+			</body>
+		</file>
+	</xliff>
+
+If possible you should set up your editor to use the XLIFF 1.2 strict schema to validate
+the files you are working on.
+
+.. note::
+
+  When using ``translationById()`` the framework will check the catalog's source language
+  against the currently needed locale and use the ``<source>`` element if no ``<target>``
+  element is found. This eliminates the need to duplicate messages in catalogs where
+  source and target language are the same.
+
+XLIFF file translation
+----------------------
+
+To translate XLIFF files you can use any text editor, but translation is a lot easier
+using one the available translation tools. To name two of them: Virtaal is a free and
+open-source tool for offline use and Pootle (both from the `Translate Toolkit
+<http://translate.sourceforge.net/wiki/toolkit/index>`_ project) is a web-based
+translation server.
+
+XLIFF can also easily be converted to *PO* file format, edited by well known *PO* editors
+(like *Poedit*, which supports plural forms), and converted back to *XLIFF* format. The
+*xliff2po* and *po2xliff* tools from the *Translate Toolkit* project can convert without
+information loss.
