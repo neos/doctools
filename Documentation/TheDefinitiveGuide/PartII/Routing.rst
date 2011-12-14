@@ -142,7 +142,9 @@ a bit shorter now:
 
 However, the edit link still looks it bit ugly:
 
-	``http://dev.tutorial.local/post/edit?post%5B__identity%5D=229e2b23-b6f3-4422-8b7a-efb196dbc88b``
+..code-block:: none
+
+	http://dev.tutorial.local/post/edit?post%5B__identity%5D=229e2b23-b6f3-4422-8b7a-efb196dbc88b
 
 For getting rid of this long identifier we need the help of a new route that can handle
 the post object.
@@ -150,12 +152,14 @@ the post object.
 Object Route Parts
 ==================
 
-Our goal is to produce an URI like
+Our goal is to produce an URI like:
 
-	``http://dev.tutorial.local/post/2010/01/18/post-title/edit``
+..code-block:: none
 
-and use this as our edit link.
-That's done by adding following route at the *top of the file*:
+	http://dev.tutorial.local/post/2010/01/18/post-title/edit
+
+and use this as our edit link. That's done by adding following route at the
+*top of the file*:
 
 .. code-block:: yaml
 
