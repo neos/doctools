@@ -125,6 +125,15 @@ The result should look similar to the screen you see in the screenshot. If somet
 wrong, it usually can be blamed on a misconfigured web server or insufficient file
 permissions.
 
+.. note::
+
+	If all you get is a 404, you might need to edit the ``.htaccess`` file in the
+	``Web`` folder to adjust the ``RewriteBase`` directive to point to the right
+	folder.
+
+	Or you can configure your webserver to use the ``Web`` folder as the document
+	root. That is the recommended setup.
+
 .. tip::
 
 	There are some friendly ghosts in our `IRC channel`_ and in the `users mailing list`_
