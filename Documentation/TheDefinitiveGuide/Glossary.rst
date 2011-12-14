@@ -4,7 +4,7 @@ Glossary
 ========
 
 .. glossary::
-   :sorted:
+	:sorted:
 
 	Package
 		A *Package* is foo

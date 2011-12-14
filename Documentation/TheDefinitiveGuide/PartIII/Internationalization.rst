@@ -260,7 +260,7 @@ object. The method will return a path to the best matching localized version of 
 Fluid Viewhelper
 ----------------
 
-The ``ResourceViewHelper`` will by default use locale-specific versions of any Resources_
+The ``ResourceViewHelper`` will by default use locale-specific versions of any resources
 you ask for. If you want to avoid that you can disable that:
 
 .. code-block:: xml
@@ -347,8 +347,9 @@ File locations and naming
 Each FLOW3 package may contain any number of XLIFF files. The location for these files is
 the *Resources/Private/Locale/Translations* folder. The files there can be named at will,
 but keep in mind that *Main* is the default catalog name. The target locale is then added
-to the filename as described in the Resources_ section earlier. The minimum needed to
-provide message catalogs for the *en* and *de* locales thus would be:
+to the filename as described in the `Localizing resources`_ section earlier. The minimum
+needed to provide message catalogs for the *en* and *de* locales thus would be:
+
 
 .. code-block:: text
 

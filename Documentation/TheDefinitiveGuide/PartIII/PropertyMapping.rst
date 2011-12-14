@@ -256,20 +256,20 @@ The Inner Workings of the Property Mapper
 The Property Mapper applies the following steps to convert a simple type to an
 object. Some of the steps will be described in detail afterwards.
 
-#. Figure out which type converter to use for the given source - target pair.
+1. Figure out which type converter to use for the given source - target pair.
 
-#. Ask this type converter to return the child properties of the source data
+2. Ask this type converter to return the child properties of the source data
    (if it has any), by calling ``getSourceChildPropertiesToBeConverted()`` on
    the type converter.
 
-#. For each child propery, do the following:
+3. For each child propery, do the following:
 
-	#. Ask the type converter about the data type of the child property, by calling
+	1. Ask the type converter about the data type of the child property, by calling
 	   ``getTypeOfChildProperty()`` on the type converter.
 
-	#. Recursively invoke the ``PropertyMapper`` to build the child object from the input data.
+	2. Recursively invoke the ``PropertyMapper`` to build the child object from the input data.
 
-#. Now, call the type converter again (method ``convertFrom()``), passing all (already
+4. Now, call the type converter again (method ``convertFrom()``), passing all (already
    built) child objects along. The result of this call is returned as the final result of the
    property mapping process.
 
@@ -300,18 +300,18 @@ each ``TypeConverter`` which influence the resolving process:
 
 When a type converter has to be found, the following algorithm is applied:
 
-#. If typeConverter is set in the ``PropertyMappingConfiguration``, this is directly used.
+1. If typeConverter is set in the ``PropertyMappingConfiguration``, this is directly used.
 
-#. The inheritance hierarchy of the target type is traversed in reverse order (from
+2. The inheritance hierarchy of the target type is traversed in reverse order (from
    most specific to generic) until a TypeConverter is found. If two type converters
    work on the same class, the one with highest priority is used.
 
-#. If no type converter could be found for the direct inheritance hierarchy, it is
+3. If no type converter could be found for the direct inheritance hierarchy, it is
    checked if there is a TypeConverter for one of the interfaces the target class
    implements. As it is not possible in PHP to order interfaces in any meaningful
    way, the TypeConverter with the highest priority is used (througout all interfaces).
 
-#. If no type converter is found in the interfaces, it is checked if there is an
+4. If no type converter is found in the interfaces, it is checked if there is an
    applicable type converter for the target type ``object``.
 
 If a type converter is found according to the above algorithm, ``canConvertFrom`` is
@@ -359,3 +359,8 @@ possibilities what can be returned in ``convertFrom()``:
 
   This is the correct response for example if the file upload could not be processed
   because of wrong checksums, or because the disk on the server is full.
+
+.. warning::
+	Inside a type converter it is not allowed to use an (injected)
+	instance of ``TYPO3\FLOW3\Property\PropertyMapper`` because it can lead to
+	an infinite, recursive invocation.

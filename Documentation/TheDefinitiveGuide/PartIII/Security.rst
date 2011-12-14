@@ -72,13 +72,12 @@ configuration looks like this:
 
 .. code-block:: yaml
 
-	-
-	  FLOW3:
-	    security:
-	      authentication:
-	        providers:
-	          DefaultProvider:
-	            providerClass: PersistedUsernamePasswordProvider
+	FLOW3:
+	  security:
+	    authentication:
+	      providers:
+	        DefaultProvider:
+	          providerClass: PersistedUsernamePasswordProvider
 
 This registers the ``PersistedUsernamePasswordProvider`` authentication provider under
 the name "``DefaultProvider``" as the only, global authentication mechanism. To
@@ -269,12 +268,11 @@ again the configuration of the default authentication provider:
 
 .. code-block:: yaml
 
-	-
-	  security:
-	    authentication:
-	      providers:
-	        DefaultProvider:
-	          providerClass: PersistedUsernamePasswordProvider
+	security:
+	  authentication:
+	    providers:
+	      DefaultProvider:
+	        providerClass: PersistedUsernamePasswordProvider
 
 If you have a closer look at this configuration, you can see, that the word providers is
 plural. That means, you have the possibility to configure more than one provider and use
@@ -289,15 +287,14 @@ them in "parallel".
 
 .. code-block:: yaml
 
-	-
-	  security:
-	    authentication:
-	      providers:
-	        MyLDAPProvider:
-	          providerClass: TYPO3\MyCoolPackage\Security\Authentication\MyLDAPProvider
-	          options: 'Some LDAP configuration options'
-	        DefaultProvider:
-	          providerClass: PersistedUsernamePasswordProvider
+	security:
+	  authentication:
+	    providers:
+	      MyLDAPProvider:
+	        providerClass: TYPO3\MyCoolPackage\Security\Authentication\MyLDAPProvider
+	        options: 'Some LDAP configuration options'
+	      DefaultProvider:
+	        providerClass: PersistedUsernamePasswordProvider
 
 This will advice the authentication manager to first authenticate over the LDAP provider
 and if that fails it will try to authenticate the default provider. So this configuration
@@ -324,11 +321,10 @@ security only for some resources (e.g. SSL client certificates for an admin back
 
 .. code-block:: yaml
 
-	--
-	  configuration:
-	    security:
-	      authentication:
-	        authenticationStrategy: allTokens
+	configuration:
+	  security:
+	    authentication:
+	      authenticationStrategy: allTokens
 
 Reuse of tokens and providers
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -345,13 +341,12 @@ in a POST request or set in an HTTP Basic authentication header.
 
 .. code-block:: yaml
 
-	-
-	  security:
-	    authentication:
-	      providers:
-	        DefaultProvider:
-	          providerClass: PersistedUsernamePasswordProvider
-	          tokenClass: UsernamePasswordHttpBasic
+	security:
+	  authentication:
+	    providers:
+	      DefaultProvider:
+	        providerClass: PersistedUsernamePasswordProvider
+	        tokenClass: UsernamePasswordHttpBasic
 
 .. _Request Patterns:
 
@@ -369,19 +364,18 @@ configuration:
 
 .. code-block:: yaml
 
-	-
-	  security:
-	    authentication:
-	      providers:
-	        MyLDAPProvider:
-	          providerClass: TYPO3\MyCoolPackage\Security\Authentication\MyLDAPProvider
-	          options: 'Some LDAP configuration options'
-	          requestPatterns:
-	           controllerObjectName: TYPO3\MyApplication\AdministrationArea\.*
-	        DefaultProvider:
-	          providerClass: PersistedUsernamePasswordProvider
-	          requestPatterns:
-	           controllerObjectName: TYPO3\MyApplication\UserArea\.*
+	security:
+	  authentication:
+	    providers:
+	      MyLDAPProvider:
+	        providerClass: TYPO3\MyCoolPackage\Security\Authentication\MyLDAPProvider
+	        options: 'Some LDAP configuration options'
+	        requestPatterns:
+	         controllerObjectName: TYPO3\MyApplication\AdministrationArea\.*
+	      DefaultProvider:
+	        providerClass: PersistedUsernamePasswordProvider
+	        requestPatterns:
+	         controllerObjectName: TYPO3\MyApplication\UserArea\.*
 
 Look at the new configuration option ``requestPatterns``. This enables or disables an
 authentication provider, depending on given patterns. The patterns will look into the
@@ -441,15 +435,14 @@ example, that redirects to a login page (Using the ``WebRedirect`` entry point).
 
 .. code-block:: yaml
 
-	-
-	  security:
-	    authentication:
-	      providers:
-	        DefaultProvider:
-	          providerClass: PersistedUsernamePasswordProvider
-	          entryPoint:
-	            WebRedirect:
-	              uri: login/
+	security:
+	  authentication:
+	    providers:
+	      DefaultProvider:
+	        providerClass: PersistedUsernamePasswordProvider
+	        entryPoint:
+	          WebRedirect:
+	            uri: login/
 
 .. note::
 
@@ -502,7 +495,7 @@ The implementation of the corresponding authentication provider resides in the c
 ``TYPO3\FLOW3\Security\Authentication\Provider\PersistedUsernamePasswordProvider``.
 It is able to authenticate tokens of the type
 ``TYPO3\FLOW3\Security\Authentication\Token\UsernamePassword``. It expects a credentials
-array in the token which looks like that: ::
+array in the token which looks like that::
 
 	array(
 	  'username' => 'admin',
@@ -528,7 +521,7 @@ corresponding section above.
 
 The username/password token is implemented in the class
 ``TYPO3\FLOW3\Security\Authentication\Token\UsernamePassword``. It fetches the credentials
-from the HTTP POST data, look at the following program listing for details: ::
+from the HTTP POST data, look at the following program listing for details::
 
 	$postArguments = $this->environment->getRawPostArguments();
 	$username = \TYPO3\FLOW3\Reflection\ObjectAccess::getPropertyPath($postArguments,
@@ -592,31 +585,31 @@ to the current security context. However, here is the recommended way of what sh
 be done in this method and if you don't have really good reasons, you shouldn't
 deviate from this procedure.
 
-	#	Get the credentials provided by the client from the authentication token
-		(``getCredentials()``)
-
-	#	Retrieve the corresponding account object from the account repository, which
-		you should inject into your provider by dependency injection. The repository
-		provides a convenient find method for this task:
-		``findActiveByAccountIdentifierAndAuthenticationProviderName()``.
-
-	#	The ``credentialsSource`` property of the account will hold the credentials
-		you'll need to compare or at least the information, where these credentials lie.
-
-	#	Start the authentication process (e.g. compare credentials/call directory service/...).
-
-	#	Depending on the authentication result, set the correct status in the
-		authentication token, by ``calling setAuthenticationStatus()``.
-
-	#	Set the account in the authentication token, if authentication succeeded. This
-		will add the roles of this token to the security context.
+	1. Get the credentials provided by the client from the authentication token
+	   (``getCredentials()``)
+       
+	2. Retrieve the corresponding account object from the account repository, which
+	   you should inject into your provider by dependency injection. The repository
+	   provides a convenient find method for this task:
+	   ``findActiveByAccountIdentifierAndAuthenticationProviderName()``.
+       
+	3. The ``credentialsSource`` property of the account will hold the credentials
+	   you'll need to compare or at least the information, where these credentials lie.
+       
+	4. Start the authentication process (e.g. compare credentials/call directory service/...).
+       
+	5. Depending on the authentication result, set the correct status in the
+	   authentication token, by ``calling setAuthenticationStatus()``.
+       
+	6. Set the account in the authentication token, if authentication succeeded. This
+	   will add the roles of this token to the security context.
 
 Authorization
 =============
 
 In this section we will deal with the authorization features of FLOW3. You won't find any
 advices, how to configure access rights here, please refer to the next section about
-:ref:`Access Control Lists` , which form the default method to model and configure access
+:ref:`Access Control Lists`, which form the default method to model and configure access
 rules.
 
 Authorize method invocations
@@ -664,7 +657,7 @@ following voting process to meet its decision:
 2. Ask every voter, to vote for the given method call (or join point in AOP nomenclature).
 
 3. Count the votes and grant access, if there is at least one ``VOTE_GRANT`` vote and no
-``VOTE_DENY`` vote. In all other cases an access denied exception will be thrown.
+   ``VOTE_DENY`` vote. In all other cases an access denied exception will be thrown.
 
 *On access decision voters*
 
@@ -699,7 +692,6 @@ following option:
 
 .. code-block:: yaml
 
-	-
 	security:
 	  authorization:
 	    allowAccessIfAllVotersAbstain: FALSE
@@ -756,26 +748,25 @@ firewall configuration will look like:
 
 .. code-block:: yaml
 
-	-
-	  TYPO3
-	    FLOW3:
-	      security:
-	        firewall:
-	          rejectAll: n
+	TYPO3
+	  FLOW3:
+	    security:
+	      firewall:
+	        rejectAll: n
 
-	          filters:
-	            -
-	              patternType:  URL
-	              patternValue: /some/url/.*
-	              interceptor:  AccessGrant
-	            -
-	              patternType:  URL
-	              patternValue: /some/url/blocked.*
-	              interceptor:  AccessDeny
-	            -
-	              patternType:  MyCompany\MyPackage\Security\MyOwnRequestPattern
-	              patternValue: some pattern value
-	              interceptor:  MyCompany\MyPackage\Security\MyOwnSecurityInterceptor
+	        filters:
+	          -
+	            patternType:  URL
+	            patternValue: /some/url/.*
+	            interceptor:  AccessGrant
+	          -
+	            patternType:  URL
+	            patternValue: /some/url/blocked.*
+	            interceptor:  AccessDeny
+	          -
+	            patternType:  MyCompany\MyPackage\Security\MyOwnRequestPattern
+	            patternValue: some pattern value
+	            interceptor:  MyCompany\MyPackage\Security\MyOwnSecurityInterceptor
 
 As you can see, you can easily use your own implementations for request patterns and
 security interceptors.
@@ -812,11 +803,10 @@ configuration, that will proclaim the roles ``Administrator``, ``Customer``, and
 
 .. code-block:: yaml
 
-	-
-	  roles:
-	    Administrator: []
-	    Customer: []
-	    PrivilegedCustomer: [Customer]
+	roles:
+	  Administrator: []
+	  Customer: []
+	  PrivilegedCustomer: [Customer]
 
 .. note::
 
@@ -842,13 +832,12 @@ resources only.
 
 .. code-block:: yaml
 
-	-
-	  resources:
-	    methods:
-	      listMethods: 'method(TYPO3\FooPackage\SomeClass->list.*())'
-	      updateMethods: 'method(TYPO3\FooPackage\SomeClass->update.*())'
-	      deleteMethods: 'method(TYPO3\FooPackage\.*->delete.*(force == TRUE))'
-	      modifyMethods: 'TYPO3_FooPackage_update || TYPO3_FooPackage_delete'
+	resources:
+	  methods:
+	    listMethods: 'method(TYPO3\FooPackage\SomeClass->list.*())'
+	    updateMethods: 'method(TYPO3\FooPackage\SomeClass->update.*())'
+	    deleteMethods: 'method(TYPO3\FooPackage\.*->delete.*(force == TRUE))'
+	    modifyMethods: 'TYPO3_FooPackage_update || TYPO3_FooPackage_delete'
 
 Each resource is defined by a unique name [#]_ and a so called pointcut expression.
 Practically a pointcut expression is a regular expression that matches on certain methods.
@@ -871,19 +860,18 @@ have a look at an example for such ACL entries:
 
 .. code-block:: yaml
 
-	-
-	  acls:
-	    Administrator:
-	      methods:
-	        listMethods:         GRANT
-	        modifyMethods:       GRANT
-	    Customer:
-	      methods:
-	        listMethods:         GRANT
-	    PriviledgedCustomer:
-	      methods:
-	        updateMethods:       GRANT
-	        deleteMethods:       DENY
+	acls:
+	  Administrator:
+	    methods:
+	      listMethods:         GRANT
+	      modifyMethods:       GRANT
+	  Customer:
+	    methods:
+	      listMethods:         GRANT
+	  PriviledgedCustomer:
+	    methods:
+	      updateMethods:       GRANT
+	      deleteMethods:       DENY
 
 This will end up in ``Administrators`` being able to call all ``update*`` and ``list*``
 methods in the class ``SomeClass`` and all ``delete*`` methods no matter which class in
