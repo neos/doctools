@@ -46,7 +46,13 @@ The code for your ``Blog`` model can be kickstarted like this:
 
 .. code-block:: none
 
-	myhost:tutorial johndoe$ ./flow3 kickstart:model TYPO3.Blog Blog title:string description:string 'posts:\Doctrine\Common\Collections\Collection'
+	myhost:tutorial johndoe$ ./flow3 kickstart:model TYPO3.Blog Blog title:string \
+	description:string 'posts:\Doctrine\Common\Collections\Collection'
+
+That command will output the created file and a hint:
+
+.. code-block:: none
+
 	Created .../TYPO3.Blog/Classes/Domain/Model/Blog.php
 	As a new model was generated, don't forget to update the database schema with the respective doctrine:* commands.
 
@@ -118,23 +124,33 @@ Open the generated file and complete it to look like the following::
 	}
 	?>
 
-*Please remove the ``setPosts`` method as we don't want that to be possible.*
+*Please remove the* ``setPosts`` *method as we don't want that to be possible.*
 
 .. tip::
+
+	The `@FLOW3\…` and `@ORM\…` strings in the code are called *Annotations*.
+	They are namespaced like PHP classes, so for the above code to work you
+	**must** add a line like::
+
+		use Doctrine\ORM\Mapping as ORM;
+
+	to the files as well. Add it right after the `use` statement for the FLOW3
+	annotations that is already there.
+
+.. tip:: **Namespaces**
+
 	Namespaces have been introduced in PHP 5.3. If you're unfamiliar with its
 	funny backslash syntax you might want to have a look at the
 	`PHP manual <http://php.net/manual/en/language.namespaces.php>`_.
 
 As you can see there's nothing really fancy in it, the class mostly consists of
-getters and setters. Let's take a closer look at the model line-by-line:
-
-PHP Code::
+getters and setters. Let's take a closer look at the model line-by-line::
 
 	namespace TYPO3\Blog\Domain\Model;
 
 This namespace declaration must be the very first code in your file.
 
-PHP Code::
+.. code-block:: php
 
 	/**
 	 * A blog
@@ -150,11 +166,11 @@ FLOW3's configuration mechanism.
 The annotation marks this class as an entity. This is an important piece
 of information for the persistence framework because it declares that
 
-	- this model is an **entity** according to the concepts of Domain-Driven
-	  Design
-	- instances of this class can be persisted (i.e. stored in the database)
-	- According to DDD, an entity is an object which has an identity, that
-	  is even if two objects with the same values exist, their identity matters.
+- this model is an **entity** according to the concepts of Domain-Driven
+  Design
+- instances of this class can be persisted (i.e. stored in the database)
+- According to DDD, an entity is an object which has an identity, that
+  is even if two objects with the same values exist, their identity matters.
 
 The model's properties are implemented as regular class properties::
 
@@ -225,8 +241,6 @@ We need a model for the posts as well, so kickstart it like this:
 		date:\DateTime \
 		author:string \
 		content:string
-	Created .../TYPO3.Blog/Classes/Domain/Model/Post.php
-	As a new model was generated, don't forget to update the database schema with the respective doctrine:* commands.
 
 Note that we use the ``--force`` option to overwrite the model - it was created along with
 the Post controller earlier because we used the ``--generate-related`` flag.
@@ -305,7 +319,6 @@ You can kickstart the repository with:
 .. code-block:: none
 
 	myhost:tutorial johndoe$ ./flow3 kickstart:repository TYPO3.Blog Blog
-	Created .../TYPO3.Blog/Classes/Domain/Repository/BlogRepository.php
 
 This will generate a vanilla repository for blogs containing this code::
 

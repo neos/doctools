@@ -193,7 +193,7 @@ the new post as an argument to a ``createAction`` in the ``PostController``::
 	 * @param \TYPO3\Blog\Domain\Model\Post $newPost
 	 * @return void
 	 */
-	public function createAction(Post $newPost) {
+	public function createAction(\TYPO3\Blog\Domain\Model\Post $newPost) {
 		$blog = $this->blogRepository->findActive();
 		$blog->addPost($newPost);
 		$this->postRepository->add($newPost);

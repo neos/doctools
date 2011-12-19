@@ -246,8 +246,9 @@ to assign blogs to the view::
 	 * @return void
 	 */
 	public function indexAction() {
-		$this->view->assign('blog', $this->blog);
-		$this->view->assign('posts', $this->blog->getPosts());
+		$blog = $this->blogRepository->findActive();
+		$this->view->assign('blog', $blog);
+		$this->view->assign('posts', $blog->getPosts());
 	}
 
 To fully understand the above code you need to know two facts:
@@ -363,7 +364,7 @@ post object. The form's elements are named after the class properties of the
 	 * @param \TYPO3\Blog\Domain\Model\Post $post
 	 * @return void
 	 */
-	public function createAction(Post $newPost) {
+	public function createAction(\TYPO3\Blog\Domain\Model\Post $newPost) {
 		$blog = $this->blogRepository->findActive();
 		$blog->addPost($newPost);
 		$this->postRepository->add($newPost);
@@ -460,7 +461,7 @@ What's missing now is a small adjustment to the PHP code displaying the edit for
 	 * @param \TYPO3\Blog\Domain\Model\Post $post The post to edit
 	 * @return void
 	 */
-	public function editAction(Post $post) {
+	public function editAction(\TYPO3\Blog\Domain\Model\Post $post) {
 		$blog = $this->blogRepository->findActive();
 		$this->view->assign('blog', $blog);
 		$this->view->assign('post', $post);
@@ -478,7 +479,7 @@ When you submit the form you call the ``updateAction``::
 	 *
 	 * @param \TYPO3\Blog\Domain\Model\Post $post The post to update
 	 */
-	public function updateAction(Post $post) {
+	public function updateAction(\TYPO3\Blog\Domain\Model\Post $post) {
 		$this->postRepository->update($post);
 		$this->addFlashMessage('Updated the post.');
 		$this->redirect('index');
