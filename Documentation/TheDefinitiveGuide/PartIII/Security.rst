@@ -587,20 +587,20 @@ deviate from this procedure.
 
 	1. Get the credentials provided by the client from the authentication token
 	   (``getCredentials()``)
-       
+
 	2. Retrieve the corresponding account object from the account repository, which
 	   you should inject into your provider by dependency injection. The repository
 	   provides a convenient find method for this task:
 	   ``findActiveByAccountIdentifierAndAuthenticationProviderName()``.
-       
+
 	3. The ``credentialsSource`` property of the account will hold the credentials
 	   you'll need to compare or at least the information, where these credentials lie.
-       
+
 	4. Start the authentication process (e.g. compare credentials/call directory service/...).
-       
+
 	5. Depending on the authentication result, set the correct status in the
 	   authentication token, by ``calling setAuthenticationStatus()``.
-       
+
 	6. Set the account in the authentication token, if authentication succeeded. This
 	   will add the roles of this token to the security context.
 
@@ -748,7 +748,7 @@ firewall configuration will look like:
 
 .. code-block:: yaml
 
-	TYPO3
+	TYPO3:
 	  FLOW3:
 	    security:
 	      firewall:
@@ -756,17 +756,17 @@ firewall configuration will look like:
 
 	        filters:
 	          -
-	            patternType:  URL
-	            patternValue: /some/url/.*
-	            interceptor:  AccessGrant
+	            patternType:  'URI'
+	            patternValue: '/some/url/.*'
+	            interceptor:  'AccessGrant'
 	          -
-	            patternType:  URL
-	            patternValue: /some/url/blocked.*
-	            interceptor:  AccessDeny
+	            patternType:  'URI'
+	            patternValue: '/some/url/blocked.*'
+	            interceptor:  'AccessDeny'
 	          -
-	            patternType:  MyCompany\MyPackage\Security\MyOwnRequestPattern
-	            patternValue: some pattern value
-	            interceptor:  MyCompany\MyPackage\Security\MyOwnSecurityInterceptor
+	            patternType:  'MyCompany\MyPackage\Security\MyOwnRequestPattern'
+	            patternValue: 'some pattern value'
+	            interceptor:  'MyCompany\MyPackage\Security\MyOwnSecurityInterceptor'
 
 As you can see, you can easily use your own implementations for request patterns and
 security interceptors.
