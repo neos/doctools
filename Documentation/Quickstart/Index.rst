@@ -278,12 +278,12 @@ setup, it would look similar to this:
 	TYPO3:
 	  FLOW3:
 	    persistence:
-	     backendOptions:
-	      driver: 'pdo_mysql'
-	      dbname: 'quickstart' # adjust to your database name
-	      user: 'root'         # adjust to your database user
-	      password: 'password' # adjust to your database password
-	      host: '127.0.0.1'    # adjust to your database host
+	      backendOptions:
+	        driver: 'pdo_mysql'
+	        dbname: 'quickstart' # adjust to your database name
+	        user: 'root'         # adjust to your database user
+	        password: 'password' # adjust to your database password
+	        host: '127.0.0.1'    # adjust to your database host
 
 .. note::
 
