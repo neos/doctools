@@ -736,8 +736,8 @@ exception). This all works because we have the following hierarchy:
 Throwing an exception
 ---------------------
 
-When throwing an exception, make sure to provide a clear error message and an error code
-being the unix timestamp of when you write the ``throw`` statement. That error code must
+When throwing an exception, make sure to provide a clear error message and an *error code
+being the unix timestamp of when you write the ``throw`` statement*. That error code must
 be unique, so watch out when doing copy and paste!
 
 For every exception there should be a page on the TYPO3 wiki, as exception messages link

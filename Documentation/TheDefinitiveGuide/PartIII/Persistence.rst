@@ -364,65 +364,61 @@ makes a number of things easier, compared to plain Doctrine 2.
 
 * ``Entity``
 
-	* ``repositoryClass`` can be left out, if you follow the naming rules for your
-	  repository classes explained above.
+  * ``repositoryClass`` can be left out, if you follow the naming rules for your
+    repository classes explained above.
 
 * ``Table``
 
-	* ``name`` does not default to the unqualified entity classname, but a name is generated
-	  from classname, package key and more elements to make it unique.
+  * ``name`` does not default to the unqualified entity classname, but a name is generated
+    from classname, package key and more elements to make it unique.
 
 * ``Id``
 
-	* Can be left out, as it is automatically generated, this means you also do not need
-	  ``@GeneratedValue``. Every entity will get a property injected that is filled with
-	  an UUID upon instantiation and used as technical identifier.
-	* If an ``@Id`` annotation is found, it is of course used as is and no magic will happen.
+  * Can be left out, as it is automatically generated, this means you also do not need
+    ``@GeneratedValue``. Every entity will get a property injected that is filled with
+    an UUID upon instantiation and used as technical identifier.
+  * If an ``@Id`` annotation is found, it is of course used as is and no magic will happen.
 
 * ``Column``
 
-	Can usually be left out altogether, as the vital *type* information can be read from
-	the ``@var`` annotation on a class member.
+  * Can usually be left out altogether, as the vital *type* information can be read from
+    the ``@var`` annotation on a class member.
 
-	.. important::
-
-		Since PHP does not differentiate between short and long strings, but databases do,
-		you must use ``@Column(type="text")`` if you intend to store more than 255
-		characters in a string property.
+    .. important::
+      Since PHP does not differentiate between short and long strings, but databases do,
+      you must use ``@Column(type="text")`` if you intend to store more than 255
+      characters in a string property.
 
 * ``OneToOne``
 * ``OneToMany``
 * ``ManyToOne``
 * ``ManyToMany``
 
-	* ``targetEntity`` can be omitted, it is read from the ``@var`` annotation on the property
+  * ``targetEntity`` can be omitted, it is read from the ``@var`` annotation on the property
 
 * ``JoinTable``
 * ``JoinColumn``
 
-	* Can usually be left out completely, the needed information is gathered automatically
+  * Can usually be left out completely, the needed information is gathered automatically
+  * But *when using a self-referencing association*, you will need to help FLOW3 a
+    little, so it doesn't generate a join table with only one column.
 
-	* But *when using a self-referencing association*, you will need to help FLOW3 a
-	  little, so it doesn't generate a join table with only one column. Here is an
-	  example:
+    *Example: JoinTable annotation for a self-referencing annotation*::
 
-		*Example: JoinTable annotation for a self-referencing annotation*::
+		/**
+		 * @var \Doctrine\Common\Collections\ArrayCollection<\TYPO3\Blog\Domain\Model\Post>
+		 * @ORM\ManyToMany
+		 * @ORM\JoinTable(inverseJoinColumns={@ORM\JoinColumn(name="related_id")})
+		 */
+		 protected $relatedPosts;
 
-			/**
-			 * @var \Doctrine\Common\Collections\ArrayCollection<\TYPO3\Blog\Domain\Model\Post>
-			 * @ORM\ManyToMany
-			 * @ORM\JoinTable(inverseJoinColumns={@ORM\JoinColumn(name="related_id")})
-			 */
-			protected $relatedPosts;
-
-		Without this, the created table would not  contain two columns but only one, named
-		after the identifiers of the associated entities - which is the same in this case.
-
+	Without this, the created table would not  contain two columns but only one, named
+	after the identifiers of the associated entities - which is the same in this case.
 
 * ``DiscriminatorColumn``
 * ``DiscriminatorMap``
 
-	* Can be left out, as they are automatically generated.
+  * Can be left out, as they are automatically generated.
 
 The generation of this metadata is slightly more expensive compared to the plain Doctrine
 ``AnnotationDriver``, but since this information can be cached after being generated once,
@@ -834,17 +830,17 @@ home-brewn ORM.
 When your target is not a relational database, things look slightly different, which is
 why the "old" code is still available for use, primarily by alternative backends like the
 ones for CouchDB or Solr, that are available. Using the Generic persistence layer to
-target a RDBMS is still possible, but probably only useful for rare egde cases.
+target a RDBMS is still possible, but probably only useful for rare edge cases.
 
 Switching to Generic Persistence
 --------------------------------
 
 To switch back to Generic persistence on SQLite using PDO you need to configure FLOW3 like
-this:
+this.
+
+*Objects.yaml*:
 
 .. code-block:: yaml
-
-	# this needs to go into Objects.yaml
 
 	TYPO3\FLOW3\Persistence\PersistenceManagerInterface:
 	  className: 'TYPO3\FLOW3\Persistence\Generic\PersistenceManager'
@@ -853,12 +849,14 @@ this:
 	  scope: prototype
 	  className: 'TYPO3\FLOW3\Persistence\Generic\QueryResult'
 
-.. code-block:: yaml
+*Settings.yaml*:
 
-	# this needs to go into Settings.yaml
+.. code-block:: yaml
 
 	FLOW3:
 	  persistence:
+	    doctrine:
+	      enable: false
 	    backendOptions:
 	      dataSourceName: 'sqlite:%FLOW3_PATH_DATA%Persistent/Objects.db'
 	      username: ''
