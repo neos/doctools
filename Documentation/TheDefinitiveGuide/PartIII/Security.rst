@@ -24,7 +24,7 @@ following value in *Settings.yaml* configuration file:
 
 .. code-block:: yaml
 
-	FLOW3: security: enable: yes
+	FLOW3: security: enable: TRUE
 
 If set to "yes", which is the default, the security framework engages with FLOW3
 by vowing in two AOP advices into the MVC dispatcher and another two into the
@@ -752,7 +752,7 @@ firewall configuration will look like:
 	  FLOW3:
 	    security:
 	      firewall:
-	        rejectAll: n
+	        rejectAll: FALSE
 
 	        filters:
 	          -

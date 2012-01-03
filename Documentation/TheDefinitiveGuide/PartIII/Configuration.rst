@@ -194,7 +194,7 @@ This feature can be configured through a switch in the *Settings.yaml* file:
 	TYPO3:
 	  FLOW3:
 	    configuration:
-	      compileConfigurationFiles: y
+	      compileConfigurationFiles: TRUE
 
 When enabled, the configuration manager will compile all loaded configuration into a PHP
 file which will be loaded in subsequent calls instead of parsing the YAML files again.
