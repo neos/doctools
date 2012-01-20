@@ -128,6 +128,11 @@ class DocumentationCommandController extends \TYPO3\FLOW3\MVC\Controller\Command
 			$this->quit(1);
 		}
 
+		if (!is_dir($renderedDocumentationRootPath)) {
+			$this->outputLine('The folder "%s" does not exist. Did you render the documentation?', array($renderedDocumentationRootPath));
+			$this->quit(1);
+		}
+
 		$unorderedJsonFileNames = \TYPO3\FLOW3\Utility\Files::readDirectoryRecursively($renderedDocumentationRootPath, '.fjson');
 		if ($unorderedJsonFileNames === array()) {
 			$this->outputLine('The folder "%s" contains no fjson files. Did you render the documentation?', array($renderedDocumentationRootPath));
