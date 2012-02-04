@@ -17,7 +17,6 @@ use TYPO3\FLOW3\Annotations as FLOW3;
 class DocumentationCommandController extends \TYPO3\FLOW3\MVC\Controller\CommandController {
 
 	/**
-	 * @FLOW3\Inject
 	 * @var \TYPO3\TYPO3\Domain\Repository\SiteRepository
 	 */
 	protected $siteRepository;
@@ -52,6 +51,14 @@ class DocumentationCommandController extends \TYPO3\FLOW3\MVC\Controller\Command
 	 */
 	public function injectSettings(array $settings) {
 		$this->settings = $settings;
+	}
+
+	/**
+	 * @param \TYPO3\TYPO3\Domain\Repository\SiteRepository $siteRepository
+	 * @return void
+	 */
+	public function injectSiteRepository(\TYPO3\TYPO3\Domain\Repository\SiteRepository $siteRepository) {
+		$this->siteRepository = $siteRepository;
 	}
 
 	/**

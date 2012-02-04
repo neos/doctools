@@ -16,3 +16,15 @@ Documentation:
 #      importRootNodePath: 'documentation/quickstart'
 #      documentationRootPath: %FLOW3_PATH_PACKAGES%Documentation/Documentation/Documentation/Quickstart
 #      renderedDocumentationRootPath: %FLOW3_PATH_DATA%Temporary/Documentation/Quickstart
+  references:
+    FluidViewHelpers:
+      title: 'Fluid ViewHelper Reference'
+      savePathAndFilename: '%FLOW3_PATH_PACKAGES%Documentation/Documentation/Documentation/TheDefinitiveGuide/PartV/FluidViewHelperReference.rst'
+      affectedClasses:
+        parentClassName: 'TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper'
+        classNamePattern: '/^TYPO3\\Fluid\\ViewHelpers\\.*$/i'
+      parser:
+        implementationClassName: 'Documentation\Domain\Service\FluidViewHelperClassParser'
+        options:
+          namespaces:
+            f: 'TYPO3\Fluid\ViewHelpers'
