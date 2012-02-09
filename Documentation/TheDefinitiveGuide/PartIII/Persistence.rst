@@ -856,7 +856,7 @@ this.
 	FLOW3:
 	  persistence:
 	    doctrine:
-	      enable: false
+	      enable: FALSE
 	    backendOptions:
 	      dataSourceName: 'sqlite:%FLOW3_PATH_DATA%Persistent/Objects.db'
 	      username: ''

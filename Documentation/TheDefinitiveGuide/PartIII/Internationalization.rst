@@ -217,32 +217,35 @@ into the ``Translator``.
 Fluid Viewhelper
 ----------------
 
-There is a ``TranslateViewHelper`` for Fluid. It covers all ``Translator`` features: it supports both translation modes, plural forms, and placeholders. In the simplest case, the ``TranslateViewHelper`` can be used like this:
+There is a ``TranslateViewHelper`` for Fluid. It covers all ``Translator`` 
+features: it supports both translation modes, plural forms, and placeholders. 
+In the simplest case, the ``TranslateViewHelper`` can be used like this:
 
 .. code-block:: xml
 
-  <f:translate>Untranslated label</f:translate>
+  <f:translate id="label.id"/>
 
-It will output translation of "*Untranslated label*".
+It will output the translation with the ID "label.id" (corresponding to the 
+trans-unit id in XLIFF files).
 
 The ``TranslateViewHelper`` also accepts all optional parameters the ``Translator`` does.
 
 .. code-block:: xml
 
-  <f:translate source="someLabelsCatalog" arguments="{0: 'foo', 1: '99.9'}>Untranslated {0} and {1,number}</f:translate>
+  <f:translate id="label.id" source="someLabelsCatalog" arguments="{0: 'foo', 1: '99.9'}/>
 
 It will translate the label using *someLabelsCatalog*. Then it will insert string casted
 value "*foo*" in place of *{0}* and localized formatted *99.9* in place of *{1,number}*.
 
-Translation by ID can also be done:
+Translation by label is also possible:
 
 .. code-block:: xml
 
-  <f:translate key="user.unregistered">Unregistered User</f:translate>
+  <f:translate>Unregistered User</f:translate>
 
 It will output the translation assigned to *user.unregistered* key.
 
-When the translation for particular message or ID is not found, value placed between
+When the translation for particular label or ID is not found, value placed between
 ``<f:translate>`` and ``</f:translate>`` tags will be displayed.
 
 Localizing resources
@@ -339,7 +342,7 @@ translations.
 
   Localizable data are stored in ``<trans-unit>`` elements. The ``<trans-unit>`` contains
   a ``<source>`` element to store the source text and a (non-mandatory) ``<target>``
-  element to store the latest translated text.
+  element to store the translated text.
 
 File locations and naming
 -------------------------
@@ -374,7 +377,7 @@ need to write them yourself. A minimal XLIFF file looks like this:
 
 	<?xml version="1.0"?>
 	<xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
-		<file original="" source-language="en" datatype="plaintext">
+		<file original="" source-language="da" target-language="fr" datatype="plaintext">
 			<body>
 				<trans-unit id="danish.celebrity">
 					<source>Skarhøj</source>
@@ -393,6 +396,28 @@ the files you are working on.
   against the currently needed locale and use the ``<source>`` element if no ``<target>``
   element is found. This eliminates the need to duplicate messages in catalogs where
   source and target language are the same.
+
+  But you may stil ask yourself *do I really need to duplicate all the strings 
+  in XLIFF files?* The answer is *you should*. Using target allows to fix typos 
+  or change wording without breaking translation by label for all other languages.
+
+Labels may contain placeholders to be replaced with given arguments during
+output. Earlier we saw an example use of the TranslateViewHelper:
+
+.. code-block:: xml
+
+  <f:translate id="label.id" arguments="{0: 'foo', 1: '99.9'}/>
+
+The corresponding XLIFF files will contain placeholders in the source and target strings:
+
+.. code-block:: xml
+
+	<trans-unit id="some.label">
+		<source>Untranslated {0} and {1,number}</source>
+		<target>Übersetzung mit {1,number} und {0}</target>
+	</trans-unit>
+
+As you can see, placeholders may be reordered in translations if needed.
 
 XLIFF file translation
 ----------------------

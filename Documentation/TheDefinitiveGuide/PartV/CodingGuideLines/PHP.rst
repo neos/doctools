@@ -487,7 +487,7 @@ The syntax is as follows:
 
 .. code-block:: text
 
- [~TASK] FLOW3 (MVC): Short (50 chars or less) summary of changes
+ [TASK] FLOW3 (MVC): Short (50 chars or less) summary of changes
 
  More detailed explanatory text, if necessary.  Wrap it to about 72
  characters or so.  In some contexts, the first line is treated as the
