@@ -80,8 +80,8 @@ need to write tons of XML, a few annotations in your code are enough:
 
 	    /**
 	     * @var string
-	     * @FLOW3\validate(type="Text")
-	     * @FLOW3\Validate("type="StringLength", options={ "minimum"=1, "maximum"=80 })
+	     * @FLOW3\Validate(type="Text")
+	     * @FLOW3\Validate(type="StringLength", options={ "minimum"=1, "maximum"=80 })
 	     * @ORM\Column(length=80)
 	     */
 	    protected $title;

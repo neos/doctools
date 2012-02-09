@@ -18,7 +18,7 @@ databases and think only in terms of objects.
     If you want to follow the example closely or to peek at the final code,
     check the *CheatSheet* folder.
 
-    It contains everyting explained in this tutorial, and more. To be on the
+    It contains everything explained in this tutorial, and more. To be on the
     safe side, do not copy the code explained here into new files, but rather
     copy the needed files from there to "your" sandbox project.
 

@@ -97,7 +97,7 @@ validation errors. Just add the ``<f:form.errors>`` view helper to your
 	<f:section name="mainbox">
 		<h2 class="flow3-firstHeader">Create a new post</h2>
 		<f:flashMessages class="flashmessages"/>
-		<f:form.validationResults for="post">
+		<f:form.validationResults for="newPost">
 			<f:if condition="{validationResults.flattenedErrors}">
 				<div class="error">
 					<f:for each="{validationResults.flattenedErrors}" key="propertyPath" as="errors">{propertyPath}: <f:for each="{errors}" as="error">{error}</f:for></f:for>

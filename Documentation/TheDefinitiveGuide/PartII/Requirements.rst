@@ -18,8 +18,8 @@ haven't really tested them). Please make sure that the
 `mod_rewrite <http://httpd.apache.org/docs/2.3/mod/mod_rewrite.html>`_ module is
 enabled.
 
-FLOW3's persistence mechanism requires a `PDO compatible database <http://php.net/manual/pdo.drivers.php>`_.
-By default we use MySQL.
+FLOW3's persistence mechanism requires a `database supported by Doctrine DBAL 
+<http://www.doctrine-project.org/projects/dbal>`_.
 
 PHP
 ===
@@ -33,6 +33,12 @@ with FLOW3 but it doesn't hurt checking if the PHP modules ``mbstring``, ``token
 and ``pdo_sqlite`` are enabled, especially if you compiled PHP yourself.
 You should (not only because of FLOW3) turn off magic quotes in your *php.ini*
 (``magic_quotes_gpc = off``).
+
+.. note::
+
+  Make sure the PHP functions ``system()``, ``shell_exec()``, 
+  ``escapeshellcmd()`` and ``escapeshellarg()`` are not disabled in you PHP 
+  installation. They are required for the system to run.
 
 The development context might need more than the default amount of memory.
 At least during development you should raise the memory limit to about 250 MB
