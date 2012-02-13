@@ -29,8 +29,8 @@ other features introduced in PHP version 5.3. So, make sure you have PHP 5.3.2 o
 available on your web server. Make sure your PHP CLI binary is the same version!
 
 The default settings and extensions of the PHP distribution should work fine
-with FLOW3 but it doesn't hurt checking if the PHP modules ``mbstring`` and
-``pdo_sqlite`` are enabled, especially if you compiled PHP yourself.
+with FLOW3 but it doesn't hurt checking if the PHP modules ``mbstring``, ``tokenizer``
+and ``pdo_sqlite`` are enabled, especially if you compiled PHP yourself.
 You should (not only because of FLOW3) turn off magic quotes in your *php.ini*
 (``magic_quotes_gpc = off``).
 
