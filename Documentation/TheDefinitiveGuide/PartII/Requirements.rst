@@ -18,6 +18,14 @@ haven't really tested them). Please make sure that the
 `mod_rewrite <http://httpd.apache.org/docs/2.3/mod/mod_rewrite.html>`_ module is
 enabled.
 
+.. tip::
+
+	To enable FLOW3 to create symlinks on Windows Server 2008 and higher you need
+	to do some extra configuration. In IIS you need to configure `Authentication` for
+	your site configuration to use a specific user in the `Anonymous Authentication`
+	setting. The configured user should also be allowed to create symlinks using the
+	local security policy `Local Policies > User Rights Assignments > Create symbolic links`
+
 FLOW3's persistence mechanism requires a `database supported by Doctrine DBAL 
 <http://www.doctrine-project.org/projects/dbal>`_.
 
