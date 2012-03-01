@@ -299,10 +299,10 @@ class DocumentationCommandController extends \TYPO3\FLOW3\MVC\Controller\Command
 			if ($image->getWidth() > $configuration['imageMaxWidth'] || $image->getHeight() > $configuration['imageMaxHeight']) {
 				$image = $image->getThumbnail($configuration['imageMaxWidth'], $configuration['imageMaxHeight']);
 			}
-			$imageUri = '_Resources/' . $resourcePublisher->publishPersistentResource($image->getResource());
+			$imageUri = $resourcePublisher->publishPersistentResource($image->getResource());
 			if ($image->getWidth() > $configuration['thumbnailMaxWidth'] || $image->getHeight() > $configuration['thumbnailMaxHeight']) {
 				$thumbnail = $image->getThumbnail(710, 800);
-				$thumbnailUri = '_Resources/' . $resourcePublisher->getPersistentResourceWebUri($thumbnail->getResource());
+				$thumbnailUri = $resourcePublisher->getPersistentResourceWebUri($thumbnail->getResource());
 				return sprintf('<a href="%s" class="lightbox">%s%s" style="width: %dpx" /></a>', $imageUri, $matches[1], $thumbnailUri, $thumbnail->getWidth());
 			} else {
 				return sprintf('%s%s" style="width: %dpx" />', $matches[1], $imageUri, $image->getWidth());
