@@ -154,7 +154,7 @@ class DocumentationCommandController extends \TYPO3\FLOW3\MVC\Controller\Command
 
 				$indexArray = json_decode(file_get_contents($jsonPathAndFileName), TRUE);
 				foreach (explode(chr(10), $indexArray['body']) as $tocHtmlLine) {
-					preg_match('!^\<li class="toctree-l1"\>\<a class="reference internal" href="\.\./([a-zA-Z0-9]+)/.*$!', $tocHtmlLine, $matches);
+					preg_match('!^\<li class="toctree-l1"\>\<a class="reference internal" href="\.\./([a-zA-Z0-9-]+)/.*$!', $tocHtmlLine, $matches);
 					if ($matches !== array()) {
 						$orderedNodePaths[] = $this->normalizeNodePath($chapterRelativeNodePath . $matches[1]);
 					}
