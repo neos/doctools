@@ -251,10 +251,20 @@ class DocumentationCommandController extends \TYPO3\FLOW3\MVC\Controller\Command
 	protected function replaceRelativeLinks($bodyText, $relativeNodePath) {
 		$self = $this;
 		$configuration = $this->bundleConfiguration;
-		$bodyText = preg_replace_callback('/(<a .*?href=")\.\.\/([^#"]*)/', function($matches) use($self, $configuration, $relativeNodePath) {
+		$bodyText = preg_replace_callback('/(<a .*?href=")(?!.*:\/\/)([^#"]*)/', function($matches) use($self, $configuration, $relativeNodePath) {
+			if ($matches[2] === '') {
+				return $matches[1];
+			}
+			$nodePathSegments = explode('/', $relativeNodePath);
+			array_pop($nodePathSegments);
 			$path = $self->normalizeNodePath($matches[2]);
-			$path = \TYPO3\FLOW3\Utility\Files::concatenatePaths(array($configuration['importRootNodePath'], $relativeNodePath , $path));
-			$path = '/' . trim($path, '/') . '.html';
+
+			$path = rtrim($path, '/') . '.html';
+			$pathSegments = $nodePathSegments + explode('/', $path);
+			while (current($pathSegments) === '..') {
+				array_shift($pathSegments);
+			}
+			$path = \TYPO3\FLOW3\Utility\Files::concatenatePaths(array($configuration['importRootNodePath'], implode('/', $pathSegments)));
 			$path = str_replace('/index.html', '.html', $path);
 			return $matches[1] . $path;
 		} , $bodyText);
