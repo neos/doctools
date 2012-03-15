@@ -81,11 +81,11 @@ are set accordingly.
 We recommend setting ownership of directories and files to the web server's
 group. All users who also need to launch FLOW3 must also be added this group.
 But don't worry, this is simply done by changing to the FLOW3 base directory
-and calling the following command:
+and calling the following command (this command must be called as super user):
 
 .. code-block:: none
 
-	./flow3 core:setfilepermissions john www-data www-data
+	sudo ./flow3 core:setfilepermissions john www-data www-data
 
 .. note::
 
