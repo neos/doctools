@@ -26,7 +26,7 @@ enabled.
 	setting. The configured user should also be allowed to create symlinks using the
 	local security policy `Local Policies > User Rights Assignments > Create symbolic links`
 
-FLOW3's persistence mechanism requires a `database supported by Doctrine DBAL 
+FLOW3's persistence mechanism requires a `database supported by Doctrine DBAL
 <http://www.doctrine-project.org/projects/dbal>`_.
 
 PHP
@@ -38,14 +38,14 @@ available on your web server. Make sure your PHP CLI binary is the same version!
 
 The default settings and extensions of the PHP distribution should work fine
 with FLOW3 but it doesn't hurt checking if the PHP modules ``mbstring``, ``tokenizer``
-and ``pdo_sqlite`` are enabled, especially if you compiled PHP yourself.
+and ``pdo_mysql`` are enabled, especially if you compiled PHP yourself.
 You should (not only because of FLOW3) turn off magic quotes in your *php.ini*
 (``magic_quotes_gpc = off``).
 
 .. note::
 
-  Make sure the PHP functions ``system()``, ``shell_exec()``, 
-  ``escapeshellcmd()`` and ``escapeshellarg()`` are not disabled in you PHP 
+  Make sure the PHP functions ``system()``, ``shell_exec()``,
+  ``escapeshellcmd()`` and ``escapeshellarg()`` are not disabled in you PHP
   installation. They are required for the system to run.
 
 The development context might need more than the default amount of memory.
