@@ -43,7 +43,7 @@ domain, focussing on the important properties, and leaving out
 unimportant ones.
 
 In the following sections, some core components of Domain-Driven
-Design are explained. It starts with an approach to create an ubiquitous
+Design are explained. It starts with an approach to create a ubiquitous
 language, and then focuses on the technical realization of the domain
 model. After that, it is quickly explained how FLOW3 enables
 Domain-Driven Design, such that the reader gets a more practical
@@ -53,7 +53,7 @@ We do not explain all details of Domain-Driven Design in this
 work, as only parts of it are important for the general understanding
 needed for this work. More information can be found at [Evans].
 
-Creating an Ubiquitous Language
+Creating a Ubiquitous Language
 -------------------------------
 
 In a typical enterprise software project, a multitude of
@@ -71,7 +71,7 @@ certain technologies, they often are no experts in the problem domain.
 Now, developers and domain experts speak a very different language,
 and misconceptions happen very often.
 
-To reduce miscommunication, an *ubiquitous
+To reduce miscommunication, a *ubiquitous
 language* should be formed, in which key terms of the
 problem domain are described in a language understandable to both the
 domain expert and the developer. Thus, the developers learn to use the
