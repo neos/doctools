@@ -1,38 +1,40 @@
-FLOW3 Documentation
-===================
+TYPO3.DocTools Documentation
+============================
 
-.. note::
+INSTALLATION
+------------
 
-	This documentation is still incomplete and has rough edges – it's a beta version.
-	While we're working on it, we'd already love to get your feedback! Please share
-	your thoughts in the `FLOW3 mailing list <http://lists.typo3.org/cgi-bin/mailman/listinfo/typo3-project-5_0-general>`_
-	or the #FLOW3 channel on irc.freenode.net
+We need *Sphinx* (http://sphinx.pocoo.org/) to render documentation.
+If you have python easy_install available, use the following command: ::
 
-	Help is always greatly appreciated, read :ref:`ch-contributing` to find out how
-	you can improve FLOW3.
+	easy_install -U Sphinx
 
-.. tip:: You can also use the left and right arrow keys to jump to the previous or next chapter.
+Bundles
+-------
 
-Quickstart
-----------
+The DocTools package renders based on bundle configurations like ::
 
-Get a first overview and a working example within 15 minutes: :doc:`Quickstart
-<Quickstart/Index>`
+	TYPO3:
+	  DocTools:
+	    bundles:
+	      TYPO3DocToolsHtml:
+	        documentationRootPath: %FLOW3_PATH_PACKAGES%Documentation/TYPO3.DocTools/Documentation/
+	        configurationRootPath: %FLOW3_PATH_PACKAGES%Documentation/TYPO3.DocTools/Resources/Private/Themes/TYPO3/
+	        renderedDocumentationRootPath: %FLOW3_PATH_DATA%Temporary/Documentation/TYPO3.DocTools/
+	        renderingOutputFormat: 'html'
+	      ImportToAPhoenixSite:
+	        importRootNodePath: 'documentation/quickstart'
+	        documentationRootPath: %FLOW3_PATH_PACKAGES%Documentation/TYPO3.DocTools/Documentation/
+	        configurationRootPath: %FLOW3_PATH_PACKAGES%Documentation/TYPO3.DocTools/Resources/Private/Themes/TYPO3/
+	        renderedDocumentationRootPath: %FLOW3_PATH_DATA%Temporary/Documentation/TYPO3.DocTools/
 
-.. toctree::
-	:hidden:
+Those bundles can be rendered by the following command ::
 
-	Quickstart/Index
+	./flow3 documentation:render [--bundle <bundle>]
 
-The Definitive Guide
---------------------
+An import to a Phoenix website can be executed using ::
 
-The Hitchhiker's Guide to FLOW3 and comprehensive almanac:
-
-.. toctree::
-	:maxdepth: 2
-
-	TheDefinitiveGuide/Index
+	./flow3 documentation:import [--bundle <bundle>]
 
 TYPO3 Publication Style Guide
 -----------------------------
@@ -43,3 +45,11 @@ A style guide giving advice on how to write for the TYPO3 project.
 	:maxdepth: 2
 
 	StyleGuide/Index
+
+Contributing to the Documentation
+---------------------------------
+
+.. toctree::
+	:maxdepth: 2
+
+	Contributing

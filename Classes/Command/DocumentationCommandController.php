@@ -148,8 +148,10 @@ class DocumentationCommandController extends \TYPO3\FLOW3\MVC\Controller\Command
 				$this->quit(1);
 			}
 			$this->bundleConfiguration = \TYPO3\FLOW3\Utility\Arrays::arrayMergeRecursiveOverrule($defaultConfiguration, $this->settings['bundles'][$bundle]);
-			$this->importBundle($bundle);
-			$this->outputLine('---');
+			if (isset($this->bundleConfiguration['importRootNodePath'])) {
+				$this->importBundle($bundle);
+				$this->outputLine('---');
+			}
 		}
 		$this->outputLine('Done');
 	}
