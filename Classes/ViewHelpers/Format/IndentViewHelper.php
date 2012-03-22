@@ -1,8 +1,8 @@
 <?php
-namespace Documentation\ViewHelpers\Format;
+namespace TYPO3\DocTools\ViewHelpers\Format;
 
 /*                                                                        *
- * This script belongs to the FLOW3 package "Documentation".              *
+ * This script belongs to the FLOW3 package "TYPO3.DocTools".             *
  *                                                                        *
  * It is free software; you can redistribute it and/or modify it under    *
  * the terms of the GNU Lesser General Public License, either version 3   *

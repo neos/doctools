@@ -1,8 +1,8 @@
 <?php
-namespace Documentation\Domain\Service;
+namespace TYPO3\DocTools\Domain\Service;
 
 /*                                                                        *
- * This script belongs to the FLOW3 package "Documentation".              *
+ * This script belongs to the FLOW3 package "TYPO3.DocTools".             *
  *                                                                        *
  *                                                                        *
  */
