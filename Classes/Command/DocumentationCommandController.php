@@ -108,7 +108,7 @@ class DocumentationCommandController extends \TYPO3\FLOW3\MVC\Controller\Command
 
 			exec($renderCommand, $output, $result);
 			if ($result !== 0) {
-				$this->output('Could not execute sphinx-build command for Bundle %s', array($bundle));
+				$this->output('Could not execute sphinx-build command for Bundle %s. Tried to execute: "%s"', array($bundle, $renderCommand));
 				$this->quit(1);
 			}
 		}
