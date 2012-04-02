@@ -9,11 +9,28 @@ TYPO3:
       imageMaxHeight: 1000
       thumbnailMaxWidth: 710
       thumbnailMaxHeight: 800
-      configurationRootPath: %FLOW3_PATH_PACKAGES%Documentation/TYPO3.DocTools/Configuration
-      #imageRootPath: %FLOW3_PATH_PACKAGES%Documentation/TYPO3.DocTools/Documentation/Images
+
     bundles:
       TYPO3DocToolsHtml:
-        documentationRootPath: %FLOW3_PATH_PACKAGES%Documentation/TYPO3.DocTools/Documentation/
-        configurationRootPath: %FLOW3_PATH_PACKAGES%Documentation/TYPO3.DocTools/Resources/Private/Themes/TYPO3/
+        documentationRootPath: %FLOW3_PATH_PACKAGES%Application/TYPO3.DocTools/Documentation/
+        configurationRootPath: %FLOW3_PATH_PACKAGES%Application/TYPO3.DocTools/Resources/Private/Themes/TYPO3/
         renderedDocumentationRootPath: %FLOW3_PATH_DATA%Temporary/Documentation/TYPO3.DocTools/
         renderingOutputFormat: 'html'
+
+      Quickstart:
+        documentationRootPath: %FLOW3_PATH_PACKAGES%Framework/TYPO3.FLOW3/Documentation/Quickstart
+        configurationRootPath: %FLOW3_PATH_PACKAGES%Application/TYPO3.DocTools/Resources/Private/Themes/FLOW3/
+        renderedDocumentationRootPath: %FLOW3_PATH_DATA%Temporary/Documentation/Quickstart/
+        imageRootPath: %FLOW3_PATH_DATA%Temporary/Documentation/Quickstart/_images/
+
+      TheDefinitiveGuide:
+        documentationRootPath: %FLOW3_PATH_PACKAGES%Framework/TYPO3.FLOW3/Documentation/TheDefinitiveGuide
+        configurationRootPath: %FLOW3_PATH_PACKAGES%Application/TYPO3.DocTools/Resources/Private/Themes/FLOW3/
+        renderedDocumentationRootPath: %FLOW3_PATH_DATA%Temporary/Documentation/TheDefinitiveGuide/
+        imageRootPath: %FLOW3_PATH_DATA%Temporary/Documentation/TheDefinitiveGuide/_images/
+
+      CodingGuidelines:
+        documentationRootPath: %FLOW3_PATH_PACKAGES%Framework/TYPO3.FLOW3/Documentation/TheDefinitiveGuide/PartV/CodingGuideLines
+        configurationRootPath: %FLOW3_PATH_PACKAGES%Application/TYPO3.DocTools/Resources/Private/Themes/FLOW3/
+        renderedDocumentationRootPath: %FLOW3_PATH_DATA%Temporary/Documentation/TheDefinitiveGuide/PartV/CodingGuidelines
+        imageRootPath: %FLOW3_PATH_DATA%Temporary/Documentation/TheDefinitiveGuide/_images/

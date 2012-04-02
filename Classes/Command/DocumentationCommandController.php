@@ -73,7 +73,7 @@ class DocumentationCommandController extends \TYPO3\FLOW3\MVC\Controller\Command
 	 * @param string $format optional output format to be used
 	 * @return void
 	 */
-	public function renderCommand($bundle = NULL, $format = 'json') {
+	public function renderCommand($bundle = NULL, $format = NULL) {
 		$bundles = $bundle !== NULL ? array($bundle) : array_keys($this->settings['bundles']);
 		$defaultConfiguration = isset($this->settings['defaultConfiguration']) ? $this->settings['defaultConfiguration'] : array();
 		if ($bundles === array()) {
@@ -87,15 +87,16 @@ class DocumentationCommandController extends \TYPO3\FLOW3\MVC\Controller\Command
 			}
 			$configuration = \TYPO3\FLOW3\Utility\Arrays::arrayMergeRecursiveOverrule($defaultConfiguration, $this->settings['bundles'][$bundle]);
 
-			$outputFormat = 'json';
-			if ($format === NULL && isset($configuration['renderingOutputFormat'])) {
-				$format = $configuration['renderingOutputFormat'];
+			$outputFormat = $format;
+			if ($outputFormat === NULL && isset($configuration['renderingOutputFormat'])) {
+				$outputFormat = $configuration['renderingOutputFormat'];
+			} elseif ($outputFormat === NULL) {
+				$outputFormat = 'json';
 			}
-			if ($format !== NULL && !in_array($format, $this->supportedOutputFormats)) {
-				$this->outputLine('Output format ' . $format . ' is not supported. Choose one of the following: ' . implode(', ', $this->supportedOutputFormats));
+
+			if ($outputFormat === NULL || !in_array($outputFormat, $this->supportedOutputFormats)) {
+				$this->outputLine('ERROR: Output format "' . $outputFormat . '" is not supported. Choose one of the following: ' . implode(', ', $this->supportedOutputFormats));
 				continue;
-			} elseif ($format !== NULL) {
-				$outputFormat = $format;
 			}
 
 			$this->outputLine('Rendering bundle "%s" with format %s', array($bundle, $outputFormat));
