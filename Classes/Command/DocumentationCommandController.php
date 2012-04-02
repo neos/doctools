@@ -86,6 +86,10 @@ class DocumentationCommandController extends \TYPO3\FLOW3\MVC\Controller\Command
 				$this->quit(1);
 			}
 			$configuration = \TYPO3\FLOW3\Utility\Arrays::arrayMergeRecursiveOverrule($defaultConfiguration, $this->settings['bundles'][$bundle]);
+			if ($this->arguments['bundle']->getValue() === NULL && $configuration['renderByDefault'] !== TRUE) {
+				$this->outputLine('Skipping bundle "%s".', array($bundle));
+				continue;
+			}
 
 			$outputFormat = $format;
 			if ($outputFormat === NULL && isset($configuration['renderingOutputFormat'])) {
