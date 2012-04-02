@@ -1,8 +1,8 @@
 <?php
-namespace Documentation\Command;
+namespace TYPO3\DocTools\Command;
 
 /*                                                                        *
- * This script belongs to the FLOW3 package "Documentation".              *
+ * This script belongs to the FLOW3 package "TYPO3.DocTools".             *
  *                                                                        *
  *                                                                        *
  */

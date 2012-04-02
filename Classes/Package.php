@@ -1,5 +1,5 @@
 <?php
-namespace Documentation;
+namespace TYPO3\DocTools;
 
 /*                                                                        *
  * This script belongs to the FLOW3 documentation.                        *

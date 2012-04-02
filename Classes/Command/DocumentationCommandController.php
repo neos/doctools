@@ -1,8 +1,8 @@
 <?php
-namespace Documentation\Command;
+namespace TYPO3\DocTools\Command;
 
 /*                                                                        *
- * This script belongs to the FLOW3 package "Documentation".              *
+ * This script belongs to the FLOW3 package "TYPO3.DocTools".             *
  *                                                                        *
  *                                                                        *
  */
@@ -39,6 +39,11 @@ class DocumentationCommandController extends \TYPO3\FLOW3\MVC\Controller\Command
 	protected $settings;
 
 	/**
+	 * @var array
+	 */
+	protected $supportedOutputFormats = array('json', 'html');
+
+	/**
 	 * Current bundle configuration
 	 *
 	 * @var array
@@ -65,9 +70,10 @@ class DocumentationCommandController extends \TYPO3\FLOW3\MVC\Controller\Command
 	 * Renders reST files to fjson files which can be processed by the import command.
 	 *
 	 * @param string $bundle Bundle to render. If not specified all configured bundles will be rendered
+	 * @param string $format optional output format to be used
 	 * @return void
 	 */
-	public function renderCommand($bundle = NULL) {
+	public function renderCommand($bundle = NULL, $format = 'json') {
 		$bundles = $bundle !== NULL ? array($bundle) : array_keys($this->settings['bundles']);
 		$defaultConfiguration = isset($this->settings['defaultConfiguration']) ? $this->settings['defaultConfiguration'] : array();
 		if ($bundles === array()) {
@@ -80,17 +86,49 @@ class DocumentationCommandController extends \TYPO3\FLOW3\MVC\Controller\Command
 				$this->quit(1);
 			}
 			$configuration = \TYPO3\FLOW3\Utility\Arrays::arrayMergeRecursiveOverrule($defaultConfiguration, $this->settings['bundles'][$bundle]);
-			$this->outputLine('Rendering bundle "%s"', array($bundle));
+
+			$outputFormat = 'json';
+			if ($format === NULL && isset($configuration['renderingOutputFormat'])) {
+				$format = $configuration['renderingOutputFormat'];
+			}
+			if ($format !== NULL && !in_array($format, $this->supportedOutputFormats)) {
+				$this->outputLine('Output format ' . $format . ' is not supported. Choose one of the following: ' . implode(', ', $this->supportedOutputFormats));
+				continue;
+			} elseif ($format !== NULL) {
+				$outputFormat = $format;
+			}
+
+			$this->outputLine('Rendering bundle "%s" with format %s', array($bundle, $outputFormat));
 			if (is_dir($configuration['renderedDocumentationRootPath'])) {
 				\TYPO3\FLOW3\Utility\Files::removeDirectoryRecursively($configuration['renderedDocumentationRootPath']);
 			}
-			$renderCommand = sprintf('sphinx-build -c %s -b json %s %s', escapeshellarg($configuration['configurationRootPath']), escapeshellarg($configuration['documentationRootPath']), escapeshellarg($configuration['renderedDocumentationRootPath']));
+
+			$renderCommand = $this->buildRenderCommand($configuration, $outputFormat);
+
 			exec($renderCommand, $output, $result);
 			if ($result !== 0) {
 				$this->output('Could not execute sphinx-build command for Bundle %s', array($bundle));
 				$this->quit(1);
 			}
 		}
+	}
+
+	/**
+	 * Build the render command for rendering
+	 *
+	 * @param array $configuration
+	 * @param string $format
+	 * @return void
+	 */
+	protected function buildRenderCommand(array $configuration, $format) {
+		$overrideSettings = '';
+		if (!empty($configuration['settings'])) {
+			foreach ($configuration['settings'] as $setting => $value) {
+				$overrideSettings .= sprintf(" -D %s=%s", $setting, escapeshellarg($value));
+			}
+		}
+
+		return sprintf('sphinx-build -c %s -b %s %s %s %s', escapeshellarg($configuration['configurationRootPath']), $format, $overrideSettings, escapeshellarg($configuration['documentationRootPath']), escapeshellarg($configuration['renderedDocumentationRootPath']));
 	}
 
 	/**

@@ -2,29 +2,18 @@
 # Settings                                                               #
 #                                                                        #
 
-Documentation:
-  defaultConfiguration:
-    imageMaxWidth: 1500
-    imageMaxHeight: 1000
-    thumbnailMaxWidth: 710
-    thumbnailMaxHeight: 800
-    configurationRootPath: %FLOW3_PATH_PACKAGES%Documentation/Documentation/Configuration
-    #imageRootPath: %FLOW3_PATH_PACKAGES%Documentation/Documentation/Documentation/Images
-  bundles: []
-#  bundles:
-#    Quickstart:
-#      importRootNodePath: 'documentation/quickstart'
-#      documentationRootPath: %FLOW3_PATH_PACKAGES%Documentation/Documentation/Documentation/Quickstart
-#      renderedDocumentationRootPath: %FLOW3_PATH_DATA%Temporary/Documentation/Quickstart
-  references:
-    FluidViewHelpers:
-      title: 'Fluid ViewHelper Reference'
-      savePathAndFilename: '%FLOW3_PATH_PACKAGES%Documentation/Documentation/Documentation/TheDefinitiveGuide/PartV/FluidViewHelperReference.rst'
-      affectedClasses:
-        parentClassName: 'TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper'
-        classNamePattern: '/^TYPO3\\Fluid\\ViewHelpers\\.*$/i'
-      parser:
-        implementationClassName: 'Documentation\Domain\Service\FluidViewHelperClassParser'
-        options:
-          namespaces:
-            f: 'TYPO3\Fluid\ViewHelpers'
+TYPO3:
+  DocTools:
+    defaultConfiguration:
+      imageMaxWidth: 1500
+      imageMaxHeight: 1000
+      thumbnailMaxWidth: 710
+      thumbnailMaxHeight: 800
+      configurationRootPath: %FLOW3_PATH_PACKAGES%Documentation/TYPO3.DocTools/Configuration
+      #imageRootPath: %FLOW3_PATH_PACKAGES%Documentation/TYPO3.DocTools/Documentation/Images
+    bundles:
+      TYPO3DocToolsHtml:
+        documentationRootPath: %FLOW3_PATH_PACKAGES%Documentation/TYPO3.DocTools/Documentation/
+        configurationRootPath: %FLOW3_PATH_PACKAGES%Documentation/TYPO3.DocTools/Resources/Private/Themes/TYPO3/
+        renderedDocumentationRootPath: %FLOW3_PATH_DATA%Temporary/Documentation/TYPO3.DocTools/
+        renderingOutputFormat: 'html'
