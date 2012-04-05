@@ -27,7 +27,7 @@ Pushing documentation
 Make sure to push to Gerrit, so you need the following configuration:
 
   scp -p -P 29418 [yourusername]@review.typo3.org:hooks/commit-msg .git/hooks/
-  git config remote.origin.pushurl ssh://[yourusername]@review.typo3.org:29418/FLOW3/Documentation.git
+  git config --global url."ssh://[yourusername]@review.typo3.org:29418".pushInsteadOf git://git.typo3.org
   git config remote.origin.push HEAD:refs/for/master
 
 Closing Notes
