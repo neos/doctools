@@ -15,7 +15,7 @@ use TYPO3\FLOW3\Annotations as FLOW3;
  *
  * @FLOW3\Scope("singleton")
  */
-class ReferenceCommandController extends \TYPO3\FLOW3\MVC\Controller\CommandController {
+class ReferenceCommandController extends \TYPO3\FLOW3\Cli\CommandController {
 
 	/**
 	 * @var \TYPO3\FLOW3\Reflection\ReflectionService
