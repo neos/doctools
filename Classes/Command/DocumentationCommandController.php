@@ -17,21 +17,38 @@ use TYPO3\FLOW3\Annotations as FLOW3;
 class DocumentationCommandController extends \TYPO3\FLOW3\Cli\CommandController {
 
 	/**
+	 * @FLOW3\Inject
 	 * @var \TYPO3\TYPO3\Domain\Repository\SiteRepository
 	 */
 	protected $siteRepository;
 
 	/**
 	 * @FLOW3\Inject
-	 * @var TYPO3\FLOW3\Resource\ResourceManager
+	 * @var \TYPO3\TYPO3CR\Domain\Repository\NodeRepository
+	 */
+	protected $nodeRepository;
+
+	/**
+	 * @FLOW3\Inject
+	 * @var \TYPO3\FLOW3\Resource\ResourceManager
 	 */
 	protected $resourceManager;
 
 	/**
 	 * @FLOW3\Inject
-	 * @var TYPO3\FLOW3\Resource\Publishing\ResourcePublisher
+	 * @var \TYPO3\FLOW3\Resource\Publishing\ResourcePublisher
 	 */
 	protected $resourcePublisher;
+
+	/**
+	 * @var \TYPO3\TYPO3\Domain\Model\Site
+	 */
+	protected $currentSite;
+
+	/**
+	 * @var \TYPO3\TYPO3CR\Domain\Model\NodeInterface
+	 */
+	protected $siteNode;
 
 	/**
 	 * @var array
@@ -56,14 +73,6 @@ class DocumentationCommandController extends \TYPO3\FLOW3\Cli\CommandController 
 	 */
 	public function injectSettings(array $settings) {
 		$this->settings = $settings;
-	}
-
-	/**
-	 * @param \TYPO3\TYPO3\Domain\Repository\SiteRepository $siteRepository
-	 * @return void
-	 */
-	public function injectSiteRepository(\TYPO3\TYPO3\Domain\Repository\SiteRepository $siteRepository) {
-		$this->siteRepository = $siteRepository;
 	}
 
 	/**
@@ -123,7 +132,7 @@ class DocumentationCommandController extends \TYPO3\FLOW3\Cli\CommandController 
 	 *
 	 * @param array $configuration
 	 * @param string $format
-	 * @return void
+	 * @return string
 	 */
 	protected function buildRenderCommand(array $configuration, $format) {
 		$overrideSettings = '';
@@ -144,6 +153,12 @@ class DocumentationCommandController extends \TYPO3\FLOW3\Cli\CommandController 
 	 * @return void
 	 */
 	public function importCommand($bundle = NULL) {
+		$contentContext = new \TYPO3\TYPO3\Domain\Service\ContentContext('live');
+		$this->nodeRepository->setContext($contentContext);
+		$contentContext->setInvisibleContentShown(TRUE);
+		$this->currentSite = $contentContext->getCurrentSite();
+		$this->siteNode = $contentContext->getCurrentSiteNode();
+
 		$bundles = $bundle !== NULL ? array($bundle) : array_keys($this->settings['bundles']);
 		$defaultConfiguration = isset($this->settings['defaultConfiguration']) ? $this->settings['defaultConfiguration'] : array();
 
@@ -171,10 +186,7 @@ class DocumentationCommandController extends \TYPO3\FLOW3\Cli\CommandController 
 		$this->outputLine('Importing bundle "%s"', array($bundle));
 		$renderedDocumentationRootPath = rtrim($this->bundleConfiguration['renderedDocumentationRootPath'], '/');
 
-		$contentContext = new \TYPO3\TYPO3\Domain\Service\ContentContext('live');
-		$contentContext->setInvisibleContentShown(TRUE);
-		$siteNode = $contentContext->getCurrentSiteNode();
-		$importRootNode = $siteNode->getNode($this->bundleConfiguration['importRootNodePath']);
+		$importRootNode = $this->siteNode->getNode($this->bundleConfiguration['importRootNodePath']);
 		if ($importRootNode === NULL) {
 			$this->output('ImportRootNode "%s" does not exist!', array($this->bundleConfiguration['importRootNodePath']));
 			$this->quit(1);
@@ -195,7 +207,6 @@ class DocumentationCommandController extends \TYPO3\FLOW3\Cli\CommandController 
 		foreach ($unorderedJsonFileNames as $jsonPathAndFileName) {
 			if(basename($jsonPathAndFileName) === 'Index.fjson') {
 				$chapterRelativeNodePath = substr($jsonPathAndFileName, strlen($renderedDocumentationRootPath), -12) . '/';
-#				$orderedNodePaths[] = $this->normalizeNodePath(substr($chapterRelativeNodePath, 0, -1));
 
 				$indexArray = json_decode(file_get_contents($jsonPathAndFileName), TRUE);
 				foreach (explode(chr(10), $indexArray['body']) as $tocHtmlLine) {
@@ -268,7 +279,7 @@ class DocumentationCommandController extends \TYPO3\FLOW3\Cli\CommandController 
 			}
 		}
 
-		$this->siteRepository->update($contentContext->getCurrentSite());
+		$this->siteRepository->update($this->currentSite);
 	}
 
 	/**
