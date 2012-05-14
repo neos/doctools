@@ -18,15 +18,21 @@ class DocumentationCommandController extends \TYPO3\FLOW3\Cli\CommandController 
 
 	/**
 	 * @FLOW3\Inject
+	 * @var \TYPO3\FLOW3\Object\ObjectManagerInterface
+	 */
+	protected $objectManager;
+
+
+	/**
 	 * @var \TYPO3\TYPO3\Domain\Repository\SiteRepository
 	 */
 	protected $siteRepository;
 
 	/**
-	 * @FLOW3\Inject
 	 * @var \TYPO3\TYPO3CR\Domain\Repository\NodeRepository
 	 */
 	protected $nodeRepository;
+
 
 	/**
 	 * @FLOW3\Inject
@@ -73,6 +79,16 @@ class DocumentationCommandController extends \TYPO3\FLOW3\Cli\CommandController 
 	 */
 	public function injectSettings(array $settings) {
 		$this->settings = $settings;
+	}
+
+	public function initializeObject() {
+		if ($this->objectManager->isRegistered('TYPO3\TYPO3\Domain\Repository\SiteRepository')) {
+			$this->siteRepository = $this->objectManager->get('TYPO3\TYPO3\Domain\Repository\SiteRepository');
+		}
+
+		if ($this->objectManager->isRegistered('TYPO3\TYPO3CR\Domain\Repository\NodeRepository')) {
+			$this->nodeRepository = $this->objectManager->get('TYPO3\TYPO3CR\Domain\Repository\NodeRepository');
+		}
 	}
 
 	/**
