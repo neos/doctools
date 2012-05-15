@@ -36,8 +36,3 @@ TYPO3:
         configurationRootPath: %FLOW3_PATH_PACKAGES%Application/TYPO3.DocTools/Resources/Private/Themes/FLOW3/
         renderedDocumentationRootPath: %FLOW3_PATH_DATA%Temporary/Documentation/TheDefinitiveGuide/PartV/CodingGuidelines
         imageRootPath: %FLOW3_PATH_DATA%Temporary/Documentation/TheDefinitiveGuide/_images/
-
-  Queue:
-    queues:
-      renderDocumentation:
-        className: 'TYPO3\Queue\Beanstalkd\BeanstalkdQueue'
