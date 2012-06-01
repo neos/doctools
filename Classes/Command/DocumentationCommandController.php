@@ -128,14 +128,17 @@ class DocumentationCommandController extends \TYPO3\FLOW3\Cli\CommandController 
 				continue;
 			}
 
-			$this->outputLine('Rendering bundle "%s" with format %s', array($bundle, $outputFormat));
-			if (is_dir($configuration['renderedDocumentationRootPath'])) {
+			$this->outputLine('Rendering bundle <b>%s</b> with format %s into directory %s.', array($bundle, $outputFormat, $configuration['renderedDocumentationRootPath']));
+
+			if (is_dir($configuration['renderedDocumentationRootPath']) && $outputFormat !== 'html') {
 				\TYPO3\FLOW3\Utility\Files::removeDirectoryRecursively($configuration['renderedDocumentationRootPath']);
 			}
 
 			$renderCommand = $this->buildRenderCommand($configuration, $outputFormat);
 
 			exec($renderCommand, $output, $result);
+			$this->outputFormatted(str_replace($configuration['documentationRootPath'], '', implode("\n", $output)), array(), 3);
+
 			if ($result !== 0) {
 				$this->output('Could not execute sphinx-build command for Bundle %s. Tried to execute: "%s"', array($bundle, $renderCommand));
 				$this->quit(1);
@@ -158,7 +161,7 @@ class DocumentationCommandController extends \TYPO3\FLOW3\Cli\CommandController 
 			}
 		}
 
-		return sprintf('sphinx-build -c %s -b %s %s %s %s', escapeshellarg($configuration['configurationRootPath']), $format, $overrideSettings, escapeshellarg($configuration['documentationRootPath']), escapeshellarg($configuration['renderedDocumentationRootPath']));
+		return sprintf('sphinx-build -c %s -b %s %s %s %s 3>&1 1>&2 2>&3', escapeshellarg($configuration['configurationRootPath']), $format, $overrideSettings, escapeshellarg($configuration['documentationRootPath']), escapeshellarg($configuration['renderedDocumentationRootPath']));
 	}
 
 	/**
