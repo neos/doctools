@@ -38,12 +38,12 @@ abstract class AbstractClassParser {
 
 	/**
 	 * @param string $className
-	 * @return \Documentation\Domain\Model\ClassReference
+	 * @return \TYPO3\DocTools\Domain\Model\ClassReference
 	 */
 	final public function parse($className) {
 		$this->className = $className;
 		$this->classReflection = new \TYPO3\FLOW3\Reflection\ClassReflection($this->className);
-		return new \Documentation\Domain\Model\ClassReference($this->parseTitle(), $this->parseDescription(), $this->parseArgumentDefinitions(), $this->parseCodeExamples(), $this->parseDeprecationNote());
+		return new \TYPO3\DocTools\Domain\Model\ClassReference($this->parseTitle(), $this->parseDescription(), $this->parseArgumentDefinitions(), $this->parseCodeExamples(), $this->parseDeprecationNote());
 	}
 
 	/**
@@ -57,12 +57,12 @@ abstract class AbstractClassParser {
 	abstract protected function parseDescription();
 
 	/**
-	 * @return array<\Documentation\Domain\Model\ArgumentDefinition>
+	 * @return array<\TYPO3\DocTools\Domain\Model\ArgumentDefinition>
 	 */
 	abstract protected function parseArgumentDefinitions();
 
 	/**
-	 * @return array<\Documentation\Domain\Model\CodeExample>
+	 * @return array<\TYPO3\DocTools\Domain\Model\CodeExample>
 	 */
 	abstract protected function parseCodeExamples();
 

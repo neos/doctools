@@ -1,4 +1,4 @@
-{namespace d=Documentation\ViewHelpers}{title -> d:format.underline(withCharacter: '=')}
+{namespace d=TYPO3\DocTools\ViewHelpers}{title -> d:format.underline(withCharacter: '=')}
 
 This reference was automatically generated from code on {f:format.date(date: 'now')}
 

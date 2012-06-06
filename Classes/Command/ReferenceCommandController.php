@@ -67,7 +67,7 @@ class ReferenceCommandController extends \TYPO3\FLOW3\Cli\CommandController {
 			$classReferences[$className] = $classParser->parse($className);
 		}
 		$standaloneView = new \TYPO3\Fluid\View\StandaloneView();
-		$templatePathAndFilename = isset($referenceConfiguration['templatePathAndFilename']) ? $referenceConfiguration['templatePathAndFilename'] : 'resource://Documentation/Private/Templates/ClassReferenceTemplate.txt';
+		$templatePathAndFilename = isset($referenceConfiguration['templatePathAndFilename']) ? $referenceConfiguration['templatePathAndFilename'] : 'resource://TYPO3.DocTools/Private/Templates/ClassReferenceTemplate.txt';
 		$standaloneView->setTemplatePathAndFilename($templatePathAndFilename);
 		$standaloneView->assign('title', isset($referenceConfiguration['title']) ? $referenceConfiguration['title'] : $reference);
 		$standaloneView->assign('classReferences', $classReferences);

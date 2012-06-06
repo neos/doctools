@@ -25,12 +25,12 @@ class ClassReference {
 	protected $description;
 
 	/**
-	 * @var array<\Documentation\Domain\Model\ArgumentDefinition>
+	 * @var array<\TYPO3\DocTools\Domain\Model\ArgumentDefinition>
 	 */
 	protected $argumentDefinitions;
 
 	/**
-	 * @var array<\Documentation\Domain\Model\CodeExample>
+	 * @var array<\TYPO3\DocTools\Domain\Model\CodeExample>
 	 */
 	protected $codeExamples;
 
@@ -42,8 +42,8 @@ class ClassReference {
 	/**
 	 * @param string $title
 	 * @param string $description
-	 * @param array<\Documentation\Domain\Model\ArgumentDefinition> $argumentDefinitions
-	 * @param array<\Documentation\Domain\Model\CodeExample> $codeExamples
+	 * @param array<\TYPO3\DocTools\Domain\Model\ArgumentDefinition> $argumentDefinitions
+	 * @param array<\TYPO3\DocTools\Domain\Model\CodeExample> $codeExamples
 	 * @param string $deprecationNote
 	 */
 	public function __construct($title, $description, array $argumentDefinitions, array $codeExamples, $deprecationNote) {
@@ -69,14 +69,14 @@ class ClassReference {
 	}
 
 	/**
-	 * @return array<\Documentation\Domain\Model\ArgumentDefinition>
+	 * @return array<\TYPO3\DocTools\Domain\Model\ArgumentDefinition>
 	 */
 	public function getArgumentDefinitions() {
 		return $this->argumentDefinitions;
 	}
 
 	/**
-	 * @return array<\Documentation\Domain\Model\CodeExample>
+	 * @return array<\TYPO3\DocTools\Domain\Model\CodeExample>
 	 */
 	public function getCodeExamples() {
 		return  $this->codeExamples;

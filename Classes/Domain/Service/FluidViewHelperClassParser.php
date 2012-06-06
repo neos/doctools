@@ -8,8 +8,8 @@ namespace TYPO3\DocTools\Domain\Service;
  */
 
 use TYPO3\FLOW3\Annotations as FLOW3;
-use \Documentation\Domain\Model\CodeExample;
-use \Documentation\Domain\Model\ArgumentDefinition;
+use TYPO3\DocTools\Domain\Model\CodeExample;
+use TYPO3\DocTools\Domain\Model\ArgumentDefinition;
 
 /**
  * @todo document
@@ -51,7 +51,7 @@ class FluidViewHelperClassParser extends AbstractClassParser {
 	}
 
 	/**
-	 * @return array<\Documentation\Domain\Model\ArgumentDefinition>
+	 * @return array<\TYPO3\DocTools\Domain\Model\ArgumentDefinition>
 	 */
 	protected function parseArgumentDefinitions() {
 		$viewHelper = new $this->className;
@@ -64,7 +64,7 @@ class FluidViewHelperClassParser extends AbstractClassParser {
 	}
 
 	/**
-	 * @return array<\Documentation\Domain\Model\CodeExample>
+	 * @return array<\TYPO3\DocTools\Domain\Model\CodeExample>
 	 */
 	protected function parseCodeExamples() {
 		$matches = array();
