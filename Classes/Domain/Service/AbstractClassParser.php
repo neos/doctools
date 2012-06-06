@@ -72,6 +72,8 @@ abstract class AbstractClassParser {
 	protected function parseDeprecationNote() {
 		if ($this->classReflection->isTaggedWith('deprecated')) {
 			return implode(', ', $this->classReflection->getTagValues('deprecated'));
+		} else {
+			return '';
 		}
 	}
 }
