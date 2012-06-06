@@ -137,11 +137,11 @@ class DocumentationCommandController extends \TYPO3\FLOW3\Cli\CommandController 
 			$renderCommand = $this->buildRenderCommand($configuration, $outputFormat);
 
 			exec($renderCommand, $output, $result);
-			$this->outputFormatted(str_replace($configuration['documentationRootPath'], '', implode("\n", $output)), array(), 3);
+			$this->output(str_replace($configuration['documentationRootPath'], '', implode("\n", $output)), array(), 3);
 
 			if ($result !== 0) {
 				$this->output('Could not execute sphinx-build command for Bundle %s. Tried to execute: "%s"', array($bundle, $renderCommand));
-				$this->quit(1);
+				continue;
 			}
 		}
 	}

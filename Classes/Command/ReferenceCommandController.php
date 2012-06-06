@@ -10,8 +10,9 @@ namespace TYPO3\DocTools\Command;
 use TYPO3\FLOW3\Annotations as FLOW3;
 
 /**
- * Reference command controller for the Documentation package
- * Used to create reference documentations for special classes (e.g. Fluid ViewHelpers, FLOW3 Validators, ...)
+ * Reference command controller for the Documentation package.
+ *
+ * Used to create reference documentation for special classes (e.g. Fluid ViewHelpers, FLOW3 Validators, ...)
  *
  * @FLOW3\Scope("singleton")
  */
@@ -37,6 +38,8 @@ class ReferenceCommandController extends \TYPO3\FLOW3\Cli\CommandController {
 	}
 
 	/**
+	 * Renders reference documentation from source code.
+	 *
 	 * @param string $reference to render. If not specified all configured references will be rendered
 	 * @return void
 	 */
@@ -50,6 +53,7 @@ class ReferenceCommandController extends \TYPO3\FLOW3\Cli\CommandController {
 
 	/**
 	 * @param $reference
+	 * @return void
 	 */
 	protected function renderReference($reference) {
 		if (!isset($this->settings['references'][$reference])) {

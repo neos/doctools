@@ -6,29 +6,29 @@ This reference was automatically generated from code on {f:format.date(date: 'no
 <d:format.underline withCharacter="-">{classReference.title}{f:if(condition: classReference.deprecationNote, then: ' (deprecated)')}</d:format.underline>
 
 {classReference.description -> f:format.raw()}
-
 <f:if condition="{classReference.deprecationNote}">
+
 **DEPRECATED** {classReference.deprecationNote}
 </f:if>
-
 <f:if condition="{classReference.argumentDefinitions}">
+
 Arguments
 *********
 <f:for each="{classReference.argumentDefinitions}" as="argument">
 * ``{argument.name}`` ({argument.type}{f:if(condition: argument.required, else: ', *optional*')}): {argument.description -> f:format.raw()}
 </f:for>
 </f:if>
-
 <f:if condition="{classReference.codeExamples}">
+
 Examples
 ********
 <f:for each="{classReference.codeExamples}" as="example">
 **{example.title}**::
 
 {example.code -> d:format.indent() -> f:format.raw()}
-
 <f:if condition="{example.output}">
-Expected result:::
+
+Expected result::
 
 {example.output -> d:format.indent() -> f:format.raw()}
 </f:if>

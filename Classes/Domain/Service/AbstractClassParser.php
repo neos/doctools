@@ -17,7 +17,7 @@ abstract class AbstractClassParser {
 	/**
 	 * @var array
 	 */
-	protected $options = array();
+	protected $options;
 
 	/**
 	 * @var string
@@ -32,7 +32,7 @@ abstract class AbstractClassParser {
 	/**
 	 * @param array $options
 	 */
-	public function __construct(array $options) {
+	public function __construct(array $options = array()) {
 		$this->options = $options;
 	}
 

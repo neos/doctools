@@ -39,8 +39,8 @@ An import to a Phoenix website can be executed using::
 References
 ----------
 
-The DocTools package can also generate references based on source code. An 
-example for that is the Fluid ViewHelper reference in the FLOW3 docmentation. 
+The DocTools package can also generate references based on source code. An
+example for that is the Fluid ViewHelper reference in the FLOW3 docmentation.
 The process is configured like this::
 
   TYPO3:
