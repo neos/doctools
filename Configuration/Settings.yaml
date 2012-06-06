@@ -36,3 +36,16 @@ TYPO3:
         configurationRootPath: %FLOW3_PATH_PACKAGES%Application/TYPO3.DocTools/Resources/Private/Themes/FLOW3/
         renderedDocumentationRootPath: %FLOW3_PATH_DATA%Temporary/Documentation/TheDefinitiveGuide/PartV/CodingGuidelines
         imageRootPath: %FLOW3_PATH_DATA%Temporary/Documentation/TheDefinitiveGuide/_images/
+
+    references:
+      FluidViewHelpers:
+        title: 'Fluid ViewHelper Reference'
+        savePathAndFilename: '%FLOW3_PATH_PACKAGES%Framework/TYPO3.FLOW3/Documentation/TheDefinitiveGuide/PartV/FluidViewHelperReference.rst'
+        affectedClasses:
+          parentClassName: 'TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper'
+          classNamePattern: '/^TYPO3\\Fluid\\ViewHelpers\\.*$/i'
+        parser:
+          implementationClassName: 'TYPO3\DocTools\Domain\Service\FluidViewHelperClassParser'
+          options:
+            namespaces:
+              f: 'TYPO3\Fluid\ViewHelpers'
