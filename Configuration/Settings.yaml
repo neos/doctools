@@ -49,3 +49,11 @@ TYPO3:
           options:
             namespaces:
               f: 'TYPO3\Fluid\ViewHelpers'
+      Flow3Validators:
+        title: 'FLOW3 Validator Reference'
+        savePathAndFilename: '%FLOW3_PATH_PACKAGES%Framework/TYPO3.FLOW3/Documentation/TheDefinitiveGuide/PartV/ValidatorReference.rst'
+        affectedClasses:
+          parentClassName: 'TYPO3\FLOW3\Validation\Validator\AbstractValidator'
+          classNamePattern: '/^TYPO3\\FLOW3\\Validation\\Validator\\.*$/i'
+        parser:
+          implementationClassName: 'TYPO3\DocTools\Domain\Service\Flow3ValidatorClassParser'
