@@ -1,0 +1,54 @@
+{namespace d=TYPO3\DocTools\ViewHelpers}{title -> d:format.underline(withCharacter: '=')}
+
+.. note:
+
+  This reference uses ``./flow3`` as the command to invoke. If you are on
+  Windows, this will probably not work, there you need to use ``flow3.bat``
+  instead.
+
+The commands in this reference are shown with their full command identifiers.
+On your system you can use shorter identifiers, whose availability depends
+on the commands available in total (to avoid overlap the shortest possible
+identifier is determined during runtime).
+
+To see the shortest possible identifiers on your system as well as further
+commands that may be available, use::
+
+  ./flow3 help
+
+The following reference was automatically generated from code on {f:format.date(date: 'now')}
+
+<f:for each="{allCommandsByPackageKey}" as="allCommands" key="packageKey">
+<d:format.underline withCharacter="-">Package *{packageKey}*</d:format.underline>
+
+<f:for each="{allCommands}" as="command">
+<d:format.underline withCharacter="*">``{command.identifier}``</d:format.underline>
+
+**{command.shortDescription}**
+
+{command.description -> f:format.raw()}
+
+<f:if condition="{command.arguments}">Arguments
+^^^^^^^^^
+
+<f:for each="{command.arguments}" key="name" as="description">``{name}``
+  {description -> f:format.raw()}
+</f:for>
+</f:if>
+
+<f:if condition="{command.options}">Options
+^^^^^^^
+
+<f:for each="{command.options}" key="name" as="description">``{name}``
+  {description -> f:format.raw()}
+</f:for>
+</f:if>
+
+<f:if condition="{command.relatedCommands}">Related commands
+^^^^^^^^^^^^^^^^
+
+<f:for each="{command.relatedCommands}" key="relatedCommandIdentifier" as="relatedCommandDescription">``{relatedCommandIdentifier}``
+  {relatedCommandDescription -> f:format.raw()}
+</f:for>
+</f:if>
+</f:for></f:for>

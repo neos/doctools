@@ -37,6 +37,10 @@ TYPO3:
         renderedDocumentationRootPath: %FLOW3_PATH_DATA%Temporary/Documentation/TheDefinitiveGuide/PartV/CodingGuidelines
         imageRootPath: %FLOW3_PATH_DATA%Temporary/Documentation/TheDefinitiveGuide/_images/
 
+    commandReference:
+      title: 'FLOW3 Command Reference'
+      savePathAndFilename: '%FLOW3_PATH_PACKAGES%Framework/TYPO3.FLOW3/Documentation/TheDefinitiveGuide/PartV/CommandReference.rst'
+
     references:
       FluidViewHelpers:
         title: 'Fluid ViewHelper Reference'
