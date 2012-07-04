@@ -61,3 +61,11 @@ TYPO3:
           classNamePattern: '/^TYPO3\\FLOW3\\Validation\\Validator\\.*$/i'
         parser:
           implementationClassName: 'TYPO3\DocTools\Domain\Service\Flow3ValidatorClassParser'
+      Flow3TypeConverters:
+        title: 'FLOW3 TypeConverter Reference'
+        savePathAndFilename: '%FLOW3_PATH_PACKAGES%Framework/TYPO3.FLOW3/Documentation/TheDefinitiveGuide/PartV/TypeConverterReference.rst'
+        affectedClasses:
+          parentClassName: 'TYPO3\FLOW3\Property\TypeConverter\AbstractTypeConverter'
+          classNamePattern: '/^TYPO3\\FLOW3\\Property\\TypeConverter\\.*$/i'
+        parser:
+          implementationClassName: 'TYPO3\DocTools\Domain\Service\Flow3TypeConverterClassParser'

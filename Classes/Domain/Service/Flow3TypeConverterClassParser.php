@@ -12,9 +12,9 @@ use TYPO3\DocTools\Domain\Model\CodeExample;
 use TYPO3\DocTools\Domain\Model\ArgumentDefinition;
 
 /**
- * TYPO3.DocTools parser for FLOW3 Validator classes.
+ * TYPO3.DocTools parser for FLOW3 TypeConverter classes.
  */
-class Flow3ValidatorClassParser extends AbstractClassParser {
+class Flow3TypeConverterClassParser extends AbstractClassParser {
 
 	/**
 	 * @return string
@@ -29,12 +29,15 @@ class Flow3ValidatorClassParser extends AbstractClassParser {
 	protected function parseDescription() {
 		$description = $this->classReflection->getDescription();
 
-		$methodReflection = $this->classReflection->getMethod('isValid');
-		$description .= chr(10) . chr(10) . $methodReflection->getDescription();
-
 		$classDefaultProperties = $this->classReflection->getDefaultProperties();
-		if ($classDefaultProperties['acceptsEmptyValues'] === TRUE) {
-			$description .= chr(10) . chr(10) . '.. note:: A value of NULL or an empty string (\'\') is considered valid';
+
+		$description .= chr(10) . chr(10) . ':Priority: ' . $classDefaultProperties['priority']. chr(10) ;
+		$description .= ':Target type: ' . $classDefaultProperties['targetType']. chr(10) ;
+		if (count($classDefaultProperties['sourceTypes']) === 1) {
+			$description .= ':Source type: ' . $classDefaultProperties['sourceTypes'] . chr(10);
+		} else {
+			$description .= ':Source types:' . chr(10);
+			$description .= ' * ' . implode(chr(10) . ' * ', $classDefaultProperties['sourceTypes']);
 		}
 
 		return $description;
@@ -44,12 +47,7 @@ class Flow3ValidatorClassParser extends AbstractClassParser {
 	 * @return array<\TYPO3\DocTools\Domain\Model\ArgumentDefinition>
 	 */
 	protected function parseArgumentDefinitions() {
-		$options = array();
-		$classDefaultProperties = $this->classReflection->getDefaultProperties();
-		foreach ($classDefaultProperties['supportedOptions'] as $optionName => $optionData) {
-			$options[] = new ArgumentDefinition($optionName, $optionData[2], $optionData[1], isset($optionData[3]), $optionData[1]);
-		}
-		return $options;
+		return array();
 	}
 
 	/**

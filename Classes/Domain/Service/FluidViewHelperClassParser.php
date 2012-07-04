@@ -12,7 +12,7 @@ use TYPO3\DocTools\Domain\Model\CodeExample;
 use TYPO3\DocTools\Domain\Model\ArgumentDefinition;
 
 /**
- * @todo document
+ * TYPO3.DocTools parser for Fluid ViewHelper classes.
  */
 class FluidViewHelperClassParser extends AbstractClassParser {
 
