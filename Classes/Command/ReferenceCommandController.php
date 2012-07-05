@@ -64,7 +64,7 @@ class ReferenceCommandController extends \TYPO3\FLOW3\Cli\CommandController {
 		$affectedClassNames = $this->getAffectedClassNames($referenceConfiguration['affectedClasses']);
 		$parserClassName = $referenceConfiguration['parser']['implementationClassName'];
 		$parserOptions = isset($referenceConfiguration['parser']['options']) ? $referenceConfiguration['parser']['options'] : array();
-		/** @var $classParser \Documentation\Domain\Service\AbstractClassParser */
+		/** @var $classParser \TYPO3\DocTools\Domain\Service\AbstractClassParser */
 		$classParser = new $parserClassName($parserOptions);
 		$classReferences = array();
 		foreach ($affectedClassNames as $className) {

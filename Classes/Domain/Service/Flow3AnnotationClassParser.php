@@ -1,0 +1,68 @@
+<?php
+namespace TYPO3\DocTools\Domain\Service;
+
+/*                                                                        *
+ * This script belongs to the FLOW3 package "TYPO3.DocTools".             *
+ *                                                                        *
+ *                                                                        *
+ */
+
+use TYPO3\FLOW3\Annotations as FLOW3;
+use TYPO3\DocTools\Domain\Model\CodeExample;
+use TYPO3\DocTools\Domain\Model\ArgumentDefinition;
+
+/**
+ * TYPO3.DocTools parser for Annotation classes.
+ */
+class Flow3AnnotationClassParser extends AbstractClassParser {
+
+	/**
+	 * @FLOW3\Inject
+	 * @var \TYPO3\FLOW3\Reflection\ReflectionService
+	 */
+	protected $reflectionService;
+
+	/**
+	 * @return string
+	 */
+	protected function parseTitle() {
+		return substr($this->className, strrpos($this->className, '\\') + 1);
+	}
+
+	/**
+	 * @return array
+	 */
+	protected function parseDescription() {
+		$description = $this->classReflection->getDescription();
+		$matches = array();
+		preg_match('/@Target\(["{](.*)["}]\)$/m', $this->classReflection->getDocComment(), $matches);
+		if (isset($matches[1])) {
+			$targets = strtr($matches[1], array('"' => ''));
+			$description .= chr(10) . chr(10) . ':Applicable to: ' . ucwords(strtolower($targets)) . chr(10);
+		}
+		return $description;
+	}
+
+	/**
+	 * @return array<\TYPO3\DocTools\Domain\Model\ArgumentDefinition>
+	 */
+	protected function parseArgumentDefinitions() {
+		$options = array();
+		$classDefaultProperties = $this->classReflection->getDefaultProperties();
+		$classProperties = $this->classReflection->getProperties();
+		foreach ($classProperties as $propertyReflection) {
+			$varTags = $propertyReflection->getTagValues('var');
+			$options[] = new ArgumentDefinition($propertyReflection->getName(), array_shift($varTags), $propertyReflection->getDescription(), TRUE, $classDefaultProperties[$propertyReflection->getName()]);
+		}
+		return $options;
+	}
+
+	/**
+	 * @return array<\TYPO3\DocTools\Domain\Model\CodeExample>
+	 */
+	protected function parseCodeExamples() {
+		return array();
+	}
+}
+
+?>

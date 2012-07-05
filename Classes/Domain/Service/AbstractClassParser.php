@@ -10,7 +10,8 @@ namespace TYPO3\DocTools\Domain\Service;
 use TYPO3\FLOW3\Annotations as FLOW3;
 
 /**
- * @todo document
+ * Abstract TYPO3.DocTools parser for classes. Extended by target specific
+ * parsers to generate reference documentation.
  */
 abstract class AbstractClassParser {
 

@@ -69,3 +69,10 @@ TYPO3:
           classNamePattern: '/^TYPO3\\FLOW3\\Property\\TypeConverter\\.*$/i'
         parser:
           implementationClassName: 'TYPO3\DocTools\Domain\Service\Flow3TypeConverterClassParser'
+      Flow3Annotations:
+        title: 'FLOW3 Annotation Reference'
+        savePathAndFilename: '%FLOW3_PATH_PACKAGES%Framework/TYPO3.FLOW3/Documentation/TheDefinitiveGuide/PartV/AnnotationReference.rst'
+        affectedClasses:
+          classNamePattern: '/^TYPO3\\FLOW3\\Annotations\\.*$/i'
+        parser:
+          implementationClassName: 'TYPO3\DocTools\Domain\Service\Flow3AnnotationClassParser'
