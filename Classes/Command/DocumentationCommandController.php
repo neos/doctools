@@ -334,15 +334,18 @@ class DocumentationCommandController extends \TYPO3\FLOW3\Cli\CommandController 
 			array_pop($nodePathSegments);
 			$path = $self->normalizeNodePath($matches[2]);
 
-			$path = rtrim($path, '/') . '.html';
-			$pathSegments = $nodePathSegments + explode('/', $path);
-			while (current($pathSegments) === '..') {
-				array_shift($pathSegments);
+			$explodedPath = explode('/', rtrim($path, '/') . '.html');
+			while (current($explodedPath) === '..') {
+				array_shift($explodedPath);
 			}
+			while (current($nodePathSegments) === '..') {
+				array_shift($nodePathSegments);
+			}
+			$pathSegments = array_merge($nodePathSegments, $explodedPath);
 			$path = \TYPO3\FLOW3\Utility\Files::concatenatePaths(array($configuration['importRootNodePath'], implode('/', $pathSegments)));
 			$path = str_replace('/index.html', '.html', $path);
 			return $matches[1] . $path;
-		} , $bodyText);
+		}, $bodyText);
 		return $bodyText;
 	}
 
@@ -360,7 +363,7 @@ class DocumentationCommandController extends \TYPO3\FLOW3\Cli\CommandController 
 			$path = '/' . trim($path, '/') . '.html';
 			$path = str_replace('/index.html', '.html', $path);
 			return $matches[1] . $path . $matches[2];
-		} , $bodyText);
+		}, $bodyText);
 		return $bodyText;
 	}
 
