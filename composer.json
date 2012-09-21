@@ -1,0 +1,15 @@
+{
+    "name": "typo3/doctools",
+    "type": "flow3-package",
+    "description": "",
+    "version": "0.0.0",
+    "require": {
+        "typo3/flow3": "*",
+        "typo3/phoenix": "*"
+    },
+    "autoload": {
+        "psr-0": {
+            "TYPO3\\DocTools": "Classes"
+        }
+    }
+}
