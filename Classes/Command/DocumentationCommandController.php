@@ -207,9 +207,9 @@ class DocumentationCommandController extends \TYPO3\FLOW3\Cli\CommandController 
 	 */
 	protected function importBundle($bundle) {
 		$contentTypes = array(
-			'page' => $this->contentTypeManager->getContentType('TYPO3.TYPO3:Page'),
-			'section' => $this->contentTypeManager->getContentType('TYPO3.TYPO3:Section'),
-			'text' => $this->contentTypeManager->getContentType('TYPO3.TYPO3:Text')
+			'page' => $this->contentTypeManager->getContentType('TYPO3.Phoenix.ContentTypes:Page'),
+			'section' => $this->contentTypeManager->getContentType('TYPO3.Phoenix.ContentTypes:Section'),
+			'text' => $this->contentTypeManager->getContentType('TYPO3.Phoenix.ContentTypes:Text')
 		);
 
 		$this->outputLine('Importing bundle "%s"', array($bundle));
@@ -282,6 +282,7 @@ class DocumentationCommandController extends \TYPO3\FLOW3\Cli\CommandController 
 			$pageNode->setProperty('title', $data->title);
 			$this->outputLine('Setting page title of page "%s" to "%s"', array($relativeNodePath, $data->title));
 			$bodyText = $this->prepareBodyText($data->body, $relativeNodePath);
+			$textNode->setProperty('title', '');
 			$textNode->setProperty('text', $bodyText);
 		}
 
