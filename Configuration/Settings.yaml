@@ -13,38 +13,38 @@ TYPO3:
 
     bundles:
       TYPO3DocToolsHtml:
-        documentationRootPath: %FLOW3_PATH_PACKAGES%Application/TYPO3.DocTools/Documentation/
-        configurationRootPath: %FLOW3_PATH_PACKAGES%Application/TYPO3.DocTools/Resources/Private/Themes/TYPO3/
-        renderedDocumentationRootPath: %FLOW3_PATH_DATA%Temporary/Documentation/TYPO3.DocTools/
+        documentationRootPath: %FLOW_PATH_PACKAGES%Application/TYPO3.DocTools/Documentation/
+        configurationRootPath: %FLOW_PATH_PACKAGES%Application/TYPO3.DocTools/Resources/Private/Themes/TYPO3/
+        renderedDocumentationRootPath: %FLOW_PATH_DATA%Temporary/Documentation/TYPO3.DocTools/
         renderingOutputFormat: 'html'
         renderByDefault: false
 
       Quickstart:
-        documentationRootPath: %FLOW3_PATH_PACKAGES%Framework/TYPO3.FLOW3/Documentation/Quickstart
-        configurationRootPath: %FLOW3_PATH_PACKAGES%Application/TYPO3.DocTools/Resources/Private/Themes/FLOW3/
-        renderedDocumentationRootPath: %FLOW3_PATH_DATA%Temporary/Documentation/Quickstart/
-        imageRootPath: %FLOW3_PATH_DATA%Temporary/Documentation/Quickstart/_images/
+        documentationRootPath: %FLOW_PATH_PACKAGES%Framework/TYPO3.Flow/Documentation/Quickstart
+        configurationRootPath: %FLOW_PATH_PACKAGES%Application/TYPO3.DocTools/Resources/Private/Themes/FLOW3/
+        renderedDocumentationRootPath: %FLOW_PATH_DATA%Temporary/Documentation/Quickstart/
+        imageRootPath: %FLOW_PATH_DATA%Temporary/Documentation/Quickstart/_images/
 
       TheDefinitiveGuide:
-        documentationRootPath: %FLOW3_PATH_PACKAGES%Framework/TYPO3.FLOW3/Documentation/TheDefinitiveGuide
-        configurationRootPath: %FLOW3_PATH_PACKAGES%Application/TYPO3.DocTools/Resources/Private/Themes/FLOW3/
-        renderedDocumentationRootPath: %FLOW3_PATH_DATA%Temporary/Documentation/TheDefinitiveGuide/
-        imageRootPath: %FLOW3_PATH_DATA%Temporary/Documentation/TheDefinitiveGuide/_images/
+        documentationRootPath: %FLOW_PATH_PACKAGES%Framework/TYPO3.Flow/Documentation/TheDefinitiveGuide
+        configurationRootPath: %FLOW_PATH_PACKAGES%Application/TYPO3.DocTools/Resources/Private/Themes/FLOW3/
+        renderedDocumentationRootPath: %FLOW_PATH_DATA%Temporary/Documentation/TheDefinitiveGuide/
+        imageRootPath: %FLOW_PATH_DATA%Temporary/Documentation/TheDefinitiveGuide/_images/
 
       CodingGuidelines:
-        documentationRootPath: %FLOW3_PATH_PACKAGES%Framework/TYPO3.FLOW3/Documentation/TheDefinitiveGuide/PartV/CodingGuideLines
-        configurationRootPath: %FLOW3_PATH_PACKAGES%Application/TYPO3.DocTools/Resources/Private/Themes/FLOW3/
-        renderedDocumentationRootPath: %FLOW3_PATH_DATA%Temporary/Documentation/TheDefinitiveGuide/PartV/CodingGuidelines
-        imageRootPath: %FLOW3_PATH_DATA%Temporary/Documentation/TheDefinitiveGuide/_images/
+        documentationRootPath: %FLOW_PATH_PACKAGES%Framework/TYPO3.Flow/Documentation/TheDefinitiveGuide/PartV/CodingGuideLines
+        configurationRootPath: %FLOW_PATH_PACKAGES%Application/TYPO3.DocTools/Resources/Private/Themes/FLOW3/
+        renderedDocumentationRootPath: %FLOW_PATH_DATA%Temporary/Documentation/TheDefinitiveGuide/PartV/CodingGuidelines
+        imageRootPath: %FLOW_PATH_DATA%Temporary/Documentation/TheDefinitiveGuide/_images/
 
     commandReference:
       title: 'FLOW3 Command Reference'
-      savePathAndFilename: '%FLOW3_PATH_PACKAGES%Framework/TYPO3.FLOW3/Documentation/TheDefinitiveGuide/PartV/CommandReference.rst'
+      savePathAndFilename: '%FLOW_PATH_PACKAGES%Framework/TYPO3.Flow/Documentation/TheDefinitiveGuide/PartV/CommandReference.rst'
 
     references:
       FluidViewHelpers:
         title: 'Fluid ViewHelper Reference'
-        savePathAndFilename: '%FLOW3_PATH_PACKAGES%Framework/TYPO3.FLOW3/Documentation/TheDefinitiveGuide/PartV/FluidViewHelperReference.rst'
+        savePathAndFilename: '%FLOW_PATH_PACKAGES%Framework/TYPO3.Flow/Documentation/TheDefinitiveGuide/PartV/FluidViewHelperReference.rst'
         affectedClasses:
           parentClassName: 'TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper'
           classNamePattern: '/^TYPO3\\Fluid\\ViewHelpers\\.*$/i'
@@ -55,23 +55,23 @@ TYPO3:
               f: 'TYPO3\Fluid\ViewHelpers'
       Flow3Validators:
         title: 'FLOW3 Validator Reference'
-        savePathAndFilename: '%FLOW3_PATH_PACKAGES%Framework/TYPO3.FLOW3/Documentation/TheDefinitiveGuide/PartV/ValidatorReference.rst'
+        savePathAndFilename: '%FLOW_PATH_PACKAGES%Framework/TYPO3.Flow/Documentation/TheDefinitiveGuide/PartV/ValidatorReference.rst'
         affectedClasses:
-          parentClassName: 'TYPO3\FLOW3\Validation\Validator\AbstractValidator'
+          parentClassName: 'TYPO3\Flow\Validation\Validator\AbstractValidator'
           classNamePattern: '/^TYPO3\\FLOW3\\Validation\\Validator\\.*$/i'
         parser:
           implementationClassName: 'TYPO3\DocTools\Domain\Service\Flow3ValidatorClassParser'
       Flow3TypeConverters:
         title: 'FLOW3 TypeConverter Reference'
-        savePathAndFilename: '%FLOW3_PATH_PACKAGES%Framework/TYPO3.FLOW3/Documentation/TheDefinitiveGuide/PartV/TypeConverterReference.rst'
+        savePathAndFilename: '%FLOW_PATH_PACKAGES%Framework/TYPO3.Flow/Documentation/TheDefinitiveGuide/PartV/TypeConverterReference.rst'
         affectedClasses:
-          parentClassName: 'TYPO3\FLOW3\Property\TypeConverter\AbstractTypeConverter'
+          parentClassName: 'TYPO3\Flow\Property\TypeConverter\AbstractTypeConverter'
           classNamePattern: '/^TYPO3\\FLOW3\\Property\\TypeConverter\\.*$/i'
         parser:
           implementationClassName: 'TYPO3\DocTools\Domain\Service\Flow3TypeConverterClassParser'
       Flow3Annotations:
         title: 'FLOW3 Annotation Reference'
-        savePathAndFilename: '%FLOW3_PATH_PACKAGES%Framework/TYPO3.FLOW3/Documentation/TheDefinitiveGuide/PartV/AnnotationReference.rst'
+        savePathAndFilename: '%FLOW_PATH_PACKAGES%Framework/TYPO3.Flow/Documentation/TheDefinitiveGuide/PartV/AnnotationReference.rst'
         affectedClasses:
           classNamePattern: '/^TYPO3\\FLOW3\\Annotations\\.*$/i'
         parser:

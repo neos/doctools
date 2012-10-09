@@ -7,7 +7,7 @@ namespace TYPO3\DocTools\Domain\Service;
  *                                                                        *
  */
 
-use TYPO3\FLOW3\Annotations as FLOW3;
+use TYPO3\Flow\Annotations as Flow;
 
 /**
  * Abstract TYPO3.DocTools parser for classes. Extended by target specific
@@ -26,7 +26,7 @@ abstract class AbstractClassParser {
 	protected $className;
 
 	/**
-	 * @var \TYPO3\FLOW3\Reflection\ClassReflection
+	 * @var \TYPO3\Flow\Reflection\ClassReflection
 	 */
 	protected $classReflection;
 
@@ -43,7 +43,7 @@ abstract class AbstractClassParser {
 	 */
 	final public function parse($className) {
 		$this->className = $className;
-		$this->classReflection = new \TYPO3\FLOW3\Reflection\ClassReflection($this->className);
+		$this->classReflection = new \TYPO3\Flow\Reflection\ClassReflection($this->className);
 		return new \TYPO3\DocTools\Domain\Model\ClassReference($this->parseTitle(), $this->parseDescription(), $this->parseArgumentDefinitions(), $this->parseCodeExamples(), $this->parseDeprecationNote());
 	}
 

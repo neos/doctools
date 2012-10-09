@@ -7,7 +7,7 @@ namespace TYPO3\DocTools\Domain\Service;
  *                                                                        *
  */
 
-use TYPO3\FLOW3\Annotations as FLOW3;
+use TYPO3\Flow\Annotations as Flow;
 use TYPO3\DocTools\Domain\Model\CodeExample;
 use TYPO3\DocTools\Domain\Model\ArgumentDefinition;
 
@@ -17,8 +17,8 @@ use TYPO3\DocTools\Domain\Model\ArgumentDefinition;
 class Flow3AnnotationClassParser extends AbstractClassParser {
 
 	/**
-	 * @FLOW3\Inject
-	 * @var \TYPO3\FLOW3\Reflection\ReflectionService
+	 * @Flow\Inject
+	 * @var \TYPO3\Flow\Reflection\ReflectionService
 	 */
 	protected $reflectionService;
 

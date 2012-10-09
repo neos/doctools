@@ -7,20 +7,20 @@ namespace TYPO3\DocTools\Command;
  *                                                                        *
  */
 
-use TYPO3\FLOW3\Annotations as FLOW3;
+use TYPO3\Flow\Annotations as Flow;
 
 /**
  * Reference command controller for the Documentation package.
  *
  * Used to create reference documentation for special classes (e.g. Fluid ViewHelpers, FLOW3 Validators, ...)
  *
- * @FLOW3\Scope("singleton")
+ * @Flow\Scope("singleton")
  */
-class ReferenceCommandController extends \TYPO3\FLOW3\Cli\CommandController {
+class ReferenceCommandController extends \TYPO3\Flow\Cli\CommandController {
 
 	/**
-	 * @var \TYPO3\FLOW3\Reflection\ReflectionService
-	 * @FLOW3\Inject
+	 * @var \TYPO3\Flow\Reflection\ReflectionService
+	 * @Flow\Inject
 	 */
 	protected $reflectionService;
 

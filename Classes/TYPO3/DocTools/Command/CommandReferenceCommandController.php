@@ -7,16 +7,16 @@ namespace TYPO3\DocTools\Command;
  *                                                                        *
  */
 
-use TYPO3\FLOW3\Annotations as FLOW3;
+use TYPO3\Flow\Annotations as Flow;
 
 /**
  * "Command Reference" command controller for the Documentation package.
  *
  * Used to create reference documentation for FLOW3 CLI commands.
  *
- * @FLOW3\Scope("singleton")
+ * @Flow\Scope("singleton")
  */
-class CommandReferenceCommandController extends \TYPO3\FLOW3\Command\HelpCommandController {
+class CommandReferenceCommandController extends \TYPO3\Flow\Command\HelpCommandController {
 
 	/**
 	 * @var array
@@ -39,7 +39,7 @@ class CommandReferenceCommandController extends \TYPO3\FLOW3\Command\HelpCommand
 	 *
 	 * @param string $commandIdentifier Identifier of a command for more details
 	 * @return void
-	 * @FLOW3\Internal
+	 * @Flow\Internal
 	 */
 	public function helpCommand($commandIdentifier = NULL) {}
 
@@ -86,7 +86,7 @@ class CommandReferenceCommandController extends \TYPO3\FLOW3\Command\HelpCommand
 						try {
 							$relatedCommand = $this->commandManager->getCommandByIdentifier($relatedCommandIdentifier);
 							$relatedCommands[$relatedCommandIdentifier] = $relatedCommand->getShortDescription();
-						} catch (\TYPO3\FLOW3\Mvc\Exception\CommandException $exception) {
+						} catch (\TYPO3\Flow\Mvc\Exception\CommandException $exception) {
 							$relatedCommands[$relatedCommandIdentifier] = '*Command not available*';
 						}
 					}

@@ -7,18 +7,18 @@ namespace TYPO3\DocTools\Command;
  *                                                                        *
  */
 
-use TYPO3\FLOW3\Annotations as FLOW3;
+use TYPO3\Flow\Annotations as Flow;
 
 /**
  * Documentation command controller for the Documentation package
  *
- * @FLOW3\Scope("singleton")
+ * @Flow\Scope("singleton")
  */
-class DocumentationCommandController extends \TYPO3\FLOW3\Cli\CommandController {
+class DocumentationCommandController extends \TYPO3\Flow\Cli\CommandController {
 
 	/**
-	 * @FLOW3\Inject
-	 * @var \TYPO3\FLOW3\Object\ObjectManagerInterface
+	 * @Flow\Inject
+	 * @var \TYPO3\Flow\Object\ObjectManagerInterface
 	 */
 	protected $objectManager;
 
@@ -33,19 +33,19 @@ class DocumentationCommandController extends \TYPO3\FLOW3\Cli\CommandController 
 	protected $nodeRepository;
 
 	/**
-	 * @FLOW3\Inject
-	 * @var \TYPO3\FLOW3\Resource\ResourceManager
+	 * @Flow\Inject
+	 * @var \TYPO3\Flow\Resource\ResourceManager
 	 */
 	protected $resourceManager;
 
 	/**
-	 * @FLOW3\Inject
-	 * @var \TYPO3\FLOW3\Resource\Publishing\ResourcePublisher
+	 * @Flow\Inject
+	 * @var \TYPO3\Flow\Resource\Publishing\ResourcePublisher
 	 */
 	protected $resourcePublisher;
 
 	/**
-	 * @FLOW3\Inject
+	 * @Flow\Inject
 	 * @var \TYPO3\TYPO3CR\Domain\Service\ContentTypeManager
 	 */
 	protected $contentTypeManager;
@@ -114,7 +114,7 @@ class DocumentationCommandController extends \TYPO3\FLOW3\Cli\CommandController 
 				$this->outputLine('Bundle "%s" is not configured.', array($bundle));
 				$this->quit(1);
 			}
-			$configuration = \TYPO3\FLOW3\Utility\Arrays::arrayMergeRecursiveOverrule($defaultConfiguration, $this->settings['bundles'][$bundle]);
+			$configuration = \TYPO3\Flow\Utility\Arrays::arrayMergeRecursiveOverrule($defaultConfiguration, $this->settings['bundles'][$bundle]);
 			if ($this->arguments['bundle']->getValue() === NULL && $configuration['renderByDefault'] !== TRUE) {
 				$this->outputLine('Skipping bundle "%s".', array($bundle));
 				continue;
@@ -135,7 +135,7 @@ class DocumentationCommandController extends \TYPO3\FLOW3\Cli\CommandController 
 			$this->outputLine('Rendering bundle <b>%s</b> with format %s into directory %s.', array($bundle, $outputFormat, $configuration['renderedDocumentationRootPath']));
 
 			if (is_dir($configuration['renderedDocumentationRootPath']) && $outputFormat !== 'html') {
-				\TYPO3\FLOW3\Utility\Files::removeDirectoryRecursively($configuration['renderedDocumentationRootPath']);
+				\TYPO3\Flow\Utility\Files::removeDirectoryRecursively($configuration['renderedDocumentationRootPath']);
 			}
 
 			$renderCommand = $this->buildRenderCommand($configuration, $outputFormat);
@@ -190,7 +190,7 @@ class DocumentationCommandController extends \TYPO3\FLOW3\Cli\CommandController 
 				$this->outputLine('Bundle "%s" is not configured', array($bundle));
 				$this->quit(1);
 			}
-			$this->bundleConfiguration = \TYPO3\FLOW3\Utility\Arrays::arrayMergeRecursiveOverrule($defaultConfiguration, $this->settings['bundles'][$bundle]);
+			$this->bundleConfiguration = \TYPO3\Flow\Utility\Arrays::arrayMergeRecursiveOverrule($defaultConfiguration, $this->settings['bundles'][$bundle]);
 			if (isset($this->bundleConfiguration['importRootNodePath'])) {
 				$this->importBundle($bundle);
 				$this->outputLine('---');
@@ -226,7 +226,7 @@ class DocumentationCommandController extends \TYPO3\FLOW3\Cli\CommandController 
 			$this->quit(1);
 		}
 
-		$unorderedJsonFileNames = \TYPO3\FLOW3\Utility\Files::readDirectoryRecursively($renderedDocumentationRootPath, '.fjson');
+		$unorderedJsonFileNames = \TYPO3\Flow\Utility\Files::readDirectoryRecursively($renderedDocumentationRootPath, '.fjson');
 		if ($unorderedJsonFileNames === array()) {
 			$this->outputLine('The folder "%s" contains no fjson files. Did you render the documentation?', array($renderedDocumentationRootPath));
 			$this->quit(1);
@@ -353,7 +353,7 @@ class DocumentationCommandController extends \TYPO3\FLOW3\Cli\CommandController 
 				array_shift($nodePathSegments);
 			}
 			$pathSegments = array_merge($nodePathSegments, $explodedPath);
-			$path = \TYPO3\FLOW3\Utility\Files::concatenatePaths(array($configuration['importRootNodePath'], implode('/', $pathSegments)));
+			$path = \TYPO3\Flow\Utility\Files::concatenatePaths(array($configuration['importRootNodePath'], implode('/', $pathSegments)));
 			$path = str_replace('/index.html', '.html', $path);
 			return $matches[1] . $path;
 		}, $bodyText);
@@ -370,7 +370,7 @@ class DocumentationCommandController extends \TYPO3\FLOW3\Cli\CommandController 
 	protected function replaceAnchorLinks($bodyText, $relativeNodePath) {
 		$configuration = $this->bundleConfiguration;
 		$bodyText = preg_replace_callback('/(<a .*?href=")(#[^"]*)/', function($matches) use($configuration, $relativeNodePath) {
-			$path = \TYPO3\FLOW3\Utility\Files::concatenatePaths(array($configuration['importRootNodePath'], $relativeNodePath));
+			$path = \TYPO3\Flow\Utility\Files::concatenatePaths(array($configuration['importRootNodePath'], $relativeNodePath));
 			$path = '/' . trim($path, '/') . '.html';
 			$path = str_replace('/index.html', '.html', $path);
 			return $matches[1] . $path . $matches[2];
@@ -391,8 +391,8 @@ class DocumentationCommandController extends \TYPO3\FLOW3\Cli\CommandController 
 		$resourcePublisher = $this->resourcePublisher;
 
 		$bodyText = preg_replace_callback('/(<img .*?src=")([^"]*)(".*?\/>)/', function($matches) use($self, $configuration, $resourceManager, $resourcePublisher) {
-			$imageRootPath = isset($configuration['imageRootPath']) ? $configuration['imageRootPath'] : \TYPO3\FLOW3\Utility\Files::concatenatePaths(array($configuration['renderedDocumentationRootPath'], '_images'));
-			$imagePathAndFilename = \TYPO3\FLOW3\Utility\Files::concatenatePaths(array($imageRootPath, basename($matches[2])));
+			$imageRootPath = isset($configuration['imageRootPath']) ? $configuration['imageRootPath'] : \TYPO3\Flow\Utility\Files::concatenatePaths(array($configuration['renderedDocumentationRootPath'], '_images'));
+			$imagePathAndFilename = \TYPO3\Flow\Utility\Files::concatenatePaths(array($imageRootPath, basename($matches[2])));
 			$imageResource = $resourceManager->importResource($imagePathAndFilename);
 			$image = new \TYPO3\Media\Domain\Model\Image($imageResource);
 			if ($image->getWidth() > $configuration['imageMaxWidth'] || $image->getHeight() > $configuration['imageMaxHeight']) {
