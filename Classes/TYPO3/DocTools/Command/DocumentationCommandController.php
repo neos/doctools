@@ -23,7 +23,7 @@ class DocumentationCommandController extends \TYPO3\Flow\Cli\CommandController {
 	protected $objectManager;
 
 	/**
-	 * @var \TYPO3\TYPO3\Domain\Repository\SiteRepository
+	 * @var \TYPO3\Neos\Domain\Repository\SiteRepository
 	 */
 	protected $siteRepository;
 
@@ -51,7 +51,7 @@ class DocumentationCommandController extends \TYPO3\Flow\Cli\CommandController {
 	protected $contentTypeManager;
 
 	/**
-	 * @var \TYPO3\TYPO3\Domain\Model\Site
+	 * @var \TYPO3\Neos\Domain\Model\Site
 	 */
 	protected $currentSite;
 
@@ -86,8 +86,8 @@ class DocumentationCommandController extends \TYPO3\Flow\Cli\CommandController {
 	}
 
 	public function initializeObject() {
-		if ($this->objectManager->isRegistered('TYPO3\TYPO3\Domain\Repository\SiteRepository')) {
-			$this->siteRepository = $this->objectManager->get('TYPO3\TYPO3\Domain\Repository\SiteRepository');
+		if ($this->objectManager->isRegistered('TYPO3\Neos\Domain\Repository\SiteRepository')) {
+			$this->siteRepository = $this->objectManager->get('TYPO3\Neos\Domain\Repository\SiteRepository');
 		}
 
 		if ($this->objectManager->isRegistered('TYPO3\TYPO3CR\Domain\Repository\NodeRepository')) {
@@ -176,7 +176,7 @@ class DocumentationCommandController extends \TYPO3\Flow\Cli\CommandController {
 	 * @return void
 	 */
 	public function importCommand($bundle = NULL) {
-		$contentContext = new \TYPO3\TYPO3\Domain\Service\ContentContext('live');
+		$contentContext = new \TYPO3\Neos\Domain\Service\ContentContext('live');
 		$this->nodeRepository->setContext($contentContext);
 		$contentContext->setInvisibleContentShown(TRUE);
 		$this->currentSite = $contentContext->getCurrentSite();
@@ -207,9 +207,9 @@ class DocumentationCommandController extends \TYPO3\Flow\Cli\CommandController {
 	 */
 	protected function importBundle($bundle) {
 		$contentTypes = array(
-			'page' => $this->contentTypeManager->getContentType('TYPO3.Phoenix.ContentTypes:Page'),
-			'section' => $this->contentTypeManager->getContentType('TYPO3.Phoenix.ContentTypes:Section'),
-			'text' => $this->contentTypeManager->getContentType('TYPO3.Phoenix.ContentTypes:Text')
+			'page' => $this->contentTypeManager->getContentType('TYPO3.Neos.ContentTypes:Page'),
+			'section' => $this->contentTypeManager->getContentType('TYPO3.Neos.ContentTypes:Section'),
+			'text' => $this->contentTypeManager->getContentType('TYPO3.Neos.ContentTypes:Text')
 		);
 
 		$this->outputLine('Importing bundle "%s"', array($bundle));

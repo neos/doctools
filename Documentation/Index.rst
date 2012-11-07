@@ -22,7 +22,7 @@ The DocTools package renders based on bundle configurations like::
 	        configurationRootPath: %FLOW3_PATH_PACKAGES%Documentation/TYPO3.DocTools/Resources/Private/Themes/TYPO3/
 	        renderedDocumentationRootPath: %FLOW3_PATH_DATA%Temporary/Documentation/TYPO3.DocTools/
 	        renderingOutputFormat: 'html'
-	      ImportToAPhoenixSite:
+	      ImportToANeosSite:
 	        importRootNodePath: 'documentation/quickstart'
 	        documentationRootPath: %FLOW3_PATH_PACKAGES%Documentation/TYPO3.DocTools/Documentation/
 	        configurationRootPath: %FLOW3_PATH_PACKAGES%Documentation/TYPO3.DocTools/Resources/Private/Themes/TYPO3/
@@ -32,7 +32,7 @@ Those bundles can be rendered by the following command::
 
 	./flow3 documentation:render [--bundle <bundle>]
 
-An import to a Phoenix website can be executed using::
+An import to a Neos website can be executed using::
 
 	./flow3 documentation:import [--bundle <bundle>]
 

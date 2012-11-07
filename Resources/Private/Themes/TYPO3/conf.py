@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# TYPO3 Phoenix documentation build configuration file, created by
+# TYPO3 Neos documentation build configuration file, created by
 # sphinx-quickstart on Mon Jul 25 09:23:38 2011.
 #
 # This file is execfile()d with the current directory set to its containing dir.
@@ -40,8 +40,8 @@ source_suffix = '.rst'
 master_doc = 'Index'
 
 # General information about the project.
-project = u'TYPO3 Phoenix'
-copyright = u'2011, TYPO3 Phoenix Core Team'
+project = u'TYPO3 Neos'
+copyright = u'2011, TYPO3 Neos Core Team'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
@@ -176,7 +176,7 @@ html_static_path = ['typo3sphinx/static']
 #html_file_suffix = None
 
 # Output file base name for HTML help builder.
-htmlhelp_basename = 'TYPO3PhoenixDoc'
+htmlhelp_basename = 'TYPO3NeosDoc'
 
 
 # -- Options for LaTeX output --------------------------------------------------
@@ -190,7 +190,7 @@ htmlhelp_basename = 'TYPO3PhoenixDoc'
 # Grouping the document tree into LaTeX files. List of tuples
 # (source start file, target name, title, author, documentclass [howto/manual]).
 latex_documents = [
-  ('Index', 'TYPO3Phoenix.tex', u'TYPO3 Phoenix Documentation',
+  ('Index', 'TYPO3Neos.tex', u'TYPO3 Neos Documentation',
    u'Robert Lemke', 'manual'),
 ]
 
@@ -223,7 +223,7 @@ latex_documents = [
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    ('Index', 'typo3phoenix', u'TYPO3 Phoenix Documentation',
+    ('Index', 'typo3neos', u'TYPO3 Neos Documentation',
      [u'Robert Lemke'], 1)
 ]
 
@@ -231,7 +231,7 @@ man_pages = [
 # -- Options for Epub output ---------------------------------------------------
 
 # Bibliographic Dublin Core info.
-epub_title = u'TYPO3 Phoenix'
+epub_title = u'TYPO3 Neos'
 epub_author = u'Robert Lemke'
 epub_publisher = u'Robert Lemke'
 epub_copyright = u'2011, Robert Lemke'

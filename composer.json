@@ -4,7 +4,7 @@
     "description": "",
     "require": {
         "typo3/flow": "*",
-        "typo3/phoenix": "*"
+        "typo3/neos": "*"
     },
     "autoload": {
         "psr-0": {
