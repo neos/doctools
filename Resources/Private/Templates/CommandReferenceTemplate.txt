@@ -2,8 +2,8 @@
 
 .. note:
 
-  This reference uses ``./flow3`` as the command to invoke. If you are on
-  Windows, this will probably not work, there you need to use ``flow3.bat``
+  This reference uses ``./flow`` as the command to invoke. If you are on
+  Windows, this will probably not work, there you need to use ``flow.bat``
   instead.
 
 The commands in this reference are shown with their full command identifiers.

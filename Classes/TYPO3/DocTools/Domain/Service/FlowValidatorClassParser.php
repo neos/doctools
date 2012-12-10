@@ -2,7 +2,7 @@
 namespace TYPO3\DocTools\Domain\Service;
 
 /*                                                                        *
- * This script belongs to the FLOW3 package "TYPO3.DocTools".             *
+ * This script belongs to the TYPO3 Flow package "TYPO3.DocTools".        *
  *                                                                        *
  *                                                                        *
  */
@@ -12,9 +12,9 @@ use TYPO3\DocTools\Domain\Model\CodeExample;
 use TYPO3\DocTools\Domain\Model\ArgumentDefinition;
 
 /**
- * TYPO3.DocTools parser for FLOW3 Validator classes.
+ * TYPO3.DocTools parser for TYPO3 Flow Validator classes.
  */
-class Flow3ValidatorClassParser extends AbstractClassParser {
+class FlowValidatorClassParser extends AbstractClassParser {
 
 	/**
 	 * @return string

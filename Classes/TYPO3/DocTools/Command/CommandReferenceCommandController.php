@@ -2,7 +2,7 @@
 namespace TYPO3\DocTools\Command;
 
 /*                                                                        *
- * This script belongs to the FLOW3 package "TYPO3.DocTools".             *
+ * This script belongs to the TYPO3 Flow package "TYPO3.DocTools".        *
  *                                                                        *
  *                                                                        *
  */
@@ -12,7 +12,7 @@ use TYPO3\Flow\Annotations as Flow;
 /**
  * "Command Reference" command controller for the Documentation package.
  *
- * Used to create reference documentation for FLOW3 CLI commands.
+ * Used to create reference documentation for TYPO3 Flow CLI commands.
  *
  * @Flow\Scope("singleton")
  */
