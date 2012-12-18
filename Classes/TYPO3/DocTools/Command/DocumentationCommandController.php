@@ -346,7 +346,7 @@ class DocumentationCommandController extends \TYPO3\Flow\Cli\CommandController {
 			$path = $self->normalizeNodePath($matches[2]);
 
 			$explodedPath = explode('/', rtrim($path, '/') . '.html');
-			while (current($explodedPath) === '..') {
+			if ($explodedPath[0] === '..') {
 				array_shift($explodedPath);
 			}
 			while (current($nodePathSegments) === '..') {
