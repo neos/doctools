@@ -56,7 +56,7 @@ class DocumentationCommandController extends \TYPO3\Flow\Cli\CommandController {
 	protected $currentSite;
 
 	/**
-	 * @var \TYPO3\TYPO3CR\Domain\Model\NodeInterface
+	 * @var \TYPO3\TYPO3CR\Domain\Model\PersistentNodeInterface
 	 */
 	protected $siteNode;
 
