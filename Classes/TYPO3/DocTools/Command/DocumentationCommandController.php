@@ -46,9 +46,9 @@ class DocumentationCommandController extends \TYPO3\Flow\Cli\CommandController {
 
 	/**
 	 * @Flow\Inject
-	 * @var \TYPO3\TYPO3CR\Domain\Service\ContentTypeManager
+	 * @var \TYPO3\TYPO3CR\Domain\Service\NodeTypeManager
 	 */
-	protected $contentTypeManager;
+	protected $nodeTypeManager;
 
 	/**
 	 * @var \TYPO3\Neos\Domain\Model\Site
@@ -206,10 +206,10 @@ class DocumentationCommandController extends \TYPO3\Flow\Cli\CommandController {
 	 * @return void
 	 */
 	protected function importBundle($bundle) {
-		$contentTypes = array(
-			'page' => $this->contentTypeManager->getContentType('TYPO3.Neos.ContentTypes:Page'),
-			'section' => $this->contentTypeManager->getContentType('TYPO3.Neos.ContentTypes:Section'),
-			'text' => $this->contentTypeManager->getContentType('TYPO3.Neos.ContentTypes:Text')
+		$nodeTypes = array(
+			'page' => $this->nodeTypeManager->getNodeType('TYPO3.Neos.ContentTypes:Page'),
+			'section' => $this->nodeTypeManager->getNodeType('TYPO3.Neos.ContentTypes:Section'),
+			'text' => $this->nodeTypeManager->getNodeType('TYPO3.Neos.ContentTypes:Text')
 		);
 
 		$this->outputLine('Importing bundle "%s"', array($bundle));
@@ -262,7 +262,7 @@ class DocumentationCommandController extends \TYPO3\Flow\Cli\CommandController {
 				$subPageNode = $pageNode->getNode($nodeName);
 				if ($subPageNode === NULL) {
 					$this->outputLine('Creating page node "%s"', array($relativeNodePath));
-					$subPageNode = $pageNode->createNode($nodeName, $contentTypes['page']);
+					$subPageNode = $pageNode->createNode($nodeName, $nodeTypes['page']);
 					if (!$subPageNode->hasProperty('title')) {
 						$subPageNode->setProperty('title', $nodeName);
 					}
@@ -272,12 +272,12 @@ class DocumentationCommandController extends \TYPO3\Flow\Cli\CommandController {
 			$sectionNode = $pageNode->getNode('main');
 			if ($sectionNode === NULL) {
 				$this->outputLine('Creating section node "%s"', array($relativeNodePath . '/main'));
-				$sectionNode = $pageNode->createNode('main', $contentTypes['section']);
+				$sectionNode = $pageNode->createNode('main', $nodeTypes['section']);
 			}
 			$textNode = $sectionNode->getNode('text1');
 			if ($textNode === NULL) {
 				$this->outputLine('Creating text node "%s"', array($relativeNodePath . '/main/text1'));
-				$textNode = $sectionNode->createNode('text1', $contentTypes['text']);
+				$textNode = $sectionNode->createNode('text1', $nodeTypes['text']);
 			}
 			$pageNode->setProperty('title', $data->title);
 			$this->outputLine('Setting page title of page "%s" to "%s"', array($relativeNodePath, $data->title));
