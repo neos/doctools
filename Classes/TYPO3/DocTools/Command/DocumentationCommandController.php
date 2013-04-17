@@ -45,7 +45,6 @@ class DocumentationCommandController extends \TYPO3\Flow\Cli\CommandController {
 	protected $resourcePublisher;
 
 	/**
-	 * @Flow\Inject
 	 * @var \TYPO3\TYPO3CR\Domain\Service\NodeTypeManager
 	 */
 	protected $nodeTypeManager;
@@ -176,6 +175,7 @@ class DocumentationCommandController extends \TYPO3\Flow\Cli\CommandController {
 	 * @return void
 	 */
 	public function importCommand($bundle = NULL) {
+		$this->nodeTypeManager = $this->objectManager->get('TYPO3\TYPO3CR\Domain\Service\NodeTypeManager');
 		$contentContext = new \TYPO3\Neos\Domain\Service\ContentContext('live');
 		$this->nodeRepository->setContext($contentContext);
 		$contentContext->setInvisibleContentShown(TRUE);
