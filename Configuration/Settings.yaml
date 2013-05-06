@@ -76,3 +76,10 @@ TYPO3:
           classNamePattern: '/^TYPO3\\Flow\\Annotations\\.*$/i'
         parser:
           implementationClassName: 'TYPO3\DocTools\Domain\Service\FlowAnnotationClassParser'
+      FlowQueryOperations:
+        title: 'FlowQuery Operation Reference'
+        savePathAndFilename: '%FLOW_PATH_PACKAGES%Application/TYPO3.Neos/Documentation/Appendixes/FlowQueryOperationReference.rst'
+        affectedClasses:
+          interface: 'TYPO3\Eel\FlowQuery\OperationInterface'
+        parser:
+          implementationClassName: 'TYPO3\DocTools\Domain\Service\FlowQueryOperationClassParser'
