@@ -1,4 +1,6 @@
-{namespace d=TYPO3\DocTools\ViewHelpers}{title -> d:format.underline(withCharacter: '=')}
+{namespace d=TYPO3\DocTools\ViewHelpers}.. _{title}:
+
+{title -> d:format.underline(withCharacter: '=')}
 
 .. note:
 
