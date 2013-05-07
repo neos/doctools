@@ -91,7 +91,7 @@ class CommandReferenceCommandController extends \TYPO3\Flow\Command\HelpCommandC
 						}
 					}
 
-					$allCommands[] = array(
+					$allCommands[$command->getCommandIdentifier()] = array(
 						'identifier' => $command->getCommandIdentifier(),
 						'shortDescription' => $command->getShortDescription(),
 						'description' => $this->transformMarkup($command->getDescription()),
@@ -101,8 +101,10 @@ class CommandReferenceCommandController extends \TYPO3\Flow\Command\HelpCommandC
 					);
 				}
 			}
+			ksort($allCommands);
 			$allCommandsByPackageKey[strtoupper($packageKey)] = $allCommands;
 		}
+		ksort($allCommandsByPackageKey);
 
 		$standaloneView = new \TYPO3\Fluid\View\StandaloneView();
 		$templatePathAndFilename = isset($settings['templatePathAndFilename']) ? $this->settings['commandReference']['templatePathAndFilename'] : 'resource://TYPO3.DocTools/Private/Templates/CommandReferenceTemplate.txt';

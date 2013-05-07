@@ -7,6 +7,7 @@ namespace TYPO3\DocTools\Command;
  *                                                                        *
  */
 
+use TYPO3\DocTools\Domain\Model\ClassReference;
 use TYPO3\Flow\Annotations as Flow;
 
 /**
@@ -70,6 +71,13 @@ class ReferenceCommandController extends \TYPO3\Flow\Cli\CommandController {
 		foreach ($affectedClassNames as $className) {
 			$classReferences[$className] = $classParser->parse($className);
 		}
+		usort($classReferences, function (ClassReference $a, ClassReference $b) {
+			if ($a->getTitle() == $b->getTitle()) {
+				return 0;
+			}
+
+			return ($a->getTitle() < $b->getTitle()) ? -1 : 1;
+		});
 		$standaloneView = new \TYPO3\Fluid\View\StandaloneView();
 		$templatePathAndFilename = isset($referenceConfiguration['templatePathAndFilename']) ? $referenceConfiguration['templatePathAndFilename'] : 'resource://TYPO3.DocTools/Private/Templates/ClassReferenceTemplate.txt';
 		$standaloneView->setTemplatePathAndFilename($templatePathAndFilename);
