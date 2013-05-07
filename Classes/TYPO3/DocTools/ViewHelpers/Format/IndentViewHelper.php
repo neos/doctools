@@ -13,16 +13,18 @@ namespace TYPO3\DocTools\ViewHelpers\Format;
 
 
 /**
- * @todo document
+ * Renders it's children and replaces every newline by a combination of
+ * newline and $indent.
  */
 class IndentViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper {
 
 	/**
+	 * @param string $indent
 	 * @return string The formatted value
 	 */
-	public function render() {
+	public function render($indent = "\t") {
 		$string = $this->renderChildren();
-		return "\t" . str_replace("\n", "\n\t", $string);
+		return $indent . str_replace("\n", "\n" . $indent, $string);
 	}
 }
 ?>
