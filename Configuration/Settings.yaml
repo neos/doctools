@@ -83,3 +83,10 @@ TYPO3:
           interface: 'TYPO3\Eel\FlowQuery\OperationInterface'
         parser:
           implementationClassName: 'TYPO3\DocTools\Domain\Service\FlowQueryOperationClassParser'
+      TypoScriptProcessors:
+        title: 'TypoScript Processor Reference'
+        savePathAndFilename: '%FLOW_PATH_PACKAGES%Application/TYPO3.Neos/Documentation/Appendixes/TypoScriptProcessorReference.rst'
+        affectedClasses:
+          interface: 'TYPO3\TypoScript\ProcessorInterface'
+        parser:
+          implementationClassName: 'TYPO3\DocTools\Domain\Service\TypoScriptProcessorClassParser'
