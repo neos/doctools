@@ -44,24 +44,41 @@ class CommandReferenceCommandController extends \TYPO3\Flow\Command\HelpCommandC
 	public function helpCommand($commandIdentifier = NULL) {}
 
 	/**
-	 * Render a CLI command reference to reStructuredText.
+	 * Renders command reference documentation from source code.
 	 *
-	 * @param string $packageKey The package key to limit to, all packages are considered if not given.
+	 * @param string $reference to render. If not specified all configured references will be rendered
 	 * @return void
 	 */
-	public function renderCommand($packageKey = NULL) {
-		$exceedingArguments = $this->request->getExceedingArguments();
-		if (count($exceedingArguments) > 0 && $packageKey === NULL) {
-			$packageKeyToRender = strtolower($exceedingArguments[0]);
-		} else {
-			$packageKeyToRender = $packageKey === NULL ? NULL : strtolower($packageKey);
+	public function renderCommand($reference = NULL) {
+		$references = $reference !== NULL ? array($reference) : array_keys($this->settings['commandReferences']);
+		foreach ($references as $reference) {
+			$this->outputLine('Rendering Reference "%s"', array($reference));
+			$this->renderReference($reference);
 		}
+	}
+
+	/**
+	 * Render a CLI command reference to reStructuredText.
+	 *
+	 * @param string $reference
+	 * @return void
+	 */
+	protected function renderReference($reference) {
+		if (!isset($this->settings['commandReferences'][$reference])) {
+			$this->outputLine('Command reference "%s" is not configured', array($reference));
+			$this->quit(1);
+		}
+		$referenceConfiguration = $this->settings['commandReferences'][$reference];
+		$packageKeysToRender = $referenceConfiguration['packageKeys'];
+		array_walk($packageKeysToRender, function (&$packageKey) {$packageKey = strtolower($packageKey);});
+
 		$availableCommands = $this->commandManager->getAvailableCommands();
 		$commandsByPackagesAndControllers = $this->buildCommandsIndex($availableCommands);
 
 		$allCommandsByPackageKey = array();
 		foreach ($commandsByPackagesAndControllers as $packageKey => $commandControllers) {
-			if ($packageKeyToRender !== NULL && $packageKeyToRender !== $packageKey) {
+			if (!in_array($packageKey, $packageKeysToRender)) {
+				$this->outputLine('Skipping package "%s"', array($packageKey));
 				continue;
 			}
 			$allCommands = array();
@@ -109,9 +126,9 @@ class CommandReferenceCommandController extends \TYPO3\Flow\Command\HelpCommandC
 		$standaloneView = new \TYPO3\Fluid\View\StandaloneView();
 		$templatePathAndFilename = isset($settings['templatePathAndFilename']) ? $this->settings['commandReference']['templatePathAndFilename'] : 'resource://TYPO3.DocTools/Private/Templates/CommandReferenceTemplate.txt';
 		$standaloneView->setTemplatePathAndFilename($templatePathAndFilename);
-		$standaloneView->assign('title', $this->settings['commandReference']['title']);
+		$standaloneView->assign('title', isset($referenceConfiguration['title']) ? $referenceConfiguration['title'] : $reference);
 		$standaloneView->assign('allCommandsByPackageKey', $allCommandsByPackageKey);
-		file_put_contents($this->settings['commandReference']['savePathAndFilename'], $standaloneView->render());
+		file_put_contents($referenceConfiguration['savePathAndFilename'], $standaloneView->render());
 		$this->outputLine('DONE.');
 	}
 

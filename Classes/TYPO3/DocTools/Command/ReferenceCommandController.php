@@ -53,7 +53,9 @@ class ReferenceCommandController extends \TYPO3\Flow\Cli\CommandController {
 	}
 
 	/**
-	 * @param $reference
+	 * Render a reference to reStructuredText.
+	 *
+	 * @param string $reference
 	 * @return void
 	 */
 	protected function renderReference($reference) {

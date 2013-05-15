@@ -37,9 +37,21 @@ TYPO3:
         renderedDocumentationRootPath: %FLOW_PATH_DATA%Temporary/Documentation/TheDefinitiveGuide/PartV/CodingGuidelines
         imageRootPath: %FLOW_PATH_DATA%Temporary/Documentation/TheDefinitiveGuide/_images/
 
-    commandReference:
-      title: 'TYPO3 Flow Command Reference'
-      savePathAndFilename: '%FLOW_PATH_PACKAGES%Framework/TYPO3.Flow/Documentation/TheDefinitiveGuide/PartV/CommandReference.rst'
+    commandReferences:
+      FlowCommands:
+        title: 'TYPO3 Flow Command Reference'
+        packageKeys:
+          - 'TYPO3.Flow'
+          - 'TYPO3.Party'
+          - 'TYPO3.Fluid'
+          - 'TYPO3.Kickstart'
+          - 'TYPO3.Welcome'
+        savePathAndFilename: '%FLOW_PATH_PACKAGES%Framework/TYPO3.Flow/Documentation/TheDefinitiveGuide/PartV/CommandReference.rst'
+      NeosCommands:
+        title: 'TYPO3 Neos Command Reference'
+        packageKeys:
+          - 'TYPO3.Neos'
+        savePathAndFilename: '%FLOW_PATH_PACKAGES%Application/TYPO3.Neos/Documentation/Appendixes/CommandReference.rst'
 
     references:
       FluidViewHelpers:

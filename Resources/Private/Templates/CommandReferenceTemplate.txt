@@ -16,7 +16,7 @@ identifier is determined during runtime).
 To see the shortest possible identifiers on your system as well as further
 commands that may be available, use::
 
-  ./flow3 help
+  ./flow help
 
 The following reference was automatically generated from code on {f:format.date(date: 'now')}
 
