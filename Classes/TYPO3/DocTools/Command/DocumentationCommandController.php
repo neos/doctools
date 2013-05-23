@@ -207,8 +207,8 @@ class DocumentationCommandController extends \TYPO3\Flow\Cli\CommandController {
 	 */
 	protected function importBundle($bundle) {
 		$nodeTypes = array(
-			'page' => $this->nodeTypeManager->getNodeType('TYPO3.Neos.NodeTypes:Page'),
-			'section' => $this->nodeTypeManager->getNodeType('TYPO3.Neos.NodeTypes:Section'),
+			'page' => $this->nodeTypeManager->getNodeType('TYPO3.Neos:Page'),
+			'section' => $this->nodeTypeManager->getNodeType('TYPO3.Neos:ContentCollection'),
 			'text' => $this->nodeTypeManager->getNodeType('TYPO3.Neos.NodeTypes:Text')
 		);
 
