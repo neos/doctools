@@ -28,9 +28,9 @@ class DocumentationCommandController extends \TYPO3\Flow\Cli\CommandController {
 	protected $siteRepository;
 
 	/**
-	 * @var \TYPO3\TYPO3CR\Domain\Repository\NodeRepository
+	 * @var \TYPO3\TYPO3CR\Domain\Repository\NodeDataRepository
 	 */
-	protected $nodeRepository;
+	protected $nodeDataRepository;
 
 	/**
 	 * @Flow\Inject
@@ -58,6 +58,12 @@ class DocumentationCommandController extends \TYPO3\Flow\Cli\CommandController {
 	 * @var \TYPO3\TYPO3CR\Domain\Model\PersistentNodeInterface
 	 */
 	protected $siteNode;
+
+	/**
+	 * @var \TYPO3\TYPO3CR\Domain\Service\ContextFactoryInterface
+	 * @Flow\Inject
+	 */
+	protected $contextFactory;
 
 	/**
 	 * @var array
@@ -176,10 +182,16 @@ class DocumentationCommandController extends \TYPO3\Flow\Cli\CommandController {
 	 */
 	public function importCommand($bundle = NULL) {
 		$this->nodeTypeManager = $this->objectManager->get('TYPO3\TYPO3CR\Domain\Service\NodeTypeManager');
-		$contentContext = new \TYPO3\Neos\Domain\Service\ContentContext('live');
-		$this->nodeRepository->setContext($contentContext);
-		$contentContext->setInvisibleContentShown(TRUE);
-		$this->currentSite = $contentContext->getCurrentSite();
+
+		$this->currentSite = $this->siteRepository->findFirst();
+
+		/** @var \TYPO3\Neos\Domain\Service\ContentContext $contentContext */
+		$contentContext = $this->contextFactory->create(array(
+			'workspaceName' => 'live',
+			'invisibleContentShown' => TRUE,
+			'currentSite' => $this->currentSite
+		));
+
 		$this->siteNode = $contentContext->getCurrentSiteNode();
 
 		$bundles = $bundle !== NULL ? array($bundle) : array_keys($this->settings['bundles']);
