@@ -61,7 +61,6 @@ class DocumentationCommandController extends \TYPO3\Flow\Cli\CommandController {
 
 	/**
 	 * @var \TYPO3\TYPO3CR\Domain\Service\ContextFactoryInterface
-	 * @Flow\Inject
 	 */
 	protected $contextFactory;
 
@@ -182,6 +181,7 @@ class DocumentationCommandController extends \TYPO3\Flow\Cli\CommandController {
 	 */
 	public function importCommand($bundle = NULL) {
 		$this->nodeTypeManager = $this->objectManager->get('TYPO3\TYPO3CR\Domain\Service\NodeTypeManager');
+		$this->contextFactory = $this->objectManager->get('TYPO3\TYPO3CR\Domain\Service\ContextFactoryInterface');
 
 		$this->currentSite = $this->siteRepository->findFirst();
 
