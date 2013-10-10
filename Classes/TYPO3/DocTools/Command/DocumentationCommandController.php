@@ -55,7 +55,7 @@ class DocumentationCommandController extends \TYPO3\Flow\Cli\CommandController {
 	protected $currentSite;
 
 	/**
-	 * @var \TYPO3\TYPO3CR\Domain\Model\PersistentNodeInterface
+	 * @var \TYPO3\TYPO3CR\Domain\Model\NodeInterface
 	 */
 	protected $siteNode;
 
@@ -94,8 +94,8 @@ class DocumentationCommandController extends \TYPO3\Flow\Cli\CommandController {
 			$this->siteRepository = $this->objectManager->get('TYPO3\Neos\Domain\Repository\SiteRepository');
 		}
 
-		if ($this->objectManager->isRegistered('TYPO3\TYPO3CR\Domain\Repository\NodeRepository')) {
-			$this->nodeRepository = $this->objectManager->get('TYPO3\TYPO3CR\Domain\Repository\NodeRepository');
+		if ($this->objectManager->isRegistered('TYPO3\TYPO3CR\Domain\Repository\NodeDataRepository')) {
+			$this->nodeDataRepository = $this->objectManager->get('TYPO3\TYPO3CR\Domain\Repository\NodeDataRepository');
 		}
 	}
 
