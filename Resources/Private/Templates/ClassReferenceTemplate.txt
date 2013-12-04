@@ -17,7 +17,7 @@ This reference was automatically generated from code on {f:format.date(date: 'no
 Arguments
 *********
 <f:for each="{classReference.argumentDefinitions}" as="argument">
-* ``{argument.name}`` ({argument.type}{f:if(condition: argument.required, else: ', *optional*')}): {argument.description -> d:format.indent(indent: '  ') -> f:format.raw()}
+* ``{argument.name}`` ({argument.type}{f:if(condition: argument.required, else: ', *optional*')}): {argument.description -> d:format.indent(indent: '  ', inline: true) -> f:format.raw()}
 </f:for>
 </f:if>
 <f:if condition="{classReference.codeExamples}">

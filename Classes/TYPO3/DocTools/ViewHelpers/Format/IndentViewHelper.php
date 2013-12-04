@@ -19,12 +19,13 @@ namespace TYPO3\DocTools\ViewHelpers\Format;
 class IndentViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper {
 
 	/**
-	 * @param string $indent
+	 * @param string $indent String used to indent
+	 * @param boolean $inline If TRUE, the first line will not be indented
 	 * @return string The formatted value
 	 */
-	public function render($indent = "\t") {
+	public function render($indent = "\t", $inline = FALSE) {
 		$string = $this->renderChildren();
-		return $indent . str_replace("\n", "\n" . $indent, $string);
+		return ($inline === FALSE ? $indent : '') . str_replace("\n", "\n" . $indent, $string);
 	}
 }
 ?>
