@@ -13,29 +13,29 @@ TYPO3:
 
     bundles:
       TYPO3DocToolsHtml:
-        documentationRootPath: %FLOW_PATH_PACKAGES%Application/TYPO3.DocTools/Documentation/
-        configurationRootPath: %FLOW_PATH_PACKAGES%Application/TYPO3.DocTools/Resources/Private/Themes/TYPO3/
-        renderedDocumentationRootPath: %FLOW_PATH_DATA%Temporary/Documentation/TYPO3.DocTools/
+        documentationRootPath: '%FLOW_PATH_PACKAGES%Application/TYPO3.DocTools/Documentation/'
+        configurationRootPath: '%FLOW_PATH_PACKAGES%Application/TYPO3.DocTools/Resources/Private/Themes/TYPO3/'
+        renderedDocumentationRootPath: '%FLOW_PATH_DATA%Temporary/Documentation/TYPO3.DocTools/'
         renderingOutputFormat: 'html'
         renderByDefault: false
 
       Quickstart:
-        documentationRootPath: %FLOW_PATH_PACKAGES%Framework/TYPO3.Flow/Documentation/Quickstart
-        configurationRootPath: %FLOW_PATH_PACKAGES%Application/TYPO3.DocTools/Resources/Private/Themes/Flow/
-        renderedDocumentationRootPath: %FLOW_PATH_DATA%Temporary/Documentation/Quickstart/
-        imageRootPath: %FLOW_PATH_DATA%Temporary/Documentation/Quickstart/_images/
+        documentationRootPath: '%FLOW_PATH_PACKAGES%Framework/TYPO3.Flow/Documentation/Quickstart'
+        configurationRootPath: '%FLOW_PATH_PACKAGES%Application/TYPO3.DocTools/Resources/Private/Themes/Flow/'
+        renderedDocumentationRootPath: '%FLOW_PATH_DATA%Temporary/Documentation/Quickstart/'
+        imageRootPath: '%FLOW_PATH_DATA%Temporary/Documentation/Quickstart/_images/'
 
       TheDefinitiveGuide:
-        documentationRootPath: %FLOW_PATH_PACKAGES%Framework/TYPO3.Flow/Documentation/TheDefinitiveGuide
-        configurationRootPath: %FLOW_PATH_PACKAGES%Application/TYPO3.DocTools/Resources/Private/Themes/Flow/
-        renderedDocumentationRootPath: %FLOW_PATH_DATA%Temporary/Documentation/TheDefinitiveGuide/
-        imageRootPath: %FLOW_PATH_DATA%Temporary/Documentation/TheDefinitiveGuide/_images/
+        documentationRootPath: '%FLOW_PATH_PACKAGES%Framework/TYPO3.Flow/Documentation/TheDefinitiveGuide'
+        configurationRootPath: '%FLOW_PATH_PACKAGES%Application/TYPO3.DocTools/Resources/Private/Themes/Flow/'
+        renderedDocumentationRootPath: '%FLOW_PATH_DATA%Temporary/Documentation/TheDefinitiveGuide/'
+        imageRootPath: '%FLOW_PATH_DATA%Temporary/Documentation/TheDefinitiveGuide/_images/'
 
       CodingGuidelines:
-        documentationRootPath: %FLOW_PATH_PACKAGES%Framework/TYPO3.Flow/Documentation/TheDefinitiveGuide/PartV/CodingGuideLines
-        configurationRootPath: %FLOW_PATH_PACKAGES%Application/TYPO3.DocTools/Resources/Private/Themes/Flow/
-        renderedDocumentationRootPath: %FLOW_PATH_DATA%Temporary/Documentation/TheDefinitiveGuide/PartV/CodingGuidelines
-        imageRootPath: %FLOW_PATH_DATA%Temporary/Documentation/TheDefinitiveGuide/_images/
+        documentationRootPath: '%FLOW_PATH_PACKAGES%Framework/TYPO3.Flow/Documentation/TheDefinitiveGuide/PartV/CodingGuideLines'
+        configurationRootPath: '%FLOW_PATH_PACKAGES%Application/TYPO3.DocTools/Resources/Private/Themes/Flow/'
+        renderedDocumentationRootPath: '%FLOW_PATH_DATA%Temporary/Documentation/TheDefinitiveGuide/PartV/CodingGuidelines'
+        imageRootPath: '%FLOW_PATH_DATA%Temporary/Documentation/TheDefinitiveGuide/_images/'
 
     commandReferences:
       FlowCommands:
