@@ -11,6 +11,7 @@ namespace TYPO3\DocTools\Command;
  * The TYPO3 project - inspiring people to share!                         *
  *                                                                        */
 
+use TYPO3\DocTools\Service\SphinxConfiguration;
 use TYPO3\Flow\Annotations as Flow;
 use TYPO3\Flow\Cli\CommandController;
 use TYPO3\Flow\Object\ObjectManagerInterface;
@@ -80,6 +81,12 @@ class DocumentationCommandController extends CommandController {
 	 * @var ContextFactoryInterface
 	 */
 	protected $contextFactory;
+
+	/**
+	 * @Flow\Inject
+	 * @var SphinxConfiguration
+	 */
+	protected $sphinxConfiguration;
 
 	/**
 	 * @var array
@@ -166,9 +173,10 @@ class DocumentationCommandController extends CommandController {
 				Files::removeDirectoryRecursively($configuration['renderedDocumentationRootPath']);
 			}
 
-			$renderCommand = $this->buildRenderCommand($configuration, $outputFormat);
+			$renderCommand = $this->sphinxConfiguration->buildRenderCommand($configuration, $outputFormat);
 
 			exec($renderCommand, $output, $result);
+			$this->sphinxConfiguration->removeTemporaryConfigurationRootPath($configuration);
 			$this->outputLine(str_replace($configuration['documentationRootPath'], '', implode("\n", $output)), array(), 3);
 
 			if ($result !== 0) {
@@ -176,24 +184,6 @@ class DocumentationCommandController extends CommandController {
 				continue;
 			}
 		}
-	}
-
-	/**
-	 * Build the render command for rendering
-	 *
-	 * @param array $configuration
-	 * @param string $format
-	 * @return string
-	 */
-	protected function buildRenderCommand(array $configuration, $format) {
-		$overrideSettings = '';
-		if (!empty($configuration['settings'])) {
-			foreach ($configuration['settings'] as $setting => $value) {
-				$overrideSettings .= sprintf(" -D %s=%s", $setting, escapeshellarg($value));
-			}
-		}
-
-		return sprintf('sphinx-build -c %s -b %s %s %s %s 3>&1 1>&2 2>&3', escapeshellarg($configuration['configurationRootPath']), $format, $overrideSettings, escapeshellarg($configuration['documentationRootPath']), escapeshellarg($configuration['renderedDocumentationRootPath']));
 	}
 
 	/**
