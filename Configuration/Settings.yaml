@@ -10,6 +10,10 @@ TYPO3:
       thumbnailMaxWidth: 710
       thumbnailMaxHeight: 800
       renderByDefault: true
+      nodeTypes:
+        page: 'TYPO3.Neos:Page'
+        section: 'TYPO3.Neos:ContentCollection'
+        text: 'TYPO3.Neos.NodeTypes:Text'
 
     bundles:
       TYPO3DocToolsHtml:
