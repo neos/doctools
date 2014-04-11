@@ -291,7 +291,7 @@ class DocumentationCommandController extends \TYPO3\Flow\Cli\CommandController {
 				$this->outputLine('Creating text node "%s"', array($relativeNodePath . '/main/text1'));
 				$textNode = $sectionNode->createNode('text1', $nodeTypes['text']);
 			}
-			$pageNode->setProperty('title', $data->title);
+			$pageNode->setProperty('title', htmlspecialchars_decode($data->title));
 			$this->outputLine('Setting page title of page "%s" to "%s"', array($relativeNodePath, $data->title));
 			$bodyText = $this->prepareBodyText($data->body, $relativeNodePath);
 			$textNode->setProperty('title', '');
