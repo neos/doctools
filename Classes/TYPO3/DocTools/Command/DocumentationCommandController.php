@@ -303,6 +303,8 @@ class DocumentationCommandController extends CommandController {
 					if (!$subPageNode->hasProperty('title')) {
 						$subPageNode->setProperty('title', $nodeName);
 					}
+				} else {
+					$subPageNode->setNodeType($nodeTypes['page']);
 				}
 				$pageNode = $subPageNode;
 			}
@@ -310,11 +312,15 @@ class DocumentationCommandController extends CommandController {
 			if ($sectionNode === NULL) {
 				$this->outputLine('Creating section node "%s"', array($relativeNodePath . '/main'));
 				$sectionNode = $pageNode->createNode('main', $nodeTypes['section']);
+			} else {
+				$sectionNode->setNodeType($nodeTypes['section']);
 			}
 			$textNode = $sectionNode->getNode('text1');
 			if ($textNode === NULL) {
 				$this->outputLine('Creating text node "%s"', array($relativeNodePath . '/main/text1'));
 				$textNode = $sectionNode->createNode('text1', $nodeTypes['text']);
+			} else {
+				$textNode->setNodeType($nodeTypes['text']);
 			}
 			$pageNode->setProperty('title', htmlspecialchars_decode($data->title));
 			$this->outputLine('Setting page title of page "%s" to "%s"', array($relativeNodePath, $data->title));
