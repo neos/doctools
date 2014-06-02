@@ -99,3 +99,10 @@ TYPO3:
           interface: 'TYPO3\Eel\FlowQuery\OperationInterface'
         parser:
           implementationClassName: 'TYPO3\DocTools\Domain\Service\FlowQueryOperationClassParser'
+      EelHelpers:
+        title: 'Eel Helpers Reference'
+        savePathAndFilename: '%FLOW_PATH_PACKAGES%Application/TYPO3.Neos/Documentation/Appendixes/EelHelpersReference.rst'
+        affectedClasses:
+          classNamePattern: '/^TYPO3\\Eel\\Helper\\.*Helper$/i'
+        parser:
+          implementationClassName: 'TYPO3\DocTools\Domain\Service\EelHelperClassParser'
