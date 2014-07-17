@@ -45,9 +45,14 @@ class FluidViewHelperClassParser extends AbstractClassParser {
 	 * @return array
 	 */
 	protected function parseDescription() {
+		$description = $this->classReflection->getDescription();
 		$matches = array();
-		preg_match(self::PATTERN_DESCRIPTION, $this->classReflection->getDescription(), $matches);
-		return isset($matches['description']) ? $matches['description'] : '';
+		preg_match(self::PATTERN_DESCRIPTION, $description, $matches);
+		$description = isset($matches['description']) ? $matches['description'] : $description;
+
+		$description .= chr(10) . chr(10) . ':Implementation: ' . str_replace('\\', '\\\\', $this->className) . chr(10) ;
+
+		return $description;
 	}
 
 	/**
