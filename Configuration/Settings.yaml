@@ -69,6 +69,18 @@ TYPO3:
           options:
             namespaces:
               f: 'TYPO3\Fluid\ViewHelpers'
+      NeosViewHelpers:
+        title: 'Neos ViewHelper Reference'
+        savePathAndFilename: '%FLOW_PATH_PACKAGES%Application/TYPO3.Neos/Documentation/Appendixes/ViewHelperReference.rst'
+        affectedClasses:
+          parentClassName: 'TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper'
+          classNamePattern: '/^TYPO3\\Neos\\ViewHelpers\\.*$/i'
+        parser:
+          implementationClassName: 'TYPO3\DocTools\Domain\Service\FluidViewHelperClassParser'
+          options:
+            namespaces:
+              f: 'TYPO3\Fluid\ViewHelpers'
+              neos: 'TYPO3\Neos\ViewHelpers'
       FlowValidators:
         title: 'TYPO3 Flow Validator Reference'
         savePathAndFilename: '%FLOW_PATH_PACKAGES%Framework/TYPO3.Flow/Documentation/TheDefinitiveGuide/PartV/ValidatorReference.rst'
