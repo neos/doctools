@@ -69,6 +69,17 @@ TYPO3:
           options:
             namespaces:
               f: 'TYPO3\Fluid\ViewHelpers'
+      MediaViewHelpers:
+        title: 'Media ViewHelper Reference'
+        savePathAndFilename: '%FLOW_PATH_PACKAGES%Application/TYPO3.Neos/Documentation/Appendixes/MediaViewHelperReference.rst'
+        affectedClasses:
+          parentClassName: 'TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper'
+          classNamePattern: '/^TYPO3\\Media\\ViewHelpers\\.*$/i'
+        parser:
+          implementationClassName: 'TYPO3\DocTools\Domain\Service\FluidViewHelperClassParser'
+          options:
+            namespaces:
+              'typo3.media': 'TYPO3\Media\ViewHelpers'
       NeosViewHelpers:
         title: 'Neos ViewHelper Reference'
         savePathAndFilename: '%FLOW_PATH_PACKAGES%Application/TYPO3.Neos/Documentation/Appendixes/ViewHelperReference.rst'
