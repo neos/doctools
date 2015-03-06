@@ -11,7 +11,6 @@ namespace TYPO3\DocTools\ViewHelpers\Format;
  * The TYPO3 project - inspiring people to share!                         *
  *                                                                        */
 
-
 /**
  * Renders it's children and replaces every newline by a combination of
  * newline and $indent.
@@ -28,4 +27,3 @@ class IndentViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper {
 		return ($inline === FALSE ? $indent : '') . str_replace("\n", "\n" . $indent, $string);
 	}
 }
-?>

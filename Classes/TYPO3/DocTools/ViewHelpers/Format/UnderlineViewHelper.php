@@ -11,7 +11,6 @@ namespace TYPO3\DocTools\ViewHelpers\Format;
  * The TYPO3 project - inspiring people to share!                         *
  *                                                                        */
 
-
 /**
  * Returns the string, a newline character and an underline made of
  * $withCharacter as long as the original string.
@@ -27,4 +26,3 @@ class UnderlineViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelpe
 		return $string . chr(10) . str_repeat($withCharacter, strlen($string));
 	}
 }
-?>
