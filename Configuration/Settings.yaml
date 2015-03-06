@@ -115,6 +115,7 @@ TYPO3:
         title: 'Eel Helpers Reference'
         savePathAndFilename: '%FLOW_PATH_PACKAGES%Application/TYPO3.Neos/Documentation/Appendixes/EelHelpersReference.rst'
         affectedClasses:
-          classNamePattern: '/^TYPO3\\Eel\\Helper\\.*Helper$/i'
+          interface: 'TYPO3\Eel\ProtectedContextAwareInterface'
+          classNamePattern: '/^.*Helper$/i'
         parser:
           implementationClassName: 'TYPO3\DocTools\Domain\Service\EelHelperClassParser'
