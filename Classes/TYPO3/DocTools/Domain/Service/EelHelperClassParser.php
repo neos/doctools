@@ -11,6 +11,7 @@ namespace TYPO3\DocTools\Domain\Service;
  * The TYPO3 project - inspiring people to share!                         *
  *                                                                        */
 
+use TYPO3\Eel\ProtectedContextAwareInterface;
 use TYPO3\Flow\Annotations as Flow;
 use TYPO3\Flow\Reflection\MethodReflection;
 
@@ -20,37 +21,44 @@ use TYPO3\Flow\Reflection\MethodReflection;
 class EelHelperClassParser extends AbstractClassParser {
 
 	/**
+	 * @Flow\InjectConfiguration(package="TYPO3.TypoScript", path="defaultContext")
+	 * @var array
+	 */
+	protected $defaultContextSettings;
+
+	/**
 	 * Get the title from the Eel helper class name
-	 *
-	 * TODO It would be nicer to use the registered settings helper names (because these are the real names inside Eel)
 	 *
 	 * @return string
 	 */
 	protected function parseTitle() {
-		$className = $this->className;
-		if (preg_match('/\\\\([^\\\\]*)Helper$/', $className, $matches)) {
+		if (($registeredName = array_search($this->className, $this->defaultContextSettings)) !== FALSE) {
+			return $registeredName;
+		} elseif (preg_match('/\\\\([^\\\\]*)Helper$/', $this->className, $matches)) {
 			return $matches[1];
 		}
-		return $className;
+		return $this->className;
 	}
 
 	/**
 	 * Iterate over all methods in the helper class
-	 *
-	 * TODO Check if the helper implements ProtectedContextAwareInterface and call allowsCallOfMethod for each method
 	 *
 	 * @return array
 	 */
 	protected function parseDescription() {
 		$description = $this->classReflection->getDescription() . chr(10) . chr(10);
 
+		$description .= 'Implemented in: ``' . $this->className . '``' . chr(10) . chr(10);
+
 		$helperName = $this->parseTitle();
+		$helperInstance = new $this->className();
 
 		$methods = $this->getHelperMethods();
-
 		foreach ($methods as $methodReflection) {
-			$methodDescription = $this->getMethodDescription($helperName, $methodReflection);
-			$description .= $methodDescription . chr(10);
+			if (!$helperInstance instanceof ProtectedContextAwareInterface || $helperInstance->allowsCallOfMethod($methodReflection->getName())) {
+				$methodDescription = $this->getMethodDescription($helperName, $methodReflection);
+				$description .= trim($methodDescription) . chr(10) . chr(10);
+			}
 		}
 
 		return $description;
@@ -72,7 +80,7 @@ class EelHelperClassParser extends AbstractClassParser {
 
 		$parameterNames = array_keys($methodParameters);
 
-		$methodSignature = $helperName . '.' . $methodName . '(' . implode(', ', $parameterNames) . ')';
+		$methodSignature = str_replace('_', '\\_', $helperName . '.' . $methodName . '(' . implode(', ', $parameterNames) . ')');
 
 		$methodDescription .= $methodSignature . chr(10) . str_repeat('^', strlen($methodSignature)) . chr(10) . chr(10);
 
@@ -91,7 +99,7 @@ class EelHelperClassParser extends AbstractClassParser {
 
 				$parameterOptionalSuffix = $methodParameters[$parameterName]->isOptional() ? ', *optional*' : '';
 
-				$methodDescription .= '* ``' . $parameterName . '`` (' . $parameterType . $parameterOptionalSuffix . ') ' . $parameterDescription . chr(10);
+				$methodDescription .= trim('* ``' . $parameterName . '`` (' . $parameterType . $parameterOptionalSuffix . ') ' . $parameterDescription) . chr(10);
 			}
 
 			$methodDescription .= chr(10);
