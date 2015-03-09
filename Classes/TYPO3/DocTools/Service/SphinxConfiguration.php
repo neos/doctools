@@ -67,7 +67,7 @@ class SphinxConfiguration {
 	 * @return string
 	 */
 	protected function generateTemporaryConfigurationRootPath($configurationRootPath) {
-		return FLOW_PATH_ROOT . 'Data/Temporary/Documentation/_Build/' . sha1($configurationRootPath);
+		return FLOW_PATH_ROOT . 'Data/Temporary/Documentation/_Build/' . sha1($configurationRootPath) . '/';
 	}
 
 	/**
