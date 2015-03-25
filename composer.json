@@ -4,7 +4,10 @@
     "description": "Tools for generating and rendering Flow and Neos documentation",
     "license": "LGPL-3.0+",
     "require": {
-        "typo3/flow": "~3.0"
+        "typo3/flow": "~3"
+    },
+    "conflict": {
+        "typo3/flow": "~2"
     },
     "suggest": {
         "typo3/neos": "For importing documentation into a Neos-based site"
