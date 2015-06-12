@@ -43,7 +43,7 @@ TYPO3:
 
     commandReferences:
       FlowCommands:
-        title: 'TYPO3 Flow Command Reference'
+        title: 'Flow Command Reference'
         packageKeys:
           - 'TYPO3.Flow'
           - 'TYPO3.Party'
@@ -93,7 +93,7 @@ TYPO3:
               f: 'TYPO3\Fluid\ViewHelpers'
               neos: 'TYPO3\Neos\ViewHelpers'
       FlowValidators:
-        title: 'TYPO3 Flow Validator Reference'
+        title: 'Flow Validator Reference'
         savePathAndFilename: '%FLOW_PATH_PACKAGES%Framework/TYPO3.Flow/Documentation/TheDefinitiveGuide/PartV/ValidatorReference.rst'
         affectedClasses:
           parentClassName: 'TYPO3\Flow\Validation\Validator\AbstractValidator'
@@ -101,7 +101,7 @@ TYPO3:
         parser:
           implementationClassName: 'TYPO3\DocTools\Domain\Service\FlowValidatorClassParser'
       FlowTypeConverters:
-        title: 'TYPO3 Flow TypeConverter Reference'
+        title: 'Flow TypeConverter Reference'
         savePathAndFilename: '%FLOW_PATH_PACKAGES%Framework/TYPO3.Flow/Documentation/TheDefinitiveGuide/PartV/TypeConverterReference.rst'
         affectedClasses:
           parentClassName: 'TYPO3\Flow\Property\TypeConverter\AbstractTypeConverter'
@@ -109,7 +109,7 @@ TYPO3:
         parser:
           implementationClassName: 'TYPO3\DocTools\Domain\Service\FlowTypeConverterClassParser'
       FlowAnnotations:
-        title: 'TYPO3 Flow Annotation Reference'
+        title: 'Flow Annotation Reference'
         savePathAndFilename: '%FLOW_PATH_PACKAGES%Framework/TYPO3.Flow/Documentation/TheDefinitiveGuide/PartV/AnnotationReference.rst'
         affectedClasses:
           classNamePattern: '/^TYPO3\\Flow\\Annotations\\.*$/i'

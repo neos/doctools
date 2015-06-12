@@ -2,7 +2,7 @@
 namespace TYPO3\DocTools\Domain\Service;
 
 /*                                                                        *
- * This script belongs to the TYPO3 Flow package "TYPO3.DocTools".        *
+ * This script belongs to the Flow package "TYPO3.DocTools".              *
  *                                                                        *
  * It is free software; you can redistribute it and/or modify it under    *
  * the terms of the GNU Lesser General Public License, either version 3   *
@@ -11,8 +11,8 @@ namespace TYPO3\DocTools\Domain\Service;
  * The TYPO3 project - inspiring people to share!                         *
  *                                                                        */
 
-use TYPO3\Flow\Annotations as Flow;
 use TYPO3\DocTools\Domain\Model\ArgumentDefinition;
+use TYPO3\Flow\Annotations as Flow;
 
 /**
  * TYPO3.DocTools parser for TYPO3 Flow Validator classes.
@@ -52,6 +52,7 @@ class FlowValidatorClassParser extends AbstractClassParser {
 		foreach ($classDefaultProperties['supportedOptions'] as $optionName => $optionData) {
 			$options[] = new ArgumentDefinition($optionName, $optionData[2], $optionData[1], isset($optionData[3]), $optionData[1]);
 		}
+
 		return $options;
 	}
 

@@ -2,7 +2,7 @@
 namespace TYPO3\DocTools\Domain\Service;
 
 /*                                                                        *
- * This script belongs to the TYPO3 Flow package "TYPO3.DocTools".        *
+ * This script belongs to the Flow package "TYPO3.DocTools".              *
  *                                                                        *
  * It is free software; you can redistribute it and/or modify it under    *
  * the terms of the GNU Lesser General Public License, either version 3   *
@@ -37,6 +37,7 @@ class EelHelperClassParser extends AbstractClassParser {
 		} elseif (preg_match('/\\\\([^\\\\]*)Helper$/', $this->className, $matches)) {
 			return $matches[1];
 		}
+
 		return $this->className;
 	}
 
@@ -114,6 +115,7 @@ class EelHelperClassParser extends AbstractClassParser {
 
 			$methodDescription .= '**Return** (' . $returnType . ') ' . $returnDescription . chr(10);
 		}
+
 		return $methodDescription;
 	}
 
@@ -122,16 +124,18 @@ class EelHelperClassParser extends AbstractClassParser {
 	 */
 	protected function getHelperMethods() {
 		$methods = $this->classReflection->getMethods(\ReflectionMethod::IS_PUBLIC);
-		$methods = array_filter($methods, function(MethodReflection $methodReflection) {
+		$methods = array_filter($methods, function (MethodReflection $methodReflection) {
 			$methodName = $methodReflection->getName();
 			if (strpos($methodName, '__') === 0 || $methodName === 'allowsCallOfMethod' || $methodReflection->isTaggedWith('deprecated')) {
 				return FALSE;
 			}
+
 			return TRUE;
 		});
 		usort($methods, function (MethodReflection $methodReflection1, MethodReflection $methodReflection2) {
 			return strcmp($methodReflection1->getName(), $methodReflection2->getName());
 		});
+
 		return $methods;
 	}
 

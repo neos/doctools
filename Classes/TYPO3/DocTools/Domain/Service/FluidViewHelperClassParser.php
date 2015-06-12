@@ -2,7 +2,7 @@
 namespace TYPO3\DocTools\Domain\Service;
 
 /*                                                                        *
- * This script belongs to the TYPO3 Flow package "TYPO3.DocTools".        *
+ * This script belongs to the Flow package "TYPO3.DocTools".              *
  *                                                                        *
  * It is free software; you can redistribute it and/or modify it under    *
  * the terms of the GNU Lesser General Public License, either version 3   *
@@ -11,9 +11,9 @@ namespace TYPO3\DocTools\Domain\Service;
  * The TYPO3 project - inspiring people to share!                         *
  *                                                                        */
 
-use TYPO3\Flow\Annotations as Flow;
-use TYPO3\DocTools\Domain\Model\CodeExample;
 use TYPO3\DocTools\Domain\Model\ArgumentDefinition;
+use TYPO3\DocTools\Domain\Model\CodeExample;
+use TYPO3\Flow\Annotations as Flow;
 
 /**
  * TYPO3.DocTools parser for Fluid ViewHelper classes.
@@ -27,7 +27,7 @@ class FluidViewHelperClassParser extends AbstractClassParser {
 	 * @return void
 	 */
 	public function initializeObject() {
-			// enable ViewHelper documentation
+		// enable ViewHelper documentation
 		\TYPO3\Fluid\Fluid::$debugMode = TRUE;
 	}
 
@@ -39,9 +39,11 @@ class FluidViewHelperClassParser extends AbstractClassParser {
 		foreach ($this->options['namespaces'] as $namespaceIdentifier => $fullyQualifiedNamespace) {
 			if (strpos($this->className, $fullyQualifiedNamespace) === 0) {
 				$titleSegments = explode('\\', substr($classNameWithoutSuffix, strlen($fullyQualifiedNamespace) + 1));
-				return sprintf('%s:%s', $namespaceIdentifier , implode('.', array_map('lcfirst', $titleSegments)));
+
+				return sprintf('%s:%s', $namespaceIdentifier, implode('.', array_map('lcfirst', $titleSegments)));
 			}
 		}
+
 		return substr($this->className, strrpos($this->className, '\\') + 1);
 	}
 
@@ -54,7 +56,7 @@ class FluidViewHelperClassParser extends AbstractClassParser {
 		preg_match(self::PATTERN_DESCRIPTION, $description, $matches);
 		$description = isset($matches['description']) ? $matches['description'] : $description;
 
-		$description .= chr(10) . chr(10) . ':Implementation: ' . str_replace('\\', '\\\\', $this->className) . chr(10) ;
+		$description .= chr(10) . chr(10) . ':Implementation: ' . str_replace('\\', '\\\\', $this->className) . chr(10);
 
 		return $description;
 	}
@@ -69,6 +71,7 @@ class FluidViewHelperClassParser extends AbstractClassParser {
 		foreach ($viewHelperArguments as $viewHelperArgument) {
 			$argumentDefinitions[] = new ArgumentDefinition($viewHelperArgument->getName(), $viewHelperArgument->getType(), $viewHelperArgument->getDescription(), $viewHelperArgument->isRequired(), $viewHelperArgument->getDefaultValue());
 		}
+
 		return $argumentDefinitions;
 	}
 
@@ -82,6 +85,7 @@ class FluidViewHelperClassParser extends AbstractClassParser {
 		foreach ($matches as $match) {
 			$examples[] = new CodeExample(trim($match['title']), trim($match['code']), 'xml', trim($match['output']));
 		}
+
 		return $examples;
 	}
 }

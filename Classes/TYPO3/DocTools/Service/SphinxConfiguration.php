@@ -2,7 +2,7 @@
 namespace TYPO3\DocTools\Service;
 
 /*                                                                        *
- * This script belongs to the TYPO3 Flow package "TYPO3.DocTools".        *
+ * This script belongs to the Flow package "TYPO3.DocTools".              *
  *                                                                        *
  *                                                                        *
  */
