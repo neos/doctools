@@ -107,7 +107,7 @@ class ReferenceCommandController extends \TYPO3\Flow\Cli\CommandController {
 		}
 
 		foreach ($affectedClassNames as $index => $className) {
-			if ($this->reflectionService->isClassAbstract($className)) {
+			if ($this->reflectionService->isClassAbstract($className) && (!isset($classesSelector['includeAbstractClasses']) || $classesSelector['includeAbstractClasses'] === FALSE)) {
 				unset($affectedClassNames[$index]);
 			} elseif (isset($classesSelector['classNamePattern']) && preg_match($classesSelector['classNamePattern'], $className) === 0) {
 				unset($affectedClassNames[$index]);
