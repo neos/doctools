@@ -2,7 +2,7 @@
 namespace TYPO3\DocTools\Domain\Service;
 
 /*                                                                        *
- * This script belongs to the TYPO3 Flow package "TYPO3.DocTools".        *
+ * This script belongs to the Flow package "TYPO3.DocTools".              *
  *                                                                        *
  * It is free software; you can redistribute it and/or modify it under    *
  * the terms of the GNU Lesser General Public License, either version 3   *
@@ -11,9 +11,8 @@ namespace TYPO3\DocTools\Domain\Service;
  * The TYPO3 project - inspiring people to share!                         *
  *                                                                        */
 
-use TYPO3\Flow\Annotations as Flow;
-use TYPO3\DocTools\Domain\Model\CodeExample;
 use TYPO3\DocTools\Domain\Model\ArgumentDefinition;
+use TYPO3\Flow\Annotations as Flow;
 
 /**
  * TYPO3.DocTools parser for TYPO3 Flow Annotation classes.
@@ -44,6 +43,7 @@ class FlowAnnotationClassParser extends AbstractClassParser {
 			$targets = strtr($matches[1], array('"' => ''));
 			$description .= chr(10) . chr(10) . ':Applicable to: ' . ucwords(strtolower($targets)) . chr(10);
 		}
+
 		return $description;
 	}
 
@@ -58,6 +58,7 @@ class FlowAnnotationClassParser extends AbstractClassParser {
 			$varTags = $propertyReflection->getTagValues('var');
 			$options[] = new ArgumentDefinition($propertyReflection->getName(), array_shift($varTags), $propertyReflection->getDescription(), TRUE, $classDefaultProperties[$propertyReflection->getName()]);
 		}
+
 		return $options;
 	}
 

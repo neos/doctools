@@ -2,7 +2,7 @@
 namespace TYPO3\DocTools\Domain\Service;
 
 /*                                                                        *
- * This script belongs to the TYPO3 Flow package "TYPO3.DocTools".        *
+ * This script belongs to the Flow package "TYPO3.DocTools".              *
  *                                                                        *
  * It is free software; you can redistribute it and/or modify it under    *
  * the terms of the GNU Lesser General Public License, either version 3   *
@@ -36,10 +36,10 @@ class FlowQueryOperationClassParser extends AbstractClassParser {
 			$description .= chr(10) . chr(10) . $methodReflection->getDescription();
 		}
 
-		$description .= chr(10) . chr(10) . ':Implementation: ' . str_replace('\\', '\\\\', $this->className) . chr(10) ;
-		$description .= ':Priority: ' . call_user_func(array($this->className, 'getPriority')) . chr(10) ;
-		$description .= ':Final: ' . (call_user_func(array($this->className, 'isFinal')) ? 'Yes' : 'No') . chr(10) ;
-		$description .= ':Returns: ' . implode(' ', $methodReflection->getTagValues('return')) . chr(10) ;
+		$description .= chr(10) . chr(10) . ':Implementation: ' . str_replace('\\', '\\\\', $this->className) . chr(10);
+		$description .= ':Priority: ' . call_user_func(array($this->className, 'getPriority')) . chr(10);
+		$description .= ':Final: ' . (call_user_func(array($this->className, 'isFinal')) ? 'Yes' : 'No') . chr(10);
+		$description .= ':Returns: ' . implode(' ', $methodReflection->getTagValues('return')) . chr(10);
 
 		return $description;
 	}

@@ -2,7 +2,7 @@
 namespace TYPO3\DocTools\Domain\Service;
 
 /*                                                                        *
- * This script belongs to the TYPO3 Flow package "TYPO3.DocTools".        *
+ * This script belongs to the Flow package "TYPO3.DocTools".              *
  *                                                                        *
  * It is free software; you can redistribute it and/or modify it under    *
  * the terms of the GNU Lesser General Public License, either version 3   *
@@ -12,8 +12,6 @@ namespace TYPO3\DocTools\Domain\Service;
  *                                                                        */
 
 use TYPO3\Flow\Annotations as Flow;
-use TYPO3\DocTools\Domain\Model\CodeExample;
-use TYPO3\DocTools\Domain\Model\ArgumentDefinition;
 
 /**
  * TYPO3.DocTools parser for TYPO3 Flow TypeConverter classes.
@@ -35,8 +33,8 @@ class FlowTypeConverterClassParser extends AbstractClassParser {
 
 		$classDefaultProperties = $this->classReflection->getDefaultProperties();
 
-		$description .= chr(10) . chr(10) . ':Priority: ' . $classDefaultProperties['priority']. chr(10) ;
-		$description .= ':Target type: ' . $classDefaultProperties['targetType']. chr(10) ;
+		$description .= chr(10) . chr(10) . ':Priority: ' . $classDefaultProperties['priority'] . chr(10);
+		$description .= ':Target type: ' . $classDefaultProperties['targetType'] . chr(10);
 		if (count($classDefaultProperties['sourceTypes']) === 1) {
 			$description .= ':Source type: ' . current($classDefaultProperties['sourceTypes']) . chr(10);
 		} else {
