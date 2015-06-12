@@ -102,6 +102,8 @@ class ReferenceCommandController extends \TYPO3\Flow\Cli\CommandController {
 			$affectedClassNames = $this->reflectionService->getAllSubClassNamesForClass($classesSelector['parentClassName']);
 		} elseif (isset($classesSelector['interface'])) {
 			$affectedClassNames = $this->reflectionService->getAllImplementationClassNamesForInterface($classesSelector['interface']);
+		} elseif (isset($classesSelector['classesContainingMethodsAnnotatedWith'])) {
+			$affectedClassNames = $this->reflectionService->getClassesContainingMethodsAnnotatedWith($classesSelector['classesContainingMethodsAnnotatedWith']);
 		} else {
 			$affectedClassNames = $this->reflectionService->getAllClassNames();
 		}
