@@ -100,6 +100,24 @@ TYPO3:
           classNamePattern: '/^TYPO3\\Flow\\Validation\\Validator\\.*$/i'
         parser:
           implementationClassName: 'TYPO3\DocTools\Domain\Service\FlowValidatorClassParser'
+      FlowSignals:
+        title: 'Flow Signals Reference'
+        savePathAndFilename: '%FLOW_PATH_PACKAGES%Framework/TYPO3.Flow/Documentation/TheDefinitiveGuide/PartV/SignalsReference.rst'
+        affectedClasses:
+          classesContainingMethodsAnnotatedWith: 'TYPO3\Flow\Annotations\Signal'
+          classNamePattern: '/^TYPO3\\Flow\\.*$/i'
+          includeAbstractClasses: TRUE
+        parser:
+          implementationClassName: 'TYPO3\DocTools\Domain\Service\SignalsParser'
+      NeosSignals:
+        title: 'Neos Signals Reference'
+        savePathAndFilename: '%FLOW_PATH_PACKAGES%Application/TYPO3.Neos/Documentation/Appendixes/SignalsReference.rst'
+        affectedClasses:
+          classesContainingMethodsAnnotatedWith: 'TYPO3\Flow\Annotations\Signal'
+          classNamePattern: '/^TYPO3\\(Neos|TYPO3CR)\\.*$/i'
+          includeAbstractClasses: TRUE
+        parser:
+          implementationClassName: 'TYPO3\DocTools\Domain\Service\SignalsParser'
       FlowTypeConverters:
         title: 'TYPO3 Flow TypeConverter Reference'
         savePathAndFilename: '%FLOW_PATH_PACKAGES%Framework/TYPO3.Flow/Documentation/TheDefinitiveGuide/PartV/TypeConverterReference.rst'
