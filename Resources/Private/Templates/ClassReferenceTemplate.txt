@@ -1,10 +1,12 @@
-{namespace d=TYPO3\DocTools\ViewHelpers}.. _{title}:
+{namespace d=TYPO3\DocTools\ViewHelpers}.. _`{title}`:
 
 {title -> d:format.underline(withCharacter: '=')}
 
 This reference was automatically generated from code on {f:format.date(date: 'now')}
 
 <f:for each="{classReferences}" as="classReference">
+.. _`{title}: {classReference.title}`:
+
 <d:format.underline withCharacter="-">{classReference.title}{f:if(condition: classReference.deprecationNote, then: ' (deprecated)')}</d:format.underline>
 
 {classReference.description -> f:format.raw()}

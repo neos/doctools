@@ -1,4 +1,4 @@
-{namespace d=TYPO3\DocTools\ViewHelpers}.. _{title}:
+{namespace d=TYPO3\DocTools\ViewHelpers}.. _`{title}`:
 
 {title -> d:format.underline(withCharacter: '=')}
 
@@ -21,9 +21,13 @@ commands that may be available, use::
 The following reference was automatically generated from code on {f:format.date(date: 'now')}
 
 <f:for each="{allCommandsByPackageKey}" as="allCommands" key="packageKey">
+.. _`{title}: {packageKey}`:
+
 <d:format.underline withCharacter="-">Package *{packageKey}*</d:format.underline>
 
 <f:for each="{allCommands}" as="command">
+.. _`{title}: {packageKey} {command.identifier}`:
+
 <d:format.underline withCharacter="*">``{command.identifier}``</d:format.underline>
 
 **{command.shortDescription}**
