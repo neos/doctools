@@ -50,6 +50,35 @@ class ReferenceCommandController extends \TYPO3\Flow\Cli\CommandController {
 	 */
 	public function renderCommand($reference = NULL) {
 		$references = $reference !== NULL ? array($reference) : array_keys($this->settings['references']);
+		$this->renderReferences($references);
+	}
+
+	/**
+	 * Renders a configured collection of reference documentation from source code.
+	 *
+	 * @param string $collection to render (typically the name of a package).
+	 * @return void
+	 */
+	public function renderCollectionCommand($collection) {
+		if (!isset($this->settings['collections'][$collection])) {
+			$this->outputLine('Collection "%s" is not configured', array($collection));
+			$this->quit(1);
+		}
+		if (!isset($this->settings['collections'][$collection]['references'])) {
+			$this->outputLine('Collection "%s" does not have any references', array($collection));
+			$this->quit(1);
+		}
+		$references = $this->settings['collections'][$collection]['references'];
+		$this->renderReferences($references);
+	}
+
+	/**
+	 * Render a set of references to reStructuredText.
+	 *
+	 * @param array $references to render.
+	 * @return void
+	 */
+	protected function renderReferences($references) {
 		foreach ($references as $reference) {
 			$this->outputLine('Rendering Reference "%s"', array($reference));
 			$this->renderReference($reference);

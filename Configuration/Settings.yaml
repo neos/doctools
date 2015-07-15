@@ -41,6 +41,30 @@ TYPO3:
         renderedDocumentationRootPath: '%FLOW_PATH_DATA%Temporary/Documentation/TheDefinitiveGuide/PartV/CodingGuidelines'
         imageRootPath: '%FLOW_PATH_DATA%Temporary/Documentation/TheDefinitiveGuide/_images/'
 
+    collections:
+      'Flow':
+        commandReferences:
+          - 'FlowCommands'
+        references:
+          - 'FluidViewHelpers'
+          - 'FlowValidators'
+          - 'FlowTypeConverters'
+          - 'FlowAnnotations'
+      'Flow:Signals':
+        references:
+          - 'FlowSignals'
+      'Neos':
+        commandReferences:
+          - 'NeosCommands'
+        references:
+          - 'MediaViewHelpers'
+          - 'NeosViewHelpers'
+          - 'FlowQueryOperations'
+          - 'EelHelpers'
+      'Neos:Signals':
+        references:
+          - 'NeosSignals'
+
     commandReferences:
       FlowCommands:
         title: 'Flow Command Reference'

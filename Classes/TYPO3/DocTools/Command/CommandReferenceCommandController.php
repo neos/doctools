@@ -39,7 +39,7 @@ class CommandReferenceCommandController extends \TYPO3\Flow\Command\HelpCommandC
 	 * Display help for a command
 	 *
 	 * The help command displays help for a given command:
-	 * ./flow3 help <commandIdentifier>
+	 * ./flow help <commandIdentifier>
 	 *
 	 * @param string $commandIdentifier Identifier of a command for more details
 	 * @return void
@@ -55,6 +55,35 @@ class CommandReferenceCommandController extends \TYPO3\Flow\Command\HelpCommandC
 	 */
 	public function renderCommand($reference = NULL) {
 		$references = $reference !== NULL ? array($reference) : array_keys($this->settings['commandReferences']);
+		$this->renderReferences($references);
+	}
+
+	/**
+	 * Renders a configured collection of command reference documentation from source code.
+	 *
+	 * @param string $collection to render (typically the name of a package).
+	 * @return void
+	 */
+	public function renderCollectionCommand($collection) {
+		if (!isset($this->settings['collections'][$collection])) {
+			$this->outputLine('Collection "%s" is not configured', array($collection));
+			$this->quit(1);
+		}
+		if (!isset($this->settings['collections'][$collection]['commandReferences'])) {
+			$this->outputLine('Collection "%s" does not have any references', array($collection));
+			$this->quit(1);
+		}
+		$references = $this->settings['collections'][$collection]['commandReferences'];
+		$this->renderReferences($references);
+	}
+
+	/**
+	 * Render a set of CLI command references to reStructuredText.
+	 *
+	 * @param array $references to render.
+	 * @return void
+	 */
+	protected function renderReferences($references) {
 		foreach ($references as $reference) {
 			$this->outputLine('Rendering Reference "%s"', array($reference));
 			$this->renderReference($reference);
