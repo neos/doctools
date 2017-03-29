@@ -9,9 +9,6 @@
     "replace": {
         "typo3/doctools": "self.version"
     },
-    "suggest": {
-        "neos/neos": "For importing documentation into a Neos-based site"
-    },
     "autoload": {
         "psr-4": {
             "Neos\\DocTools\\": "Classes"
