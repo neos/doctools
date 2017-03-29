@@ -15,15 +15,17 @@ namespace Neos\DocTools\ViewHelpers\Format;
  * Renders it's children and replaces every newline by a combination of
  * newline and $indent.
  */
-class IndentViewHelper extends \Neos\FluidAdaptor\Core\ViewHelper\AbstractViewHelper {
+class IndentViewHelper extends \Neos\FluidAdaptor\Core\ViewHelper\AbstractViewHelper
+{
+    /**
+     * @param string $indent String used to indent
+     * @param boolean $inline If TRUE, the first line will not be indented
+     * @return string The formatted value
+     */
+    public function render($indent = "\t", $inline = false)
+    {
+        $string = $this->renderChildren();
 
-	/**
-	 * @param string $indent String used to indent
-	 * @param boolean $inline If TRUE, the first line will not be indented
-	 * @return string The formatted value
-	 */
-	public function render($indent = "\t", $inline = FALSE) {
-		$string = $this->renderChildren();
-		return ($inline === FALSE ? $indent : '') . str_replace("\n", "\n" . $indent, $string);
-	}
+        return ($inline === false ? $indent : '') . str_replace("\n", "\n" . $indent, $string);
+    }
 }
