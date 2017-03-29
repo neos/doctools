@@ -2,7 +2,7 @@
     "name": "neos/doctools",
     "type": "neos-package",
     "description": "Tools for generating and rendering Flow and Neos documentation",
-    "license": "LGPL-3.0+",
+    "license": "MIT",
     "require": {
         "neos/flow": "~4.0"
     },
