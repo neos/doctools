@@ -2,7 +2,7 @@
 # Settings                                                               #
 #                                                                        #
 
-TYPO3:
+Neos:
   DocTools:
     defaultConfiguration:
       imageMaxWidth: 1500
@@ -11,6 +11,6 @@ TYPO3:
       thumbnailMaxHeight: 800
       renderByDefault: true
       nodeTypes:
-        page: 'TYPO3.Neos:Page'
-        section: 'TYPO3.Neos:ContentCollection'
-        text: 'TYPO3.Neos.NodeTypes:Text'
+        page: 'Neos.Neos:Page'
+        section: 'Neos.Neos:ContentCollection'
+        text: 'Neos.NodeTypes:Text'
