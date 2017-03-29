@@ -14,7 +14,7 @@
     },
     "autoload": {
         "psr-4": {
-            "Neos\\DocTools": "Classes"
+            "Neos\\DocTools\\": "Classes"
         }
     }
 }
