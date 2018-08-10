@@ -13,6 +13,7 @@ namespace Neos\DocTools\Command;
 
 use Neos\DocTools\Domain\Model\ClassReference;
 use Neos\Flow\Annotations as Flow;
+use Neos\Flow\Cli\CommandController;
 
 /**
  * Reference command controller for the Documentation package.
@@ -21,7 +22,7 @@ use Neos\Flow\Annotations as Flow;
  *
  * @Flow\Scope("singleton")
  */
-class ReferenceCommandController extends \Neos\Flow\Cli\CommandController
+class ReferenceCommandController extends CommandController
 {
     /**
      * @var \Neos\Flow\Reflection\ReflectionService

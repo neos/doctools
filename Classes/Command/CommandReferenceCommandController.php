@@ -12,6 +12,7 @@ namespace Neos\DocTools\Command;
  */
 
 use Neos\Flow\Annotations as Flow;
+use Neos\Flow\Cli\CommandController;
 
 /**
  * "Command Reference" command controller for the Documentation package.
@@ -20,7 +21,7 @@ use Neos\Flow\Annotations as Flow;
  *
  * @Flow\Scope("singleton")
  */
-class CommandReferenceCommandController extends \Neos\Flow\Command\HelpCommandController
+class CommandReferenceCommandController extends CommandController
 {
     /**
      * @var array
@@ -34,20 +35,6 @@ class CommandReferenceCommandController extends \Neos\Flow\Command\HelpCommandCo
     public function injectSettings(array $settings)
     {
         $this->settings = $settings;
-    }
-
-    /**
-     * Display help for a command
-     *
-     * The help command displays help for a given command:
-     * ./flow help <commandIdentifier>
-     *
-     * @param string $commandIdentifier Identifier of a command for more details
-     * @return void
-     * @Flow\Internal
-     */
-    public function helpCommand($commandIdentifier = null)
-    {
     }
 
     /**
