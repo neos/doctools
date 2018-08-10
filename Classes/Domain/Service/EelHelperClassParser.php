@@ -45,7 +45,7 @@ class EelHelperClassParser extends AbstractClassParser
     /**
      * Iterate over all methods in the helper class
      *
-     * @return array
+     * @return string
      */
     protected function parseDescription()
     {

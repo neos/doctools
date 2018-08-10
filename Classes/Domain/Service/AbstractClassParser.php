@@ -43,6 +43,7 @@ abstract class AbstractClassParser
     /**
      * @param string $className
      * @return \Neos\DocTools\Domain\Model\ClassReference
+     * @throws \Neos\Flow\Reflection\Exception\ClassLoadingForReflectionFailedException
      */
     final public function parse($className)
     {

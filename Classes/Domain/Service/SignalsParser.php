@@ -33,7 +33,7 @@ class SignalsParser extends AbstractClassParser
     }
 
     /**
-     * @return array
+     * @return string
      */
     protected function parseDescription()
     {

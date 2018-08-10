@@ -48,6 +48,9 @@ class ReferenceCommandController extends \Neos\Flow\Cli\CommandController
      *
      * @param string $reference to render. If not specified all configured references will be rendered
      * @return void
+     * @throws \Neos\Flow\Mvc\Exception\StopActionException
+     * @throws \Neos\FluidAdaptor\Exception
+     * @throws \Neos\Flow\Reflection\Exception\ClassLoadingForReflectionFailedException
      */
     public function renderCommand($reference = null)
     {
@@ -60,6 +63,9 @@ class ReferenceCommandController extends \Neos\Flow\Cli\CommandController
      *
      * @param string $collection to render (typically the name of a package).
      * @return void
+     * @throws \Neos\Flow\Mvc\Exception\StopActionException
+     * @throws \Neos\FluidAdaptor\Exception
+     * @throws \Neos\Flow\Reflection\Exception\ClassLoadingForReflectionFailedException
      */
     public function renderCollectionCommand($collection)
     {
@@ -80,6 +86,9 @@ class ReferenceCommandController extends \Neos\Flow\Cli\CommandController
      *
      * @param array $references to render.
      * @return void
+     * @throws \Neos\Flow\Mvc\Exception\StopActionException
+     * @throws \Neos\FluidAdaptor\Exception
+     * @throws \Neos\Flow\Reflection\Exception\ClassLoadingForReflectionFailedException
      */
     protected function renderReferences($references)
     {
@@ -94,6 +103,9 @@ class ReferenceCommandController extends \Neos\Flow\Cli\CommandController
      *
      * @param string $reference
      * @return void
+     * @throws \Neos\Flow\Mvc\Exception\StopActionException
+     * @throws \Neos\FluidAdaptor\Exception
+     * @throws \Neos\Flow\Reflection\Exception\ClassLoadingForReflectionFailedException
      */
     protected function renderReference($reference)
     {

@@ -38,7 +38,7 @@ class CommandReferenceCommandController extends \Neos\Flow\Command\HelpCommandCo
 
     /**
      * Display help for a command
-	 *
+     *
      * The help command displays help for a given command:
      * ./flow help <commandIdentifier>
      *
@@ -55,6 +55,8 @@ class CommandReferenceCommandController extends \Neos\Flow\Command\HelpCommandCo
      *
      * @param string $reference to render. If not specified all configured references will be rendered
      * @return void
+     * @throws \Neos\Flow\Mvc\Exception\StopActionException
+     * @throws \Neos\FluidAdaptor\Exception
      */
     public function renderCommand($reference = null)
     {
@@ -67,6 +69,8 @@ class CommandReferenceCommandController extends \Neos\Flow\Command\HelpCommandCo
      *
      * @param string $collection to render (typically the name of a package).
      * @return void
+     * @throws \Neos\Flow\Mvc\Exception\StopActionException
+     * @throws \Neos\FluidAdaptor\Exception
      */
     public function renderCollectionCommand($collection)
     {
@@ -87,6 +91,8 @@ class CommandReferenceCommandController extends \Neos\Flow\Command\HelpCommandCo
      *
      * @param array $references to render.
      * @return void
+     * @throws \Neos\Flow\Mvc\Exception\StopActionException
+     * @throws \Neos\FluidAdaptor\Exception
      */
     protected function renderReferences($references)
     {
@@ -101,6 +107,8 @@ class CommandReferenceCommandController extends \Neos\Flow\Command\HelpCommandCo
      *
      * @param string $reference
      * @return void
+     * @throws \Neos\Flow\Mvc\Exception\StopActionException
+     * @throws \Neos\FluidAdaptor\Exception
      */
     protected function renderReference($reference)
     {

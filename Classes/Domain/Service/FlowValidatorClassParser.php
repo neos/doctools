@@ -27,7 +27,7 @@ class FlowValidatorClassParser extends AbstractClassParser
     }
 
     /**
-     * @return array
+     * @return string
      */
     protected function parseDescription()
     {
