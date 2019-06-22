@@ -12,7 +12,10 @@ namespace Neos\DocTools\Command;
  */
 
 use Neos\Flow\Annotations as Flow;
+use Neos\Flow\Cli\Command;
 use Neos\Flow\Cli\CommandController;
+use Neos\Flow\Mvc\Exception\CommandException;
+use Neos\FluidAdaptor\View\StandaloneView;
 
 /**
  * "Command Reference" command controller for the Documentation package.
@@ -45,7 +48,7 @@ class CommandReferenceCommandController extends CommandController
      * @throws \Neos\Flow\Mvc\Exception\StopActionException
      * @throws \Neos\FluidAdaptor\Exception
      */
-    public function renderCommand($reference = null)
+    public function renderCommand(string $reference = null)
     {
         $references = $reference !== null ? [$reference] : array_keys($this->settings['commandReferences']);
         $this->renderReferences($references);
@@ -59,7 +62,7 @@ class CommandReferenceCommandController extends CommandController
      * @throws \Neos\Flow\Mvc\Exception\StopActionException
      * @throws \Neos\FluidAdaptor\Exception
      */
-    public function renderCollectionCommand($collection)
+    public function renderCollectionCommand(string $collection)
     {
         if (!isset($this->settings['collections'][$collection])) {
             $this->outputLine('Collection "%s" is not configured', [$collection]);
@@ -81,7 +84,7 @@ class CommandReferenceCommandController extends CommandController
      * @throws \Neos\Flow\Mvc\Exception\StopActionException
      * @throws \Neos\FluidAdaptor\Exception
      */
-    protected function renderReferences($references)
+    protected function renderReferences(array $references)
     {
         foreach ($references as $reference) {
             $this->outputLine('Rendering Reference "%s"', [$reference]);
@@ -97,24 +100,21 @@ class CommandReferenceCommandController extends CommandController
      * @throws \Neos\Flow\Mvc\Exception\StopActionException
      * @throws \Neos\FluidAdaptor\Exception
      */
-    protected function renderReference($reference)
+    protected function renderReference(string $reference)
     {
         if (!isset($this->settings['commandReferences'][$reference])) {
             $this->outputLine('Command reference "%s" is not configured', [$reference]);
             $this->quit(1);
         }
         $referenceConfiguration = $this->settings['commandReferences'][$reference];
-        $packageKeysToRender = $referenceConfiguration['packageKeys'];
-        array_walk($packageKeysToRender, function (&$packageKey) {
-            $packageKey = strtolower($packageKey);
-        });
+        $packageKeysToRender = array_map('strtolower', $referenceConfiguration['packageKeys']);
 
         $availableCommands = $this->commandManager->getAvailableCommands();
         $commandsByPackagesAndControllers = $this->buildCommandsIndex($availableCommands);
 
         $allCommandsByPackageKey = [];
         foreach ($commandsByPackagesAndControllers as $packageKey => $commandControllers) {
-            if (!in_array($packageKey, $packageKeysToRender)) {
+            if (!in_array($packageKey, $packageKeysToRender, true)) {
                 $this->outputLine('Skipping package "%s"', [$packageKey]);
                 continue;
             }
@@ -140,7 +140,7 @@ class CommandReferenceCommandController extends CommandController
                         try {
                             $relatedCommand = $this->commandManager->getCommandByIdentifier($relatedCommandIdentifier);
                             $relatedCommands[$relatedCommandIdentifier] = $relatedCommand->getShortDescription();
-                        } catch (\Neos\Flow\Mvc\Exception\CommandException $exception) {
+                        } catch (CommandException $exception) {
                             $relatedCommands[$relatedCommandIdentifier] = '*Command not available*';
                         }
                     }
@@ -160,10 +160,10 @@ class CommandReferenceCommandController extends CommandController
         }
         ksort($allCommandsByPackageKey);
 
-        $standaloneView = new \Neos\FluidAdaptor\View\StandaloneView();
+        $standaloneView = new StandaloneView();
         $templatePathAndFilename = isset($settings['templatePathAndFilename']) ? $this->settings['commandReference']['templatePathAndFilename'] : 'resource://Neos.DocTools/Private/Templates/CommandReferenceTemplate.txt';
         $standaloneView->setTemplatePathAndFilename($templatePathAndFilename);
-        $standaloneView->assign('title', isset($referenceConfiguration['title']) ? $referenceConfiguration['title'] : $reference);
+        $standaloneView->assign('title', $referenceConfiguration['title'] ?? $reference);
         $standaloneView->assign('allCommandsByPackageKey', $allCommandsByPackageKey);
         file_put_contents($referenceConfiguration['savePathAndFilename'], $standaloneView->render());
         $this->outputLine('DONE.');
@@ -173,7 +173,7 @@ class CommandReferenceCommandController extends CommandController
      * @param string $input
      * @return string
      */
-    protected function transformMarkup($input)
+    protected function transformMarkup(string $input): string
     {
         $output = preg_replace('|\<b>(((?!\</b>).)*)\</b>|', '**$1**', $input);
         $output = preg_replace('|\<i>(((?!\</i>).)*)\</i>|', '*$1*', $output);
@@ -182,5 +182,29 @@ class CommandReferenceCommandController extends CommandController
         $output = preg_replace('|\<strike>(((?!\</strike>).)*)\</strike>|', '[$1]', $output);
 
         return $output;
+    }
+
+    /**
+     * Builds an index of available commands. For each of them a Command object is
+     * added to the commands array of this class.
+     *
+     * @param array<Command> $commands
+     * @return array in the format array('<packageKey>' => array('<CommandControllerClassName>', array('<command1>' => $command1, '<command2>' => $command2)))
+     */
+    protected function buildCommandsIndex(array $commands): array
+    {
+        $commandsByPackagesAndControllers = [];
+        /** @var Command $command */
+        foreach ($commands as $command) {
+            if ($command->isInternal()) {
+                continue;
+            }
+            $commandIdentifier = $command->getCommandIdentifier();
+            $packageKey = strstr($commandIdentifier, ':', true);
+            $commandControllerClassName = $command->getControllerClassName();
+            $commandName = $command->getControllerCommandName();
+            $commandsByPackagesAndControllers[$packageKey][$commandControllerClassName][$commandName] = $command;
+        }
+        return $commandsByPackagesAndControllers;
     }
 }
