@@ -18,14 +18,24 @@ namespace Neos\DocTools\ViewHelpers\Format;
 class IndentViewHelper extends \Neos\FluidAdaptor\Core\ViewHelper\AbstractViewHelper
 {
     /**
-     * @param string $indent String used to indent
-     * @param boolean $inline If TRUE, the first line will not be indented
+     * Initialize the arguments.
+     *
+     * @return void
+     * @api
+     */
+    public function initializeArguments()
+    {
+        $this->registerArgument('indent', 'string', 'String used to indent', false, "\t");
+        $this->registerArgument('inline', 'boolean', 'If true, the first line will not be indented', false, false);
+    }
+
+    /**
      * @return string The formatted value
      */
-    public function render($indent = "\t", $inline = false)
+    public function render()
     {
         $string = $this->renderChildren();
 
-        return ($inline === false ? $indent : '') . str_replace("\n", "\n" . $indent, $string);
+        return ($this->arguments['inline'] === false ? $this->arguments['indent'] : '') . str_replace("\n", "\n" . $this->arguments['indent'], $string);
     }
 }

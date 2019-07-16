@@ -18,13 +18,23 @@ namespace Neos\DocTools\ViewHelpers\Format;
 class UnderlineViewHelper extends \Neos\FluidAdaptor\Core\ViewHelper\AbstractViewHelper
 {
     /**
-     * @param string $withCharacter The padding string
+     * Initialize the arguments.
+     *
+     * @return void
+     * @api
+     */
+    public function initializeArguments()
+    {
+        $this->registerArgument('withCharacter', 'string', 'The padding string', false, '-');
+    }
+
+    /**
      * @return string The formatted value
      */
-    public function render($withCharacter = '-')
+    public function render()
     {
         $string = $this->renderChildren();
 
-        return $string . chr(10) . str_repeat($withCharacter, strlen($string));
+        return $string . chr(10) . str_repeat($this->arguments['withCharacter'], strlen($string));
     }
 }
