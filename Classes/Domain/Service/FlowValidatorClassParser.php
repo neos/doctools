@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 namespace Neos\DocTools\Domain\Service;
 
 /*
@@ -12,24 +13,19 @@ namespace Neos\DocTools\Domain\Service;
  */
 
 use Neos\DocTools\Domain\Model\ArgumentDefinition;
+use Neos\DocTools\Domain\Model\CodeExample;
 
 /**
  * Neos.DocTools parser for Flow Validator classes.
  */
 class FlowValidatorClassParser extends AbstractClassParser
 {
-    /**
-     * @return string
-     */
-    protected function parseTitle()
+    protected function parseTitle(): string
     {
         return substr($this->className, strrpos($this->className, '\\') + 1);
     }
 
-    /**
-     * @return string
-     */
-    protected function parseDescription()
+    protected function parseDescription(): string
     {
         $description = $this->classReflection->getDescription();
 
@@ -45,9 +41,9 @@ class FlowValidatorClassParser extends AbstractClassParser
     }
 
     /**
-     * @return array<\Neos\DocTools\Domain\Model\ArgumentDefinition>
+     * @return ArgumentDefinition[]
      */
-    protected function parseArgumentDefinitions()
+    protected function parseArgumentDefinitions(): array
     {
         $options = [];
         $classDefaultProperties = $this->classReflection->getDefaultProperties();
@@ -59,9 +55,9 @@ class FlowValidatorClassParser extends AbstractClassParser
     }
 
     /**
-     * @return array<\Neos\DocTools\Domain\Model\CodeExample>
+     * @return CodeExample[]
      */
-    protected function parseCodeExamples()
+    protected function parseCodeExamples(): array
     {
         return [];
     }

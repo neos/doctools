@@ -4,7 +4,8 @@
     "description": "Tools for generating and rendering Flow and Neos documentation",
     "license": "MIT",
     "require": {
-        "neos/flow": "~5.0 || ~6.0 || ~7.0 || ~8.0 || dev-master"
+        "php": "^7.4 || ^8.0",
+        "neos/flow": "^6.3 || ^7.0 || ^8.0 || dev-master"
     },
     "replace": {
         "typo3/doctools": "self.version"

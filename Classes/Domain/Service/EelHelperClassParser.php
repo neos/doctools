@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 namespace Neos\DocTools\Domain\Service;
 
 /*
@@ -11,6 +12,8 @@ namespace Neos\DocTools\Domain\Service;
  * source code.
  */
 
+use Neos\DocTools\Domain\Model\ArgumentDefinition;
+use Neos\DocTools\Domain\Model\CodeExample;
 use Neos\Eel\ProtectedContextAwareInterface;
 use Neos\Flow\Annotations as Flow;
 use Neos\Flow\Reflection\MethodReflection;
@@ -24,30 +27,22 @@ class EelHelperClassParser extends AbstractClassParser
      * @Flow\InjectConfiguration(package="Neos.Fusion", path="defaultContext")
      * @var array
      */
-    protected $defaultContextSettings;
+    protected array $defaultContextSettings = [];
 
-    /**
-     * Get the title from the Eel helper class name
-     *
-     * @return string
-     */
-    protected function parseTitle()
+    protected function parseTitle(): string
     {
-        if (($registeredName = array_search($this->className, $this->defaultContextSettings)) !== false) {
+        if (($registeredName = array_search($this->className, $this->defaultContextSettings, true)) !== false) {
             return $registeredName;
-        } elseif (preg_match('/\\\\([^\\\\]*)Helper$/', $this->className, $matches)) {
+        }
+
+        if (preg_match('/\\\\([^\\\\]*)Helper$/', $this->className, $matches)) {
             return $matches[1];
         }
 
         return $this->className;
     }
 
-    /**
-     * Iterate over all methods in the helper class
-     *
-     * @return string
-     */
-    protected function parseDescription()
+    protected function parseDescription(): string
     {
         $description = $this->classReflection->getDescription() . chr(10) . chr(10);
 
@@ -67,12 +62,7 @@ class EelHelperClassParser extends AbstractClassParser
         return $description;
     }
 
-    /**
-     * @param string $helperName
-     * @param MethodReflection $methodReflection
-     * @return string
-     */
-    protected function getMethodDescription($helperName, $methodReflection)
+    protected function getMethodDescription(string $helperName, MethodReflection $methodReflection): string
     {
         $methodDescription = '';
         $methodName = $methodReflection->getName();
@@ -97,9 +87,9 @@ class EelHelperClassParser extends AbstractClassParser
 
             foreach ($paramTagValues as $paramTagValue) {
                 $values = explode(' ', $paramTagValue, 3);
-                list($parameterType, $parameterName) = $values;
+                [$parameterType, $parameterName] = $values;
                 $parameterName = ltrim($parameterName, '$');
-                $parameterDescription = isset($values[2]) ? $values[2] : '';
+                $parameterDescription = $values[2] ?? '';
 
                 $parameterOptionalSuffix = $methodParameters[$parameterName]->isOptional() ? ', *optional*' : '';
 
@@ -110,11 +100,11 @@ class EelHelperClassParser extends AbstractClassParser
         }
 
         if ($methodReflection->isTaggedWith('return')) {
-            list($returnTagValue) = $methodReflection->getTagValues('return');
+            [$returnTagValue] = $methodReflection->getTagValues('return');
 
             $values = explode(' ', $returnTagValue, 2);
-            list($returnType) = $values;
-            $returnDescription = isset($values[1]) ? $values[1] : '';
+            [$returnType] = $values;
+            $returnDescription = $values[1] ?? '';
 
             $methodDescription .= '**Return** (' . $returnType . ') ' . $returnDescription . chr(10);
         }
@@ -123,20 +113,16 @@ class EelHelperClassParser extends AbstractClassParser
     }
 
     /**
-     * @return array<MethodReflection>
+     * @return MethodReflection[]
      */
-    protected function getHelperMethods()
+    protected function getHelperMethods(): array
     {
         $methods = $this->classReflection->getMethods(\ReflectionMethod::IS_PUBLIC);
-        $methods = array_filter($methods, function (MethodReflection $methodReflection) {
+        $methods = array_filter($methods, static function (MethodReflection $methodReflection) {
             $methodName = $methodReflection->getName();
-            if (strpos($methodName, '__') === 0 || $methodName === 'allowsCallOfMethod' || $methodReflection->isTaggedWith('deprecated')) {
-                return false;
-            }
-
-            return true;
+            return !(strpos($methodName, '__') === 0 || $methodName === 'allowsCallOfMethod' || $methodReflection->isTaggedWith('deprecated'));
         });
-        usort($methods, function (MethodReflection $methodReflection1, MethodReflection $methodReflection2) {
+        usort($methods, static function (MethodReflection $methodReflection1, MethodReflection $methodReflection2) {
             return strcmp($methodReflection1->getName(), $methodReflection2->getName());
         });
 
@@ -144,19 +130,18 @@ class EelHelperClassParser extends AbstractClassParser
     }
 
     /**
-     * @return array<\Neos\DocTools\Domain\Model\ArgumentDefinition>
+     * @return ArgumentDefinition[]
      */
-    protected function parseArgumentDefinitions()
+    protected function parseArgumentDefinitions(): array
     {
         return [];
     }
 
     /**
-     * @return array<\Neos\DocTools\Domain\Model\CodeExample>
+     * @return CodeExample[]
      */
-    protected function parseCodeExamples()
+    protected function parseCodeExamples(): array
     {
         return [];
     }
-
 }

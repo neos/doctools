@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 namespace Neos\DocTools\Command;
 
 /*
@@ -12,8 +13,13 @@ namespace Neos\DocTools\Command;
  */
 
 use Neos\DocTools\Domain\Model\ClassReference;
+use Neos\DocTools\Domain\Service\AbstractClassParser;
 use Neos\Flow\Annotations as Flow;
 use Neos\Flow\Cli\CommandController;
+use Neos\Flow\Mvc\Exception\StopActionException;
+use Neos\Flow\Reflection\Exception\ClassLoadingForReflectionFailedException;
+use Neos\Flow\Reflection\ReflectionService;
+use Neos\FluidAdaptor\View\StandaloneView;
 
 /**
  * Reference command controller for the Documentation package.
@@ -25,21 +31,14 @@ use Neos\Flow\Cli\CommandController;
 class ReferenceCommandController extends CommandController
 {
     /**
-     * @var \Neos\Flow\Reflection\ReflectionService
      * @Flow\Inject
+     * @var ReflectionService
      */
     protected $reflectionService;
 
-    /**
-     * @var array
-     */
-    protected $settings;
+    protected array $settings;
 
-    /**
-     * @param array $settings
-     * @return void
-     */
-    public function injectSettings(array $settings)
+    public function injectSettings(array $settings): void
     {
         $this->settings = $settings;
     }
@@ -47,13 +46,12 @@ class ReferenceCommandController extends CommandController
     /**
      * Renders reference documentation from source code.
      *
-     * @param string $reference to render. If not specified all configured references will be rendered
+     * @param string|null $reference to render. If not specified all configured references will be rendered
      * @return void
-     * @throws \Neos\Flow\Mvc\Exception\StopActionException
-     * @throws \Neos\FluidAdaptor\Exception
-     * @throws \Neos\Flow\Reflection\Exception\ClassLoadingForReflectionFailedException
+     * @throws StopActionException
+     * @throws ClassLoadingForReflectionFailedException
      */
-    public function renderCommand($reference = null)
+    public function renderCommand(string $reference = null): void
     {
         $references = $reference !== null ? [$reference] : array_keys($this->settings['references']);
         $this->renderReferences($references);
@@ -64,11 +62,10 @@ class ReferenceCommandController extends CommandController
      *
      * @param string $collection to render (typically the name of a package).
      * @return void
-     * @throws \Neos\Flow\Mvc\Exception\StopActionException
-     * @throws \Neos\FluidAdaptor\Exception
-     * @throws \Neos\Flow\Reflection\Exception\ClassLoadingForReflectionFailedException
+     * @throws StopActionException
+     * @throws ClassLoadingForReflectionFailedException
      */
-    public function renderCollectionCommand($collection)
+    public function renderCollectionCommand(string $collection): void
     {
         if (!isset($this->settings['collections'][$collection])) {
             $this->outputLine('Collection "%s" is not configured', [$collection]);
@@ -83,15 +80,10 @@ class ReferenceCommandController extends CommandController
     }
 
     /**
-     * Render a set of references to reStructuredText.
-     *
-     * @param array $references to render.
-     * @return void
-     * @throws \Neos\Flow\Mvc\Exception\StopActionException
-     * @throws \Neos\FluidAdaptor\Exception
-     * @throws \Neos\Flow\Reflection\Exception\ClassLoadingForReflectionFailedException
+     * @throws StopActionException
+     * @throws ClassLoadingForReflectionFailedException
      */
-    protected function renderReferences($references)
+    protected function renderReferences(array $references): void
     {
         foreach ($references as $reference) {
             $this->outputLine('Rendering Reference "%s"', [$reference]);
@@ -100,15 +92,10 @@ class ReferenceCommandController extends CommandController
     }
 
     /**
-     * Render a reference to reStructuredText.
-     *
-     * @param string $reference
-     * @return void
-     * @throws \Neos\Flow\Mvc\Exception\StopActionException
-     * @throws \Neos\FluidAdaptor\Exception
-     * @throws \Neos\Flow\Reflection\Exception\ClassLoadingForReflectionFailedException
+     * @throws StopActionException
+     * @throws ClassLoadingForReflectionFailedException
      */
-    protected function renderReference($reference)
+    protected function renderReference(string $reference): void
     {
         if (!isset($this->settings['references'][$reference])) {
             $this->outputLine('Reference "%s" is not configured', [$reference]);
@@ -117,34 +104,31 @@ class ReferenceCommandController extends CommandController
         $referenceConfiguration = $this->settings['references'][$reference];
         $affectedClassNames = $this->getAffectedClassNames($referenceConfiguration['affectedClasses']);
         $parserClassName = $referenceConfiguration['parser']['implementationClassName'];
-        $parserOptions = isset($referenceConfiguration['parser']['options']) ? $referenceConfiguration['parser']['options'] : [];
-        /** @var $classParser \Neos\DocTools\Domain\Service\AbstractClassParser */
+        $parserOptions = $referenceConfiguration['parser']['options'] ?? [];
+        /** @var $classParser AbstractClassParser */
         $classParser = new $parserClassName($parserOptions);
         $classReferences = [];
         foreach ($affectedClassNames as $className) {
             $classReferences[$className] = $classParser->parse($className);
         }
-        usort($classReferences, function (ClassReference $a, ClassReference $b) {
-            if ($a->getTitle() == $b->getTitle()) {
+        usort($classReferences, static function (ClassReference $a, ClassReference $b) {
+            if ($a->getTitle() === $b->getTitle()) {
                 return 0;
             }
 
             return ($a->getTitle() < $b->getTitle()) ? -1 : 1;
         });
-        $standaloneView = new \Neos\FluidAdaptor\View\StandaloneView();
-        $templatePathAndFilename = isset($referenceConfiguration['templatePathAndFilename']) ? $referenceConfiguration['templatePathAndFilename'] : 'resource://Neos.DocTools/Private/Templates/ClassReferenceTemplate.txt';
+        $standaloneView = new StandaloneView();
+        $templatePathAndFilename = $referenceConfiguration['templatePathAndFilename'] ?? 'resource://Neos.DocTools/Private/Templates/ClassReferenceTemplate.txt';
         $standaloneView->setTemplatePathAndFilename($templatePathAndFilename);
-        $standaloneView->assign('title', isset($referenceConfiguration['title']) ? $referenceConfiguration['title'] : $reference);
+        $standaloneView->assign('title', $referenceConfiguration['title'] ?? $reference);
         $standaloneView->assign('classReferences', $classReferences);
         file_put_contents($referenceConfiguration['savePathAndFilename'], $standaloneView->render());
+        $this->outputLine('Written to: ' . $referenceConfiguration['savePathAndFilename']);
         $this->outputLine('DONE.');
     }
 
-    /**
-     * @param array $classesSelector
-     * @return array
-     */
-    protected function getAffectedClassNames(array $classesSelector)
+    protected function getAffectedClassNames(array $classesSelector): array
     {
         if (isset($classesSelector['parentClassName'])) {
             $affectedClassNames = $this->reflectionService->getAllSubClassNamesForClass($classesSelector['parentClassName']);
@@ -157,7 +141,7 @@ class ReferenceCommandController extends CommandController
         }
 
         foreach ($affectedClassNames as $index => $className) {
-            if ($this->reflectionService->isClassAbstract($className) && (!isset($classesSelector['includeAbstractClasses']) || $classesSelector['includeAbstractClasses'] === false)) {
+            if ((!isset($classesSelector['includeAbstractClasses']) || $classesSelector['includeAbstractClasses'] === false) && $this->reflectionService->isClassAbstract($className)) {
                 unset($affectedClassNames[$index]);
             } elseif (isset($classesSelector['classNamePattern']) && preg_match($classesSelector['classNamePattern'], $className) === 0) {
                 unset($affectedClassNames[$index]);

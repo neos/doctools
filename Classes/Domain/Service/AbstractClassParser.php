@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 namespace Neos\DocTools\Domain\Service;
 
 /*
@@ -11,77 +12,60 @@ namespace Neos\DocTools\Domain\Service;
  * source code.
  */
 
+use Neos\DocTools\Domain\Model\ArgumentDefinition;
+use Neos\DocTools\Domain\Model\ClassReference;
+use Neos\DocTools\Domain\Model\CodeExample;
+use Neos\Flow\Reflection\ClassReflection;
+use Neos\Flow\Reflection\Exception\ClassLoadingForReflectionFailedException;
+
 /**
  * Abstract Neos.DocTools parser for classes. Extended by target specific
  * parsers to generate reference documentation.
  */
 abstract class AbstractClassParser
 {
-    /**
-     * @var array
-     */
-    protected $options;
+    protected array $options;
 
-    /**
-     * @var string
-     */
-    protected $className;
+    protected string $className;
 
-    /**
-     * @var \Neos\Flow\Reflection\ClassReflection
-     */
-    protected $classReflection;
+    protected ClassReflection $classReflection;
 
-    /**
-     * @param array $options
-     */
     public function __construct(array $options = [])
     {
         $this->options = $options;
     }
 
     /**
-     * @param string $className
-     * @return \Neos\DocTools\Domain\Model\ClassReference
-     * @throws \Neos\Flow\Reflection\Exception\ClassLoadingForReflectionFailedException
+     * @throws ClassLoadingForReflectionFailedException
      */
-    final public function parse($className)
+    final public function parse(string $className): ClassReference
     {
         $this->className = $className;
-        $this->classReflection = new \Neos\Flow\Reflection\ClassReflection($this->className);
+        $this->classReflection = new ClassReflection($this->className);
 
-        return new \Neos\DocTools\Domain\Model\ClassReference($this->parseTitle(), $this->parseDescription(), $this->parseArgumentDefinitions(), $this->parseCodeExamples(), $this->parseDeprecationNote());
+        return new ClassReference($this->parseTitle(), $this->parseDescription(), $this->parseArgumentDefinitions(), $this->parseCodeExamples(), $this->parseDeprecationNote());
     }
 
-    /**
-     * @return string
-     */
-    abstract protected function parseTitle();
+    abstract protected function parseTitle(): string;
+
+    abstract protected function parseDescription(): string;
 
     /**
-     * @return string
+     * @return ArgumentDefinition[]
      */
-    abstract protected function parseDescription();
+    abstract protected function parseArgumentDefinitions(): array;
 
     /**
-     * @return array<\Neos\DocTools\Domain\Model\ArgumentDefinition>
+     * @return CodeExample[]
      */
-    abstract protected function parseArgumentDefinitions();
+    abstract protected function parseCodeExamples(): array;
 
-    /**
-     * @return array<\Neos\DocTools\Domain\Model\CodeExample>
-     */
-    abstract protected function parseCodeExamples();
-
-    /**
-     * @return string
-     */
-    protected function parseDeprecationNote()
+    protected function parseDeprecationNote(): string
     {
         if ($this->classReflection->isTaggedWith('deprecated')) {
             return implode(', ', $this->classReflection->getTagValues('deprecated'));
-        } else {
-            return '';
         }
+
+        return '';
     }
 }

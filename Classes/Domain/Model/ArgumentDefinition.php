@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 namespace Neos\DocTools\Domain\Model;
 
 /*
@@ -16,40 +17,18 @@ namespace Neos\DocTools\Domain\Model;
  */
 class ArgumentDefinition
 {
-    /**
-     * Name of the argument
-     *
-     * @var string
-     */
-    protected $name;
+    protected string $name;
+
+    protected string $type;
+
+    protected string $description;
+
+    protected bool $required = false;
 
     /**
-     * Type of the argument
-     *
-     * @var string
-     */
-    protected $type;
-
-    /**
-     * Description of the argument
-     *
-     * @var string
-     */
-    protected $description;
-
-    /**
-     * Is argument required?
-     *
-     * @var boolean
-     */
-    protected $required = false;
-
-    /**
-     * Default value of the argument
-     *
      * @var mixed
      */
-    protected $defaultValue = null;
+    protected $defaultValue;
 
     /**
      * Constructor for this argument definition.
@@ -57,10 +36,10 @@ class ArgumentDefinition
      * @param string $name Name of argument
      * @param string $type Type of argument
      * @param string $description Description of argument
-     * @param boolean $required TRUE if argument is required
+     * @param bool $required TRUE if argument is required
      * @param mixed $defaultValue Default value
      */
-    public function __construct($name, $type, $description, $required, $defaultValue = null)
+    public function __construct(string $name, string $type, string $description, bool $required, $defaultValue = null)
     {
         $this->name = $name;
         $this->type = $type;
@@ -69,51 +48,27 @@ class ArgumentDefinition
         $this->defaultValue = $defaultValue;
     }
 
-    /**
-     * Returns the name of the argument
-     *
-     * @return string Name of argument
-     */
-    public function getName()
+
+    public function getName(): string
     {
         return $this->name;
     }
 
-    /**
-     * Returns the type of the argument
-     *
-     * @return string Type of argument
-     */
-    public function getType()
+    public function getType(): string
     {
         return $this->type;
     }
 
-    /**
-     * Returns the description of the argument
-     *
-     * @return string Description of argument
-     */
-    public function getDescription()
+    public function getDescription(): string
     {
         return $this->description;
     }
 
-    /**
-     * Returns whether the argument is required or optional
-     *
-     * @return boolean TRUE if argument is optional
-     */
-    public function isRequired()
+    public function isRequired(): bool
     {
         return $this->required;
     }
 
-    /**
-     * Returns the default value, if set
-     *
-     * @return mixed Default value
-     */
     public function getDefaultValue()
     {
         return $this->defaultValue;
