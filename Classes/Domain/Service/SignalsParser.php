@@ -41,15 +41,12 @@ class SignalsParser extends AbstractClassParser
     protected function parseDescription(): string
     {
         $description = 'This class contains the following signals.' . chr(10) . chr(10);
-        $methodReflections = $this->classReflection->getMethods();
-        foreach ($methodReflections as $methodReflection) {
-            /** @var MethodReflection $methodReflection */
-            if ($this->reflectionService->isMethodAnnotatedWith($this->className, $methodReflection->getName(), Signal::class)) {
-                $signalName = lcfirst(preg_replace('/^emit/', '', $methodReflection->getName()));
-                $description .= $signalName;
-                $description .= chr(10) . str_repeat('^', strlen($signalName));
-                $description .= chr(10) . chr(10) . $methodReflection->getDescription() . chr(10) . chr(10);
-            }
+        foreach ($this->reflectionService->getMethodsAnnotatedWith($this->className, Signal::class) as $methodName) {
+            $methodReflection = new MethodReflection($this->className . '::' . $methodName);
+            $signalName = lcfirst(preg_replace('/^emit/', '', $methodReflection->getName()));
+            $description .= $signalName;
+            $description .= chr(10) . str_repeat('^', strlen($signalName));
+            $description .= chr(10) . chr(10) . $methodReflection->getDescription() . chr(10) . chr(10);
         }
 
         return $description;
