@@ -3,14 +3,3 @@
 #                                                                        #
 
 Neos:
-  DocTools:
-    defaultConfiguration:
-      imageMaxWidth: 1500
-      imageMaxHeight: 1000
-      thumbnailMaxWidth: 710
-      thumbnailMaxHeight: 800
-      renderByDefault: true
-      nodeTypes:
-        page: 'Neos.Neos:Page'
-        section: 'Neos.Neos:ContentCollection'
-        text: 'Neos.NodeTypes:Text'
