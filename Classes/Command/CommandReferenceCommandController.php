@@ -74,7 +74,7 @@ class CommandReferenceCommandController extends CommandController
             $this->outputLine('Collection "%s" does not have any references', [$collection]);
             $this->quit(1);
         }
-        $references = $this->settings['collections'][$collection]['commandReferences'];
+        $references = array_keys(array_filter($this->settings['collections'][$collection]['commandReferences']));
         $this->renderReferences($references);
     }
 
@@ -109,7 +109,7 @@ class CommandReferenceCommandController extends CommandController
             $this->quit(1);
         }
         $referenceConfiguration = $this->settings['commandReferences'][$reference];
-        $packageKeysToRender = array_map('strtolower', $referenceConfiguration['packageKeys']);
+        $packageKeysToRender = array_map('strtolower', array_keys(array_filter($referenceConfiguration['packageKeys'])));
 
         $availableCommands = $this->commandManager->getAvailableCommands();
         $commandsByPackagesAndControllers = $this->buildCommandsIndex($availableCommands);

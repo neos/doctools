@@ -75,7 +75,7 @@ class ReferenceCommandController extends CommandController
             $this->outputLine('Collection "%s" does not have any references', [$collection]);
             $this->quit(1);
         }
-        $references = $this->settings['collections'][$collection]['references'];
+        $references = array_keys(array_filter($this->settings['collections'][$collection]['references']));
         $this->renderReferences($references);
     }
 
