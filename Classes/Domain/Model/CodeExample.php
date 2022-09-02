@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 namespace Neos\DocTools\Domain\Model;
 
 /*
@@ -16,33 +17,13 @@ namespace Neos\DocTools\Domain\Model;
  */
 class CodeExample
 {
-    /**
-     * Title of the example
-     *
-     * @var string
-     */
-    protected $title;
+    protected string $title;
 
-    /**
-     * Example code
-     *
-     * @var string
-     */
-    protected $code;
+    protected string $code;
 
-    /**
-     * Example code format (xml, php, ...)
-     *
-     * @var string
-     */
-    protected $codeFormat;
+    protected string $codeFormat;
 
-    /**
-     * Expected output
-     *
-     * @var string
-     */
-    protected $output;
+    protected string $output;
 
     /**
      * Constructor for this code example
@@ -52,7 +33,7 @@ class CodeExample
      * @param string $codeFormat Example code format (xml, php, ...)
      * @param string $output Expected output of the code example
      */
-    public function __construct($title, $code, $codeFormat, $output)
+    public function __construct(string $title, string $code, string $codeFormat, string $output)
     {
         $this->title = $title;
         $this->code = $code;
@@ -60,42 +41,22 @@ class CodeExample
         $this->output = $output;
     }
 
-    /**
-     * Returns the title of this example
-     *
-     * @return string
-     */
-    public function getTitle()
+    public function getTitle(): string
     {
         return $this->title;
     }
 
-    /**
-     * Returns the example code
-     *
-     * @return string
-     */
-    public function getCode()
+    public function getCode(): string
     {
         return $this->code;
     }
 
-    /**
-     * Returns the example code format
-     *
-     * @return string
-     */
-    public function getCodeFormat()
+    public function getCodeFormat(): string
     {
         return $this->codeFormat;
     }
 
-    /**
-     * Returns the expected output of this example
-     *
-     * @return string
-     */
-    public function getOutput()
+    public function getOutput(): string
     {
         return $this->output;
     }

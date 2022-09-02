@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 namespace Neos\DocTools\ViewHelpers\Format;
 
 /*
@@ -11,11 +12,13 @@ namespace Neos\DocTools\ViewHelpers\Format;
  * source code.
  */
 
+use Neos\FluidAdaptor\Core\ViewHelper\AbstractViewHelper;
+
 /**
  * Returns the string, a newline character and an underline made of
  * $withCharacter as long as the original string.
  */
-class UnderlineViewHelper extends \Neos\FluidAdaptor\Core\ViewHelper\AbstractViewHelper
+class UnderlineViewHelper extends AbstractViewHelper
 {
     /**
      * Initialize the arguments.
@@ -31,7 +34,7 @@ class UnderlineViewHelper extends \Neos\FluidAdaptor\Core\ViewHelper\AbstractVie
     /**
      * @return string The formatted value
      */
-    public function render()
+    public function render(): string
     {
         $string = $this->renderChildren();
 

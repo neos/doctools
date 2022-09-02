@@ -3,14 +3,70 @@
 #                                                                        #
 
 Neos:
-  DocTools:
-    defaultConfiguration:
-      imageMaxWidth: 1500
-      imageMaxHeight: 1000
-      thumbnailMaxWidth: 710
-      thumbnailMaxHeight: 800
-      renderByDefault: true
-      nodeTypes:
-        page: 'Neos.Neos:Page'
-        section: 'Neos.Neos:ContentCollection'
-        text: 'Neos.NodeTypes:Text'
+  DocTools: []
+    # What is to be rendered is configured like this.
+    # - Collections group references
+    # - References can be rendered for CLI commands and other code
+    #
+    # collections:
+    #   AcmeCollection:
+    #     commandReferences:
+    #       'Acme:MyCommands': true
+    #     references:
+    #       'Acme:ViewHelpers': true
+    #       'Acme:Validators': true
+    #       'Acme:Signals': true
+    #       'Acme:FlowQueryOperations': true
+    #       'Acme:EelHelpers': true
+    # commandReferences:
+    #   'Acme:MyCommands':
+    #     title: 'My Command Reference'
+    #     packageKeys:
+    #       'Acme.PackageOne': true
+    #     savePathAndFilename: '%FLOW_PATH_PACKAGES%Application/Acme.PackageOne/Documentation/References/CommandReference.rst'
+    # references:
+    #   'Acme:ViewHelpers':
+    #     title: 'ViewHelper Reference'
+    #     savePathAndFilename: '%FLOW_PATH_PACKAGES%Application/Acme.PackageOne/Documentation/References/ViewHelpers.rst'
+    #     templatePathAndFilename: 'resource://Neos.DocTools/Private/Templates/ViewHelperReferenceTemplate.txt'
+    #     affectedClasses:
+    #       parentClassName: Neos\FluidAdaptor\Core\ViewHelper\AbstractViewHelper
+    #       classNamePattern: '/^Acme\\PackageOne\\ViewHelpers\\.*$/i'
+    #     parser:
+    #       implementationClassName: Neos\DocTools\Domain\Service\FluidViewHelperClassParser
+    #       options:
+    #         namespaces:
+    #           f: TYPO3Fluid\Fluid\ViewHelpers
+    #           fusion: Neos\Fusion\ViewHelpers
+    #   'Acme:Validators':
+    #     title: 'Validator Reference'
+    #     savePathAndFilename: '%FLOW_PATH_PACKAGES%Application/Acme.PackageOne/Documentation/References/Validators.rst'
+    #     affectedClasses:
+    #       parentClassName: Neos\Flow\Validation\Validator\AbstractValidator
+    #       classNamePattern: '/^Acme\\PackageOne\\Validation\\Validator\\.*$/i'
+    #     parser:
+    #       implementationClassName: Neos\DocTools\Domain\Service\FlowValidatorClassParser
+    #   'Acme:Signals':
+    #     title: 'Signals Reference'
+    #     savePathAndFilename: '%FLOW_PATH_PACKAGES%Application/Acme.PackageOne/Documentation/References/Signals.rst'
+    #     affectedClasses:
+    #       classesContainingMethodsAnnotatedWith: Neos\Flow\Annotations\Signal
+    #       classNamePattern: '/^Acme\\PackageOne\\.*$/i'
+    #       includeAbstractClasses: true
+    #     parser:
+    #       implementationClassName: Neos\DocTools\Domain\Service\SignalsParser
+    #   'Acme:FlowQueryOperations':
+    #     title: 'FlowQuery Operation Reference'
+    #     savePathAndFilename: '%FLOW_PATH_PACKAGES%Application/Acme.PackageOne/Documentation/References/FlowQueryOperationReference.rst'
+    #     affectedClasses:
+    #       interface: Neos\Eel\FlowQuery\OperationInterface
+    #     parser:
+    #       implementationClassName: Neos\DocTools\Domain\Service\FlowQueryOperationClassParser
+    #   'Acme:EelHelpers':
+    #     title: 'Eel Helpers Reference'
+    #     savePathAndFilename: '%FLOW_PATH_PACKAGES%Application/Acme.PackageOne/Documentation/References/EelHelpersReference.rst'
+    #     affectedClasses:
+    #       interface: Neos\Eel\ProtectedContextAwareInterface
+    #       classNamePattern: '/^.*Helper$/i'
+    #     parser:
+    #       implementationClassName: Neos\DocTools\Domain\Service\EelHelperClassParser

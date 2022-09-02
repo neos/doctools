@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 namespace Neos\DocTools\ViewHelpers\Format;
 
 /*
@@ -11,11 +12,13 @@ namespace Neos\DocTools\ViewHelpers\Format;
  * source code.
  */
 
+use Neos\FluidAdaptor\Core\ViewHelper\AbstractViewHelper;
+
 /**
  * Renders it's children and replaces every newline by a combination of
  * newline and $indent.
  */
-class IndentViewHelper extends \Neos\FluidAdaptor\Core\ViewHelper\AbstractViewHelper
+class IndentViewHelper extends AbstractViewHelper
 {
     /**
      * Initialize the arguments.
@@ -32,7 +35,7 @@ class IndentViewHelper extends \Neos\FluidAdaptor\Core\ViewHelper\AbstractViewHe
     /**
      * @return string The formatted value
      */
-    public function render()
+    public function render(): string
     {
         $string = $this->renderChildren();
 

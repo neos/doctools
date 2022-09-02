@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 namespace Neos\DocTools\Domain\Service;
 
 /*
@@ -11,23 +12,20 @@ namespace Neos\DocTools\Domain\Service;
  * source code.
  */
 
+use Neos\DocTools\Domain\Model\ArgumentDefinition;
+use Neos\DocTools\Domain\Model\CodeExample;
+
 /**
  * Neos.DocTools parser for FlowQuery Operation classes.
  */
 class FlowQueryOperationClassParser extends AbstractClassParser
 {
-    /**
-     * @return string
-     */
-    protected function parseTitle()
+    protected function parseTitle(): string
     {
         return call_user_func([$this->className, 'getShortName']);
     }
 
-    /**
-     * @return string
-     */
-    protected function parseDescription()
+    protected function parseDescription(): string
     {
         $description = $this->classReflection->getDescription();
 
@@ -45,17 +43,17 @@ class FlowQueryOperationClassParser extends AbstractClassParser
     }
 
     /**
-     * @return array<\Neos\DocTools\Domain\Model\ArgumentDefinition>
+     * @return ArgumentDefinition[]
      */
-    protected function parseArgumentDefinitions()
+    protected function parseArgumentDefinitions(): array
     {
         return [];
     }
 
     /**
-     * @return array<\Neos\DocTools\Domain\Model\CodeExample>
+     * @return CodeExample[]
      */
-    protected function parseCodeExamples()
+    protected function parseCodeExamples(): array
     {
         return [];
     }

@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 namespace Neos\DocTools\Domain\Model;
 
 /*
@@ -16,39 +17,24 @@ namespace Neos\DocTools\Domain\Model;
  */
 class ClassReference
 {
-    /**
-     * @var string
-     */
-    protected $title;
+    protected string $title;
 
-    /**
-     * @var string
-     */
-    protected $description;
+    protected string $description;
 
-    /**
-     * @var array<\Neos\DocTools\Domain\Model\ArgumentDefinition>
-     */
-    protected $argumentDefinitions;
+    protected array $argumentDefinitions;
 
-    /**
-     * @var array<\Neos\DocTools\Domain\Model\CodeExample>
-     */
-    protected $codeExamples;
+    protected array $codeExamples;
 
-    /**
-     * @var string
-     */
-    protected $deprecationNote;
+    protected string $deprecationNote;
 
     /**
      * @param string $title
      * @param string $description
-     * @param array <\Neos\DocTools\Domain\Model\ArgumentDefinition> $argumentDefinitions
-     * @param array <\Neos\DocTools\Domain\Model\CodeExample> $codeExamples
+     * @param ArgumentDefinition[] $argumentDefinitions
+     * @param CodeExample[] $codeExamples
      * @param string $deprecationNote
      */
-    public function __construct($title, $description, array $argumentDefinitions, array $codeExamples, $deprecationNote)
+    public function __construct(string $title, string $description, array $argumentDefinitions, array $codeExamples, string $deprecationNote)
     {
         $this->title = $title;
         $this->description = $description;
@@ -57,42 +43,33 @@ class ClassReference
         $this->deprecationNote = $deprecationNote;
     }
 
-    /**
-     * @return string
-     */
-    public function getTitle()
+    public function getTitle(): string
     {
         return $this->title;
     }
 
-    /**
-     * @return array
-     */
-    public function getDescription()
+    public function getDescription(): string
     {
         return $this->description;
     }
 
     /**
-     * @return array<\Neos\DocTools\Domain\Model\ArgumentDefinition>
+     * @return ArgumentDefinition[]
      */
-    public function getArgumentDefinitions()
+    public function getArgumentDefinitions(): array
     {
         return $this->argumentDefinitions;
     }
 
     /**
-     * @return array<\Neos\DocTools\Domain\Model\CodeExample>
+     * @return CodeExample[]
      */
-    public function getCodeExamples()
+    public function getCodeExamples(): array
     {
         return $this->codeExamples;
     }
 
-    /**
-     * @return string
-     */
-    public function getDeprecationNote()
+    public function getDeprecationNote(): string
     {
         return $this->deprecationNote;
     }

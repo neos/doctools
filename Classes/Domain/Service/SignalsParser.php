@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 namespace Neos\DocTools\Domain\Service;
 
 /*
@@ -11,7 +12,12 @@ namespace Neos\DocTools\Domain\Service;
  * source code.
  */
 
+use Neos\DocTools\Domain\Model\ArgumentDefinition;
+use Neos\DocTools\Domain\Model\CodeExample;
 use Neos\Flow\Annotations as Flow;
+use Neos\Flow\Annotations\Signal;
+use Neos\Flow\Reflection\MethodReflection;
+use Neos\Flow\Reflection\ReflectionService;
 
 /**
  * Neos.DocTools parser for signals in classes
@@ -20,50 +26,44 @@ class SignalsParser extends AbstractClassParser
 {
     /**
      * @Flow\Inject
-     * @var \Neos\Flow\Reflection\ReflectionService
+     * @var ReflectionService
      */
     protected $reflectionService;
 
-    /**
-     * @return string
-     */
-    protected function parseTitle()
+    protected function parseTitle(): string
     {
         return substr($this->className, strrpos($this->className, '\\') + 1) . ' (``' . $this->className . '``)';
     }
 
     /**
-     * @return string
+     * @throws \ReflectionException
      */
-    protected function parseDescription()
+    protected function parseDescription(): string
     {
         $description = 'This class contains the following signals.' . chr(10) . chr(10);
-        $methodReflections = $this->classReflection->getMethods();
-        foreach ($methodReflections as $methodReflection) {
-            /** @var \Neos\Flow\Reflection\MethodReflection $methodReflection */
-            if ($this->reflectionService->isMethodAnnotatedWith($this->className, $methodReflection->getName(), \Neos\Flow\Annotations\Signal::class)) {
-                $signalName = lcfirst(preg_replace('/^emit/', '', $methodReflection->getName()));
-                $description .= $signalName;
-                $description .= chr(10) . str_repeat('^', strlen($signalName));
-                $description .= chr(10) . chr(10) . $methodReflection->getDescription() . chr(10) . chr(10);
-            }
+        foreach ($this->reflectionService->getMethodsAnnotatedWith($this->className, Signal::class) as $methodName) {
+            $methodReflection = new MethodReflection($this->className . '::' . $methodName);
+            $signalName = lcfirst(preg_replace('/^emit/', '', $methodReflection->getName()));
+            $description .= $signalName;
+            $description .= chr(10) . str_repeat('^', strlen($signalName));
+            $description .= chr(10) . chr(10) . $methodReflection->getDescription() . chr(10) . chr(10);
         }
 
         return $description;
     }
 
     /**
-     * @return array<\Neos\DocTools\Domain\Model\ArgumentDefinition>
+     * @return ArgumentDefinition[]
      */
-    protected function parseArgumentDefinitions()
+    protected function parseArgumentDefinitions(): array
     {
         return [];
     }
 
     /**
-     * @return array<\Neos\DocTools\Domain\Model\CodeExample>
+     * @return CodeExample[]
      */
-    protected function parseCodeExamples()
+    protected function parseCodeExamples(): array
     {
         return [];
     }

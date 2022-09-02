@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 namespace Neos\DocTools\Domain\Service;
 
 /*
@@ -19,13 +20,10 @@ use Neos\DocTools\Domain\Model\CodeExample;
  */
 class FluidViewHelperClassParser extends AbstractClassParser
 {
-    const PATTERN_CODE_EXAMPLES = '/<code title="(?P<title>[^"]+)">\n(?P<code>.*?)<\/code>\n\s*<output>\n(?P<output>.*?)<\/output>/s';
-    const PATTERN_DESCRIPTION = '/(?P<description>.*)(?=\n\s=\sExamples\s=\n)/s';
+    private const PATTERN_CODE_EXAMPLES = '/<code title="(?P<title>[^"]+)">\n(?P<code>.*?)<\/code>\n\s*<output>\n(?P<output>.*?)<\/output>/s';
+    private const PATTERN_DESCRIPTION = '/(?P<description>.*)(?=\n\s=\sExamples\s=\n)/s';
 
-    /**
-     * @return string
-     */
-    protected function parseTitle()
+    protected function parseTitle(): string
     {
         $classNameWithoutSuffix = substr($this->className, 0, -10);
         foreach ($this->options['namespaces'] as $namespaceIdentifier => $fullyQualifiedNamespace) {
@@ -39,15 +37,12 @@ class FluidViewHelperClassParser extends AbstractClassParser
         return substr($this->className, strrpos($this->className, '\\') + 1);
     }
 
-    /**
-     * @return string
-     */
-    protected function parseDescription()
+    protected function parseDescription(): string
     {
         $description = $this->classReflection->getDescription();
         $matches = [];
         preg_match(self::PATTERN_DESCRIPTION, $description, $matches);
-        $description = isset($matches['description']) ? $matches['description'] : $description;
+        $description = $matches['description'] ?? $description;
 
         $description .= chr(10) . chr(10) . ':Implementation: ' . str_replace('\\', '\\\\', $this->className) . chr(10);
 
@@ -55,11 +50,11 @@ class FluidViewHelperClassParser extends AbstractClassParser
     }
 
     /**
-     * @return array<\Neos\DocTools\Domain\Model\ArgumentDefinition>
+     * @return ArgumentDefinition[]
      */
-    protected function parseArgumentDefinitions()
+    protected function parseArgumentDefinitions(): array
     {
-        $viewHelper = new $this->className;
+        $viewHelper = new $this->className();
         $viewHelperArguments = $viewHelper->prepareArguments();
         $argumentDefinitions = [];
         foreach ($viewHelperArguments as $viewHelperArgument) {
@@ -70,9 +65,9 @@ class FluidViewHelperClassParser extends AbstractClassParser
     }
 
     /**
-     * @return array<\Neos\DocTools\Domain\Model\CodeExample>
+     * @return CodeExample[]
      */
-    protected function parseCodeExamples()
+    protected function parseCodeExamples(): array
     {
         $matches = [];
         preg_match_all(self::PATTERN_CODE_EXAMPLES, $this->classReflection->getDescription(), $matches, PREG_SET_ORDER);

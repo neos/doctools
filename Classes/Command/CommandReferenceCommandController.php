@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 namespace Neos\DocTools\Command;
 
 /*
@@ -15,6 +16,8 @@ use Neos\Flow\Annotations as Flow;
 use Neos\Flow\Cli\Command;
 use Neos\Flow\Cli\CommandController;
 use Neos\Flow\Mvc\Exception\CommandException;
+use Neos\Flow\Mvc\Exception\StopActionException;
+use Neos\FluidAdaptor\Exception;
 use Neos\FluidAdaptor\View\StandaloneView;
 
 /**
@@ -29,13 +32,13 @@ class CommandReferenceCommandController extends CommandController
     /**
      * @var array
      */
-    protected $settings;
+    protected array $settings;
 
     /**
      * @param array $settings
      * @return void
      */
-    public function injectSettings(array $settings)
+    public function injectSettings(array $settings): void
     {
         $this->settings = $settings;
     }
@@ -43,12 +46,11 @@ class CommandReferenceCommandController extends CommandController
     /**
      * Renders command reference documentation from source code.
      *
-     * @param string $reference to render. If not specified all configured references will be rendered
+     * @param string|null $reference to render. If not specified all configured references will be rendered
      * @return void
-     * @throws \Neos\Flow\Mvc\Exception\StopActionException
-     * @throws \Neos\FluidAdaptor\Exception
+     * @throws Exception
      */
-    public function renderCommand(string $reference = null)
+    public function renderCommand(string $reference = null): void
     {
         $references = $reference !== null ? [$reference] : array_keys($this->settings['commandReferences']);
         $this->renderReferences($references);
@@ -59,10 +61,10 @@ class CommandReferenceCommandController extends CommandController
      *
      * @param string $collection to render (typically the name of a package).
      * @return void
-     * @throws \Neos\Flow\Mvc\Exception\StopActionException
-     * @throws \Neos\FluidAdaptor\Exception
+     * @throws StopActionException
+     * @throws Exception
      */
-    public function renderCollectionCommand(string $collection)
+    public function renderCollectionCommand(string $collection): void
     {
         if (!isset($this->settings['collections'][$collection])) {
             $this->outputLine('Collection "%s" is not configured', [$collection]);
@@ -72,7 +74,7 @@ class CommandReferenceCommandController extends CommandController
             $this->outputLine('Collection "%s" does not have any references', [$collection]);
             $this->quit(1);
         }
-        $references = $this->settings['collections'][$collection]['commandReferences'];
+        $references = array_keys(array_filter($this->settings['collections'][$collection]['commandReferences']));
         $this->renderReferences($references);
     }
 
@@ -81,10 +83,10 @@ class CommandReferenceCommandController extends CommandController
      *
      * @param array $references to render.
      * @return void
-     * @throws \Neos\Flow\Mvc\Exception\StopActionException
-     * @throws \Neos\FluidAdaptor\Exception
+     * @throws StopActionException
+     * @throws Exception
      */
-    protected function renderReferences(array $references)
+    protected function renderReferences(array $references): void
     {
         foreach ($references as $reference) {
             $this->outputLine('Rendering Reference "%s"', [$reference]);
@@ -97,17 +99,17 @@ class CommandReferenceCommandController extends CommandController
      *
      * @param string $reference
      * @return void
-     * @throws \Neos\Flow\Mvc\Exception\StopActionException
-     * @throws \Neos\FluidAdaptor\Exception
+     * @throws StopActionException
+     * @throws Exception
      */
-    protected function renderReference(string $reference)
+    protected function renderReference(string $reference): void
     {
         if (!isset($this->settings['commandReferences'][$reference])) {
             $this->outputLine('Command reference "%s" is not configured', [$reference]);
             $this->quit(1);
         }
         $referenceConfiguration = $this->settings['commandReferences'][$reference];
-        $packageKeysToRender = array_map('strtolower', $referenceConfiguration['packageKeys']);
+        $packageKeysToRender = array_map('strtolower', array_keys(array_filter($referenceConfiguration['packageKeys'])));
 
         $availableCommands = $this->commandManager->getAvailableCommands();
         $commandsByPackagesAndControllers = $this->buildCommandsIndex($availableCommands);
@@ -121,7 +123,6 @@ class CommandReferenceCommandController extends CommandController
             $allCommands = [];
             foreach ($commandControllers as $commands) {
                 foreach ($commands as $command) {
-
                     $argumentDescriptions = [];
                     $optionDescriptions = [];
 
@@ -145,8 +146,9 @@ class CommandReferenceCommandController extends CommandController
                         }
                     }
 
-                    $allCommands[$command->getCommandIdentifier()] = [
-                        'identifier' => $command->getCommandIdentifier(),
+                    $commandIdentifier = $command->getCommandIdentifier();
+                    $allCommands[$commandIdentifier] = [
+                        'identifier' => $commandIdentifier,
                         'shortDescription' => $command->getShortDescription(),
                         'description' => $this->transformMarkup($command->getDescription()),
                         'options' => $optionDescriptions,
@@ -175,13 +177,11 @@ class CommandReferenceCommandController extends CommandController
      */
     protected function transformMarkup(string $input): string
     {
-        $output = preg_replace('|\<b>(((?!\</b>).)*)\</b>|', '**$1**', $input);
-        $output = preg_replace('|\<i>(((?!\</i>).)*)\</i>|', '*$1*', $output);
-        $output = preg_replace('|\<u>(((?!\</u>).)*)\</u>|', '*$1*', $output);
-        $output = preg_replace('|\<em>(((?!\</em>).)*)\</em>|', '*$1*', $output);
-        $output = preg_replace('|\<strike>(((?!\</strike>).)*)\</strike>|', '[$1]', $output);
-
-        return $output;
+        $output = preg_replace('|<b>(((?!</b>).)*)</b>|', '**$1**', $input);
+        $output = preg_replace('|<i>(((?!</i>).)*)</i>|', '*$1*', $output);
+        $output = preg_replace('|<u>(((?!</u>).)*)</u>|', '*$1*', $output);
+        $output = preg_replace('|<em>(((?!</em>).)*)</em>|', '*$1*', $output);
+        return preg_replace('|<strike>(((?!</strike>).)*)</strike>|', '[$1]', $output);
     }
 
     /**
