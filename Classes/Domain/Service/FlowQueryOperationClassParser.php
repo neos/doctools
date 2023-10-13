@@ -14,6 +14,7 @@ namespace Neos\DocTools\Domain\Service;
 
 use Neos\DocTools\Domain\Model\ArgumentDefinition;
 use Neos\DocTools\Domain\Model\CodeExample;
+use Neos\Flow\Reflection\MethodReflection;
 
 /**
  * Neos.DocTools parser for FlowQuery Operation classes.
@@ -37,7 +38,7 @@ class FlowQueryOperationClassParser extends AbstractClassParser
         $description .= chr(10) . chr(10) . ':Implementation: ' . str_replace('\\', '\\\\', $this->className) . chr(10);
         $description .= ':Priority: ' . call_user_func([$this->className, 'getPriority']) . chr(10);
         $description .= ':Final: ' . (call_user_func([$this->className, 'isFinal']) ? 'Yes' : 'No') . chr(10);
-        $description .= ':Returns: ' . implode(' ', $methodReflection->getTagValues('return')) . chr(10);
+        $description .= ':Returns: ' . $this->determineReturnType($methodReflection) . chr(10);
 
         return $description;
     }
@@ -56,5 +57,18 @@ class FlowQueryOperationClassParser extends AbstractClassParser
     protected function parseCodeExamples(): array
     {
         return [];
+    }
+
+    private function determineReturnType(MethodReflection $methodReflection): string
+    {
+        if ($methodReflection->isTaggedWith('return')) {
+            return implode(' ', $methodReflection->getTagValues('return'));
+        }
+
+        if ($methodReflection->hasReturnType()) {
+            return $methodReflection->getReturnType()->getName();
+        }
+
+        return '';
     }
 }
