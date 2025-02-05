@@ -13,7 +13,7 @@ namespace Neos\DocTools\Domain\Model;
  */
 
 /**
- * @todo document
+ * Describes an argument to a method, annotation, ViewHelper, …
  */
 class ArgumentDefinition
 {
@@ -25,21 +25,9 @@ class ArgumentDefinition
 
     protected bool $required = false;
 
-    /**
-     * @var mixed
-     */
-    protected $defaultValue;
+    protected mixed $defaultValue;
 
-    /**
-     * Constructor for this argument definition.
-     *
-     * @param string $name Name of argument
-     * @param string $type Type of argument
-     * @param string $description Description of argument
-     * @param bool $required TRUE if argument is required
-     * @param mixed $defaultValue Default value
-     */
-    public function __construct(string $name, string $type, string $description, bool $required, $defaultValue = null)
+    public function __construct(string $name, string $type, string $description, bool $required, mixed $defaultValue = null)
     {
         $this->name = $name;
         $this->type = $type;
@@ -47,7 +35,6 @@ class ArgumentDefinition
         $this->required = $required;
         $this->defaultValue = $defaultValue;
     }
-
 
     public function getName(): string
     {
@@ -69,7 +56,7 @@ class ArgumentDefinition
         return $this->required;
     }
 
-    public function getDefaultValue()
+    public function getDefaultValue(): mixed
     {
         return $this->defaultValue;
     }

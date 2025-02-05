@@ -21,23 +21,16 @@ class CodeExample
 
     protected string $code;
 
-    protected string $codeFormat;
+    /** @var string Example code format (xml, php, ...) */
+    protected string $codeLanguage;
 
     protected string $output;
 
-    /**
-     * Constructor for this code example
-     *
-     * @param string $title Title of the example
-     * @param string $code Example code
-     * @param string $codeFormat Example code format (xml, php, ...)
-     * @param string $output Expected output of the code example
-     */
-    public function __construct(string $title, string $code, string $codeFormat, string $output)
+    public function __construct(string $title, string $code, string $codeLanguage, string $output)
     {
         $this->title = $title;
         $this->code = $code;
-        $this->codeFormat = $codeFormat;
+        $this->codeLanguage = $codeLanguage;
         $this->output = $output;
     }
 
@@ -51,9 +44,9 @@ class CodeExample
         return $this->code;
     }
 
-    public function getCodeFormat(): string
+    public function getCodeLanguage(): string
     {
-        return $this->codeFormat;
+        return $this->codeLanguage;
     }
 
     public function getOutput(): string

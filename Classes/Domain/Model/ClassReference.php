@@ -13,7 +13,9 @@ namespace Neos\DocTools\Domain\Model;
  */
 
 /**
- * @todo document
+ * Describes a class with it's description parsed from the docblock and reflection information
+ *
+ * Depending on the class this can be tailored to Eel helpers, ViewHelpers, type converters, …
  */
 class ClassReference
 {
@@ -21,19 +23,14 @@ class ClassReference
 
     protected string $description;
 
+    /** @var ArgumentDefinition[] */
     protected array $argumentDefinitions;
 
+    /** @var CodeExample[] */
     protected array $codeExamples;
 
     protected string $deprecationNote;
 
-    /**
-     * @param string $title
-     * @param string $description
-     * @param ArgumentDefinition[] $argumentDefinitions
-     * @param CodeExample[] $codeExamples
-     * @param string $deprecationNote
-     */
     public function __construct(string $title, string $description, array $argumentDefinitions, array $codeExamples, string $deprecationNote)
     {
         $this->title = $title;
@@ -53,17 +50,11 @@ class ClassReference
         return $this->description;
     }
 
-    /**
-     * @return ArgumentDefinition[]
-     */
     public function getArgumentDefinitions(): array
     {
         return $this->argumentDefinitions;
     }
 
-    /**
-     * @return CodeExample[]
-     */
     public function getCodeExamples(): array
     {
         return $this->codeExamples;

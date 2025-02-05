@@ -37,9 +37,6 @@ class FlowAnnotationClassParser extends AbstractClassParser
         return $description;
     }
 
-    /**
-     * @return ArgumentDefinition[]
-     */
     protected function parseArgumentDefinitions(): array
     {
         $options = [];

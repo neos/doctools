@@ -13,7 +13,6 @@ namespace Neos\DocTools\Domain\Service;
  */
 
 use Neos\DocTools\Domain\Model\ArgumentDefinition;
-use Neos\DocTools\Domain\Model\CodeExample;
 
 /**
  * Neos.DocTools parser for Flow Validator classes.

@@ -21,10 +21,7 @@ use Neos\FluidAdaptor\Core\ViewHelper\AbstractViewHelper;
 class IndentViewHelper extends AbstractViewHelper
 {
     /**
-     * Initialize the arguments.
-     *
      * @return void
-     * @api
      */
     public function initializeArguments()
     {
@@ -32,9 +29,6 @@ class IndentViewHelper extends AbstractViewHelper
         $this->registerArgument('inline', 'boolean', 'If true, the first line will not be indented', false, false);
     }
 
-    /**
-     * @return string The formatted value
-     */
     public function render(): string
     {
         $string = $this->renderChildren();
