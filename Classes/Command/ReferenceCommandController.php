@@ -145,6 +145,8 @@ class ReferenceCommandController extends CommandController
                 unset($affectedClassNames[$index]);
             } elseif (isset($classesSelector['classNamePattern']) && preg_match($classesSelector['classNamePattern'], $className) === 0) {
                 unset($affectedClassNames[$index]);
+            } elseif ($this->reflectionService->isClassAnnotatedWith($className, Flow\Internal::class)) {
+                unset($affectedClassNames[$index]);
             }
         }
 
