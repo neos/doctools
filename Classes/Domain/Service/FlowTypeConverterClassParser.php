@@ -12,9 +12,6 @@ namespace Neos\DocTools\Domain\Service;
  * source code.
  */
 
-use Neos\DocTools\Domain\Model\ArgumentDefinition;
-use Neos\DocTools\Domain\Model\CodeExample;
-
 /**
  * Neos.DocTools parser for Flow TypeConverter classes.
  */
@@ -41,21 +38,5 @@ class FlowTypeConverterClassParser extends AbstractClassParser
         }
 
         return $description;
-    }
-
-    /**
-     * @return ArgumentDefinition[]
-     */
-    protected function parseArgumentDefinitions(): array
-    {
-        return [];
-    }
-
-    /**
-     * @return CodeExample[]
-     */
-    protected function parseCodeExamples(): array
-    {
-        return [];
     }
 }

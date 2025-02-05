@@ -13,7 +13,6 @@ namespace Neos\DocTools\Domain\Service;
  */
 
 use Neos\DocTools\Domain\Model\ArgumentDefinition;
-use Neos\DocTools\Domain\Model\CodeExample;
 
 /**
  * Neos.DocTools parser for Flow Annotation classes.
@@ -52,13 +51,5 @@ class FlowAnnotationClassParser extends AbstractClassParser
         }
 
         return $options;
-    }
-
-    /**
-     * @return CodeExample[]
-     */
-    protected function parseCodeExamples(): array
-    {
-        return [];
     }
 }

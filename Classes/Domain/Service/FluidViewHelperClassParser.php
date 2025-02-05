@@ -49,9 +49,6 @@ class FluidViewHelperClassParser extends AbstractClassParser
         return $description;
     }
 
-    /**
-     * @return ArgumentDefinition[]
-     */
     protected function parseArgumentDefinitions(): array
     {
         $viewHelper = new $this->className();
@@ -64,9 +61,6 @@ class FluidViewHelperClassParser extends AbstractClassParser
         return $argumentDefinitions;
     }
 
-    /**
-     * @return CodeExample[]
-     */
     protected function parseCodeExamples(): array
     {
         $matches = [];

@@ -40,9 +40,6 @@ class FlowValidatorClassParser extends AbstractClassParser
         return $description;
     }
 
-    /**
-     * @return ArgumentDefinition[]
-     */
     protected function parseArgumentDefinitions(): array
     {
         $options = [];
@@ -52,13 +49,5 @@ class FlowValidatorClassParser extends AbstractClassParser
         }
 
         return $options;
-    }
-
-    /**
-     * @return CodeExample[]
-     */
-    protected function parseCodeExamples(): array
-    {
-        return [];
     }
 }

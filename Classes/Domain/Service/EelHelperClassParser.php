@@ -12,8 +12,6 @@ namespace Neos\DocTools\Domain\Service;
  * source code.
  */
 
-use Neos\DocTools\Domain\Model\ArgumentDefinition;
-use Neos\DocTools\Domain\Model\CodeExample;
 use Neos\Eel\ProtectedContextAwareInterface;
 use Neos\Flow\Annotations as Flow;
 use Neos\Flow\Reflection\MethodReflection;
@@ -127,21 +125,5 @@ class EelHelperClassParser extends AbstractClassParser
         });
 
         return $methods;
-    }
-
-    /**
-     * @return ArgumentDefinition[]
-     */
-    protected function parseArgumentDefinitions(): array
-    {
-        return [];
-    }
-
-    /**
-     * @return CodeExample[]
-     */
-    protected function parseCodeExamples(): array
-    {
-        return [];
     }
 }
