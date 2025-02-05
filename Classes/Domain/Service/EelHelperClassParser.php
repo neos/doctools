@@ -12,8 +12,6 @@ namespace Neos\DocTools\Domain\Service;
  * source code.
  */
 
-use Neos\DocTools\Domain\Model\ArgumentDefinition;
-use Neos\DocTools\Domain\Model\CodeExample;
 use Neos\Eel\ProtectedContextAwareInterface;
 use Neos\Flow\Annotations as Flow;
 use Neos\Flow\Reflection\MethodReflection;
@@ -25,7 +23,6 @@ class EelHelperClassParser extends AbstractClassParser
 {
     /**
      * @Flow\InjectConfiguration(package="Neos.Fusion", path="defaultContext")
-     * @var array
      */
     protected array $defaultContextSettings = [];
 
@@ -120,28 +117,12 @@ class EelHelperClassParser extends AbstractClassParser
         $methods = $this->classReflection->getMethods(\ReflectionMethod::IS_PUBLIC);
         $methods = array_filter($methods, static function (MethodReflection $methodReflection) {
             $methodName = $methodReflection->getName();
-            return !(strpos($methodName, '__') === 0 || $methodName === 'allowsCallOfMethod' || $methodReflection->isTaggedWith('deprecated'));
+            return !($methodName === 'allowsCallOfMethod' || str_starts_with($methodName, '__') || $methodReflection->isTaggedWith('deprecated'));
         });
         usort($methods, static function (MethodReflection $methodReflection1, MethodReflection $methodReflection2) {
             return strcmp($methodReflection1->getName(), $methodReflection2->getName());
         });
 
         return $methods;
-    }
-
-    /**
-     * @return ArgumentDefinition[]
-     */
-    protected function parseArgumentDefinitions(): array
-    {
-        return [];
-    }
-
-    /**
-     * @return CodeExample[]
-     */
-    protected function parseCodeExamples(): array
-    {
-        return [];
     }
 }

@@ -27,7 +27,7 @@ class FluidViewHelperClassParser extends AbstractClassParser
     {
         $classNameWithoutSuffix = substr($this->className, 0, -10);
         foreach ($this->options['namespaces'] as $namespaceIdentifier => $fullyQualifiedNamespace) {
-            if (strpos($this->className, $fullyQualifiedNamespace) === 0) {
+            if (str_starts_with($this->className, $fullyQualifiedNamespace)) {
                 $titleSegments = explode('\\', substr($classNameWithoutSuffix, strlen($fullyQualifiedNamespace) + 1));
 
                 return sprintf('%s:%s', $namespaceIdentifier, implode('.', array_map('lcfirst', $titleSegments)));
@@ -49,9 +49,6 @@ class FluidViewHelperClassParser extends AbstractClassParser
         return $description;
     }
 
-    /**
-     * @return ArgumentDefinition[]
-     */
     protected function parseArgumentDefinitions(): array
     {
         $viewHelper = new $this->className();
@@ -64,9 +61,6 @@ class FluidViewHelperClassParser extends AbstractClassParser
         return $argumentDefinitions;
     }
 
-    /**
-     * @return CodeExample[]
-     */
     protected function parseCodeExamples(): array
     {
         $matches = [];

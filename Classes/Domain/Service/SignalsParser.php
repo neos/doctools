@@ -12,8 +12,6 @@ namespace Neos\DocTools\Domain\Service;
  * source code.
  */
 
-use Neos\DocTools\Domain\Model\ArgumentDefinition;
-use Neos\DocTools\Domain\Model\CodeExample;
 use Neos\Flow\Annotations as Flow;
 use Neos\Flow\Annotations\Signal;
 use Neos\Flow\Reflection\MethodReflection;
@@ -53,21 +51,5 @@ class SignalsParser extends AbstractClassParser
         }
 
         return $description;
-    }
-
-    /**
-     * @return ArgumentDefinition[]
-     */
-    protected function parseArgumentDefinitions(): array
-    {
-        return [];
-    }
-
-    /**
-     * @return CodeExample[]
-     */
-    protected function parseCodeExamples(): array
-    {
-        return [];
     }
 }

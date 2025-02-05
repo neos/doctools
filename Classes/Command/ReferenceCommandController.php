@@ -16,7 +16,7 @@ use Neos\DocTools\Domain\Model\ClassReference;
 use Neos\DocTools\Domain\Service\AbstractClassParser;
 use Neos\Flow\Annotations as Flow;
 use Neos\Flow\Cli\CommandController;
-use Neos\Flow\Mvc\Exception\StopActionException;
+use Neos\Flow\Cli\Exception\StopCommandException;
 use Neos\Flow\Reflection\Exception\ClassLoadingForReflectionFailedException;
 use Neos\Flow\Reflection\ReflectionService;
 use Neos\FluidAdaptor\View\StandaloneView;
@@ -48,8 +48,7 @@ class ReferenceCommandController extends CommandController
      *
      * @param string|null $reference to render. If not specified all configured references will be rendered
      * @return void
-     * @throws StopActionException
-     * @throws ClassLoadingForReflectionFailedException
+     * @throws
      */
     public function renderCommand(string $reference = null): void
     {
@@ -62,8 +61,7 @@ class ReferenceCommandController extends CommandController
      *
      * @param string $collection to render (typically the name of a package).
      * @return void
-     * @throws StopActionException
-     * @throws ClassLoadingForReflectionFailedException
+     * @throws
      */
     public function renderCollectionCommand(string $collection): void
     {
@@ -80,8 +78,8 @@ class ReferenceCommandController extends CommandController
     }
 
     /**
-     * @throws StopActionException
      * @throws ClassLoadingForReflectionFailedException
+     * @throws StopCommandException
      */
     protected function renderReferences(array $references): void
     {
@@ -92,8 +90,8 @@ class ReferenceCommandController extends CommandController
     }
 
     /**
-     * @throws StopActionException
      * @throws ClassLoadingForReflectionFailedException
+     * @throws StopCommandException
      */
     protected function renderReference(string $reference): void
     {
@@ -105,7 +103,7 @@ class ReferenceCommandController extends CommandController
         $affectedClassNames = $this->getAffectedClassNames($referenceConfiguration['affectedClasses']);
         $parserClassName = $referenceConfiguration['parser']['implementationClassName'];
         $parserOptions = $referenceConfiguration['parser']['options'] ?? [];
-        /** @var $classParser AbstractClassParser */
+        /** @var AbstractClassParser $classParser */
         $classParser = new $parserClassName($parserOptions);
         $classReferences = [];
         foreach ($affectedClassNames as $className) {

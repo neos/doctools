@@ -21,19 +21,13 @@ use Neos\FluidAdaptor\Core\ViewHelper\AbstractViewHelper;
 class UnderlineViewHelper extends AbstractViewHelper
 {
     /**
-     * Initialize the arguments.
-     *
      * @return void
-     * @api
      */
     public function initializeArguments()
     {
         $this->registerArgument('withCharacter', 'string', 'The padding string', false, '-');
     }
 
-    /**
-     * @return string The formatted value
-     */
     public function render(): string
     {
         $string = $this->renderChildren();

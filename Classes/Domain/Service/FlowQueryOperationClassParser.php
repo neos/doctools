@@ -12,8 +12,6 @@ namespace Neos\DocTools\Domain\Service;
  * source code.
  */
 
-use Neos\DocTools\Domain\Model\ArgumentDefinition;
-use Neos\DocTools\Domain\Model\CodeExample;
 use Neos\Flow\Reflection\MethodReflection;
 
 /**
@@ -41,22 +39,6 @@ class FlowQueryOperationClassParser extends AbstractClassParser
         $description .= ':Returns: ' . $this->determineReturnType($methodReflection) . chr(10);
 
         return $description;
-    }
-
-    /**
-     * @return ArgumentDefinition[]
-     */
-    protected function parseArgumentDefinitions(): array
-    {
-        return [];
-    }
-
-    /**
-     * @return CodeExample[]
-     */
-    protected function parseCodeExamples(): array
-    {
-        return [];
     }
 
     private function determineReturnType(MethodReflection $methodReflection): string

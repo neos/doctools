@@ -53,12 +53,18 @@ abstract class AbstractClassParser
     /**
      * @return ArgumentDefinition[]
      */
-    abstract protected function parseArgumentDefinitions(): array;
+    protected function parseArgumentDefinitions(): array
+    {
+        return [];
+    }
 
     /**
      * @return CodeExample[]
      */
-    abstract protected function parseCodeExamples(): array;
+    protected function parseCodeExamples(): array
+    {
+        return [];
+    }
 
     protected function parseDeprecationNote(): string
     {

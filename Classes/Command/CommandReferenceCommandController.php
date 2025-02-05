@@ -15,8 +15,8 @@ namespace Neos\DocTools\Command;
 use Neos\Flow\Annotations as Flow;
 use Neos\Flow\Cli\Command;
 use Neos\Flow\Cli\CommandController;
+use Neos\Flow\Cli\Exception\StopCommandException;
 use Neos\Flow\Mvc\Exception\CommandException;
-use Neos\Flow\Mvc\Exception\StopActionException;
 use Neos\FluidAdaptor\Exception;
 use Neos\FluidAdaptor\View\StandaloneView;
 
@@ -48,7 +48,7 @@ class CommandReferenceCommandController extends CommandController
      *
      * @param string|null $reference to render. If not specified all configured references will be rendered
      * @return void
-     * @throws Exception
+     * @throws
      */
     public function renderCommand(string $reference = null): void
     {
@@ -61,8 +61,7 @@ class CommandReferenceCommandController extends CommandController
      *
      * @param string $collection to render (typically the name of a package).
      * @return void
-     * @throws StopActionException
-     * @throws Exception
+     * @throws
      */
     public function renderCollectionCommand(string $collection): void
     {
@@ -79,12 +78,7 @@ class CommandReferenceCommandController extends CommandController
     }
 
     /**
-     * Render a set of CLI command references to reStructuredText.
-     *
-     * @param array $references to render.
-     * @return void
-     * @throws StopActionException
-     * @throws Exception
+     * @throws
      */
     protected function renderReferences(array $references): void
     {
@@ -95,12 +89,7 @@ class CommandReferenceCommandController extends CommandController
     }
 
     /**
-     * Render a CLI command reference to reStructuredText.
-     *
-     * @param string $reference
-     * @return void
-     * @throws StopActionException
-     * @throws Exception
+     * @throws Exception|StopCommandException
      */
     protected function renderReference(string $reference): void
     {
@@ -141,7 +130,7 @@ class CommandReferenceCommandController extends CommandController
                         try {
                             $relatedCommand = $this->commandManager->getCommandByIdentifier($relatedCommandIdentifier);
                             $relatedCommands[$relatedCommandIdentifier] = $relatedCommand->getShortDescription();
-                        } catch (CommandException $exception) {
+                        } catch (CommandException) {
                             $relatedCommands[$relatedCommandIdentifier] = '*Command not available*';
                         }
                     }
@@ -171,10 +160,6 @@ class CommandReferenceCommandController extends CommandController
         $this->outputLine('DONE.');
     }
 
-    /**
-     * @param string $input
-     * @return string
-     */
     protected function transformMarkup(string $input): string
     {
         $output = preg_replace('|<b>(((?!</b>).)*)</b>|', '**$1**', $input);
@@ -189,12 +174,11 @@ class CommandReferenceCommandController extends CommandController
      * added to the commands array of this class.
      *
      * @param array<Command> $commands
-     * @return array in the format array('<packageKey>' => array('<CommandControllerClassName>', array('<command1>' => $command1, '<command2>' => $command2)))
+     * @return array in the format ['<packageKey>' => ['<CommandControllerClassName>', ['<command1>' => $command1, '<command2>' => $command2]]]
      */
     protected function buildCommandsIndex(array $commands): array
     {
         $commandsByPackagesAndControllers = [];
-        /** @var Command $command */
         foreach ($commands as $command) {
             if ($command->isInternal()) {
                 continue;
